@@ -1,0 +1,140 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 24px 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  transition: var(--transition);
+}
+
+.navbar--overlay {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.navbar--overlay .navbar-logo,
+.navbar--overlay .nav-link {
+  color: var(--white);
+}
+
+.navbar--overlay .menu-toggle {
+  color: var(--white);
+}
+
+.navbar.scrolled {
+  padding: 16px 0;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.navbar.scrolled .navbar-logo,
+.navbar.scrolled .nav-link {
+  color: var(--text-primary);
+}
+
+.navbar.scrolled .nav-link {
+  color: var(--text-muted);
+}
+
+.navbar.scrolled .nav-link.active,
+.navbar.scrolled .nav-link:hover {
+  color: var(--text-primary);
+}
+
+.navbar-inner {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-logo {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.navbar-logo:hover {
+  opacity: 0.7;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-link {
+  padding: 8px 24px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  transition: var(--transition);
+  text-transform: uppercase;
+  font-family: 'Montserrat', 'Inter', sans-serif;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+.nav-link.active {
+  color: var(--text-primary);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  padding: 8px;
+}
+
+@media (max-width: 768px) {
+  .navbar-inner {
+    padding: 0 20px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .navbar-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 260px;
+    height: 100vh;
+    background: var(--white);
+    flex-direction: column;
+    padding: 100px 32px 32px;
+    gap: 0;
+    transition: right 0.3s ease;
+    border-left: 1px solid var(--border);
+  }
+
+  .navbar-links.open {
+    right: 0;
+  }
+
+  .navbar-links .nav-link {
+    color: var(--text-muted);
+    width: 100%;
+    padding: 16px;
+    font-size: 0.9rem;
+  }
+
+  .navbar-links .nav-link:hover,
+  .navbar-links .nav-link.active {
+    color: var(--text-primary);
+  }
+}
