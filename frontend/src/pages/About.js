@@ -5,7 +5,9 @@ import { HiArrowRight, HiUpload } from 'react-icons/hi';
 import { FaReact, FaNodeJs, FaPython, FaDocker, FaAws, FaFigma, FaVuejs, FaGitAlt, FaHtml5, FaCss3Alt, FaJava, FaNpm } from 'react-icons/fa';
 import { SiTypescript, SiNextdotjs, SiMongodb, SiPostgresql, SiFlutter, SiTailwindcss, SiRedis, SiGraphql, SiFirebase, SiVercel, SiJavascript, SiMysql, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
 import FloatingParticles from '../components/FloatingParticles';
-import BallPitGame from '../components/BallPitGame';
+import ValueChip from '../components/ValueChip';
+import ProcessPipeline from '../components/ProcessPipeline';
+import DevTerminal from '../components/DevTerminal';
 import './About.css';
 
 const fadeUp = {
@@ -59,17 +61,26 @@ function About() {
   ];
 
   const values = [
-    { emoji: '01', title: '전문성', desc: '최신 기술 트렌드를 반영한 최적의 기술 스택을 제안합니다.' },
-    { emoji: '02', title: '책임감', desc: '일정과 품질을 철저히 관리하며 프로젝트를 완수합니다.' },
-    { emoji: '03', title: '소통', desc: '투명한 진행 상황 공유와 적극적인 커뮤니케이션을 합니다.' },
+    {
+      title: 'EXPERTISE',
+      desc: '최신 기술 트렌드를 반영한 최적의 기술 스택을 제안합니다.',
+      tags: ['React 18', 'TypeScript', 'Node 20', 'AWS'],
+      calibration: 96,
+    },
+    {
+      title: 'COMMITMENT',
+      desc: '일정과 품질을 철저히 관리하며 프로젝트를 완수합니다.',
+      tags: ['On-time', 'CI/CD', 'Code Review', 'QA'],
+      calibration: 99,
+    },
+    {
+      title: 'DIALOGUE',
+      desc: '투명한 진행 상황 공유와 적극적인 커뮤니케이션을 합니다.',
+      tags: ['Slack', 'Notion', 'Stand-up', 'Async'],
+      calibration: 94,
+    },
   ];
 
-  const process = [
-    { num: '01', title: '상담 & 기획', desc: '프로젝트 목표와 요구사항을 분석하고 최적의 솔루션을 제안합니다.' },
-    { num: '02', title: '설계 & 디자인', desc: 'UI/UX 와이어프레임과 프로토타입을 제작하여 시각적 방향을 확정합니다.' },
-    { num: '03', title: '개발', desc: '최신 기술 스택으로 안정적이고 확장 가능한 코드를 작성합니다.' },
-    { num: '04', title: '테스트 & 배포', desc: '철저한 QA 테스트 후 서비스를 배포하고 유지보수를 지원합니다.' },
-  ];
 
   return (
     <div className="about-page">
@@ -134,25 +145,25 @@ function About() {
       <section className="about-banner">
         <div className="about-banner-grid">
           <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80" alt="code" />
+            <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=700&q=80" alt="circuit traces" />
             <div className="about-banner-overlay">
               <span>Clean Code</span>
             </div>
           </motion.div>
           <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&q=80" alt="workspace" />
+            <img src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=700&q=80" alt="hardware components" />
             <div className="about-banner-overlay">
               <span>Dev Setup</span>
             </div>
           </motion.div>
           <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80" alt="monitor code" />
+            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=700&q=80" alt="motherboard chipset" />
             <div className="about-banner-overlay">
               <span>Build & Deploy</span>
             </div>
           </motion.div>
           <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }}>
-            <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80" alt="programming" />
+            <img src="https://images.unsplash.com/photo-1563770660941-20978e870e26?w=700&q=80" alt="ram memory module" />
             <div className="about-banner-overlay">
               <span>Problem Solving</span>
             </div>
@@ -190,10 +201,8 @@ function About() {
           </motion.div>
           <div className="values-grid">
             {values.map((val, i) => (
-              <motion.div key={i} className="value-card" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
-                <span className="value-num">{val.emoji}</span>
-                <h3>{val.title}</h3>
-                <p>{val.desc}</p>
+              <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
+                <ValueChip index={i} {...val} />
               </motion.div>
             ))}
           </div>
@@ -206,31 +215,22 @@ function About() {
           <motion.div className="section-header" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <span className="section-label">PROCESS</span>
             <h2 className="section-title">작업 프로세스</h2>
+            <p className="section-desc">상담부터 배포까지, 검증된 4단계 파이프라인</p>
           </motion.div>
-          <div className="about-process-grid">
-            {process.map((item, i) => (
-              <motion.div key={i} className="about-process-card" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
-                <span className="about-process-num">{item.num}</span>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+          <ProcessPipeline />
         </div>
       </section>
 
-      {/* CTA with Ball Pit Game */}
+      {/* CTA with Interactive Terminal */}
       <section className="about-cta">
         <div className="container">
           <motion.div className="section-header" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <span className="section-label">LET'S PLAY</span>
-            <h2 className="section-title">공을 구멍에 넣어보세요!</h2>
-            <p className="section-desc">마우스로 공을 밀어서 구멍에 넣어보세요. 클릭하면 더 세게!</p>
+            <span className="section-label">$ EXPLORE</span>
+            <h2 className="section-title">명령어로 둘러보세요</h2>
+            <p className="section-desc">직접 입력하거나 칩을 클릭해 Dev.Vibe를 탐색해보세요. <code>help</code> 부터 시작.</p>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <div className="game-wrapper">
-              <BallPitGame height={380} />
-            </div>
+            <DevTerminal />
           </motion.div>
 
           <motion.div className="cta-bottom" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>

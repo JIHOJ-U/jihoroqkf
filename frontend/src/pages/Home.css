@@ -204,6 +204,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(0.8) contrast(1.06);
+  transition: filter 0.5s ease;
+}
+
+.intro-img:hover img {
+  filter: saturate(1) contrast(1.06);
 }
 
 .intro-img--1 {
@@ -295,6 +301,33 @@
 /* ===== Services with shine effect ===== */
 .services-section {
   padding: 60px 0 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.services-accent {
+  position: absolute;
+  top: -80px;
+  right: -120px;
+  width: 480px;
+  height: 480px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.18;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+}
+
+.services-accent img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.6) contrast(1.1) hue-rotate(-10deg);
+}
+
+.services-section .container-wide {
+  position: relative;
+  z-index: 1;
 }
 
 .services-grid {
@@ -382,15 +415,21 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(0.7) contrast(1.1);
 }
 
 .banner-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(26, 26, 46, 0.85), rgba(15, 52, 96, 0.75));
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.35), rgba(15, 52, 96, 0.25));
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.banner-text h2,
+.banner-text p {
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
 }
 
 .banner-text {
@@ -630,9 +669,34 @@
   overflow: hidden;
 }
 
+.cta-bg-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+.cta-bg-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.5) contrast(1.1) hue-rotate(-15deg);
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(248, 247, 255, 0.55), rgba(240, 239, 255, 0.7));
+  z-index: 1;
+  pointer-events: none;
+}
+
 .cta-inner {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .cta-label {

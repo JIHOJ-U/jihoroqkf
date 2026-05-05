@@ -1,0 +1,306 @@
+.pipeline {
+  position: relative;
+  margin-top: 40px;
+}
+
+/* ===========================
+   Horizontal pipeline trace
+   =========================== */
+.pipeline__trace-wrap {
+  position: relative;
+  width: calc(100% - 60px);
+  margin: 0 auto 0;
+  height: 40px;
+  padding: 0;
+}
+
+.pipeline__trace {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.pipeline__trace-base {
+  stroke: rgba(99, 102, 241, 0.18);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+
+.pipeline__trace-active {
+  stroke: url(#pipeFlow);
+  stroke: #8b5cf6;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.55));
+  transition: x2 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.pipeline__node-outer {
+  fill: rgba(99, 102, 241, 0.1);
+  stroke: rgba(99, 102, 241, 0.4);
+  stroke-width: 1.5;
+  transition: fill 0.5s, stroke 0.5s;
+}
+
+.pipeline__node-outer.is-on {
+  fill: rgba(139, 92, 246, 0.25);
+  stroke: #a78bfa;
+  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.6));
+}
+
+.pipeline__node-inner {
+  fill: rgba(99, 102, 241, 0.5);
+  transition: fill 0.5s;
+}
+
+.pipeline__node-inner.is-on {
+  fill: #ffffff;
+}
+
+.pipeline__packet {
+  fill: #f0abfc;
+  filter: drop-shadow(0 0 6px #c4b5fd);
+}
+
+/* ===========================
+   Stage cards
+   =========================== */
+.pipeline__stages {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 0;
+}
+
+.pipe-card {
+  position: relative;
+  padding-top: 24px;
+}
+
+/* Connector between trace node and card */
+.pipe-card__connector {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.1));
+}
+
+.pipe-card__pulse {
+  display: none;
+}
+
+.pipe-card.is-active .pipe-card__connector {
+  background: linear-gradient(180deg, #a78bfa, rgba(99, 102, 241, 0.2));
+}
+
+.pipe-card__inner {
+  position: relative;
+  background:
+    radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.06), transparent 50%),
+    linear-gradient(160deg, #0f1320 0%, #181d2c 100%);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  border-radius: 12px;
+  padding: 20px 22px 22px;
+  color: #e0e7ff;
+  transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
+  overflow: hidden;
+}
+
+.pipe-card.is-active .pipe-card__inner {
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow:
+    0 18px 40px -15px rgba(139, 92, 246, 0.35),
+    0 0 0 1px rgba(139, 92, 246, 0.15);
+}
+
+.pipe-card__inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.pipe-card.is-active .pipe-card__inner::before {
+  opacity: 1;
+}
+
+/* Card header */
+.pipe-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(99, 102, 241, 0.2);
+}
+
+.pipe-card__model {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: rgba(167, 139, 250, 0.95);
+}
+
+.pipe-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.5s;
+}
+
+.pipe-card__status i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.pipe-card__status.is-on {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.pipe-card__status.is-on i {
+  background: #10b981;
+  box-shadow: 0 0 5px #10b981;
+  animation: pipe-blink 1.8s ease-in-out infinite;
+}
+
+@keyframes pipe-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ID row */
+.pipe-card__id-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.pipe-card__num {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.pipe-card__duration {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(196, 181, 253, 0.7);
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 3px;
+}
+
+.pipe-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 12px 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.pipe-card__desc {
+  font-size: 0.82rem;
+  color: rgba(224, 231, 255, 0.6);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+/* Task list */
+.pipe-card__tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(99, 102, 241, 0.15);
+}
+
+.pipe-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.72rem;
+  color: rgba(224, 231, 255, 0.7);
+}
+
+.pipe-task__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.5s, transform 0.5s;
+}
+
+.pipe-task__check.is-on {
+  color: #34d399;
+  transform: scale(1.05);
+}
+
+.pipe-task__label {
+  letter-spacing: 0.2px;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media (max-width: 1024px) {
+  .pipeline__trace-wrap {
+    display: none;
+  }
+
+  .pipeline__stages {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .pipe-card {
+    padding-top: 0;
+  }
+
+  .pipe-card__connector {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .pipeline__stages {
+    grid-template-columns: 1fr;
+  }
+
+  .pipe-card__num {
+    font-size: 2rem;
+  }
+}

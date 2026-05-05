@@ -6,6 +6,7 @@ import { getPortfolios, getImageUrl } from '../api';
 import Marquee from '../components/Marquee';
 import FloatingParticles from '../components/FloatingParticles';
 import InteractiveBalls from '../components/InteractiveBalls';
+import DeviceShowcase from '../components/DeviceShowcase';
 import './Home.css';
 
 const fadeUp = {
@@ -67,7 +68,7 @@ function Home() {
         <div className="hero-full__content">
           <motion.div className="hero-full__text" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}>
             <h1 className="hero-full__title">
-              JOE.DEV
+              Dev.Vibe
               <div className="hero-roller">
                 <div className="hero-roller__track" style={{ transform: `translateY(-${rollingIndex * 100}%)` }}>
                   {rollingWords.map((word, i) => (
@@ -127,10 +128,10 @@ function Home() {
             <motion.div className="intro-right" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <div className="intro-image-stack">
                 <div className="intro-img intro-img--1">
-                  <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&q=80" alt="coding workspace" />
+                  <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="circuit board macro" />
                 </div>
                 <div className="intro-img intro-img--2">
-                  <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=500&q=80" alt="design work" />
+                  <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80" alt="pcb detail" />
                 </div>
                 <div className="intro-img-deco" />
               </div>
@@ -141,6 +142,9 @@ function Home() {
 
       {/* Services */}
       <section className="services-section">
+        <div className="services-accent">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&q=80" alt="" aria-hidden="true" />
+        </div>
         <div className="container-wide">
           <motion.div className="section-header" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <span className="section-label">SERVICES</span>
@@ -161,10 +165,13 @@ function Home() {
         </div>
       </section>
 
+      {/* Device Showcase */}
+      <DeviceShowcase />
+
       {/* Featured Image Banner */}
       <section className="banner-section">
         <motion.div className="banner-inner" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1400&q=80" alt="development setup" />
+          <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1600&q=80" alt="hardware macro" />
           <div className="banner-overlay">
             <FloatingParticles count={10} colors={['#ffffff', '#c4b5fd', '#a78bfa']} />
             <div className="banner-text">
@@ -221,7 +228,7 @@ function Home() {
           ) : (
             <div className="works-empty">
               <div className="works-empty-img">
-                <img src="https://images.unsplash.com/photo-1522542550221-31fd8043e9d7?w=500&q=80" alt="start project" />
+                <img src="https://images.unsplash.com/photo-1597733336794-12d05021d510?w=500&q=80" alt="microchip" />
               </div>
               <h3>아직 등록된 프로젝트가 없습니다</h3>
               <p>첫 번째 포트폴리오를 등록해보세요.</p>
@@ -232,12 +239,15 @@ function Home() {
       </section>
 
       {/* Marquee 2 */}
-      <Marquee text="JOE.DEV  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  JOE.DEV  -  LET'S WORK TOGETHER" speed="slow" />
+      <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" />
 
       {/* CTA */}
       <section className="cta-section">
         <div className="container">
           <motion.div className="cta-box" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <div className="cta-bg-image">
+              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400&q=80" alt="" aria-hidden="true" />
+            </div>
             <FloatingParticles count={15} colors={['#6366f1', '#8b5cf6', '#c4b5fd', '#e0e7ff']} />
             <div className="cta-inner">
               <span className="cta-label">LET'S WORK TOGETHER</span>

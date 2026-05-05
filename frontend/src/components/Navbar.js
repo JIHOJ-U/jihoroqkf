@@ -29,7 +29,7 @@ function Navbar() {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${isHome && !scrolled ? 'navbar--overlay' : ''}`}>
       <div className="navbar-inner">
         <Link to="/" className="navbar-logo">
-          JOE.DEV
+          Dev.Vibe
         </Link>
 
         <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>

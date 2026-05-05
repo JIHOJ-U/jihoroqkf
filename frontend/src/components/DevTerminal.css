@@ -1,0 +1,262 @@
+.dev-terminal {
+  position: relative;
+  background: linear-gradient(160deg, #0d1117 0%, #161b26 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  overflow: hidden;
+  box-shadow:
+    0 30px 60px -20px rgba(15, 23, 42, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  font-family: 'JetBrains Mono', 'Courier New', 'Consolas', monospace;
+  color: #e0e7ff;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Header */
+.dev-terminal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #1a1f2e, #161b26);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.dev-terminal__lights {
+  display: flex;
+  gap: 7px;
+}
+
+.dev-terminal__lights span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dev-terminal__lights span:nth-child(1) { background: #ff5f57; }
+.dev-terminal__lights span:nth-child(2) { background: #febc2e; }
+.dev-terminal__lights span:nth-child(3) { background: #28c840; }
+
+.dev-terminal__title {
+  font-size: 0.75rem;
+  color: rgba(224, 231, 255, 0.55);
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+.dev-terminal__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: #34d399;
+  text-transform: uppercase;
+}
+
+.dev-terminal__status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: dt-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes dt-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Body */
+.dev-terminal__body {
+  height: 380px;
+  overflow-y: auto;
+  padding: 18px 22px 8px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  cursor: text;
+  scroll-behavior: smooth;
+}
+
+.dev-terminal__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dev-terminal__body::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 3px;
+}
+
+.dt-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.dt-line--boot {
+  color: rgba(196, 181, 253, 0.7);
+  font-size: 0.75rem;
+  animation: dt-fadein 0.3s ease-out;
+}
+
+.dt-line--input {
+  color: #ffffff;
+  margin-top: 4px;
+  animation: dt-fadein 0.2s ease-out;
+}
+
+.dt-line--output {
+  color: rgba(224, 231, 255, 0.85);
+  animation: dt-fadein 0.25s ease-out;
+}
+
+.dt-line--error {
+  color: #f87171;
+  animation: dt-fadein 0.2s ease-out;
+}
+
+@keyframes dt-fadein {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dt-prompt {
+  color: #a78bfa;
+  font-weight: 700;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.dt-prompt__sep {
+  color: rgba(167, 139, 250, 0.5);
+  font-weight: 400;
+}
+
+.dt-text {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+}
+
+/* Form / input */
+.dt-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  position: relative;
+}
+
+.dt-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  caret-color: transparent;
+  padding: 0;
+}
+
+.dt-cursor {
+  position: absolute;
+  left: 0;
+  width: 7px;
+  height: 14px;
+  background: #a78bfa;
+  pointer-events: none;
+  animation: dt-cursor 1s steps(2) infinite;
+  /* visually we let the input's text overlay; the cursor sits at the end via JS-free trick: use a sibling with no width and rely on caret. Simplify: hide for now. */
+  display: none;
+}
+
+@keyframes dt-cursor {
+  50% { opacity: 0; }
+}
+
+/* Use real caret instead — make input caret visible */
+.dt-input {
+  caret-color: #a78bfa;
+}
+
+/* Suggestion chips */
+.dev-terminal__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+  border-top: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.dev-terminal__chip-label {
+  font-size: 0.7rem;
+  color: rgba(196, 181, 253, 0.55);
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
+.dev-terminal__chip {
+  font-family: inherit;
+  font-size: 0.72rem;
+  padding: 5px 11px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: rgba(196, 181, 253, 0.95);
+  border-radius: 4px;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.dev-terminal__chip:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(167, 139, 250, 0.6);
+  transform: translateY(-1px);
+}
+
+.dev-terminal__chip:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dev-terminal__title {
+    display: none;
+  }
+
+  .dev-terminal__body {
+    height: 320px;
+    padding: 14px 16px 8px;
+    font-size: 0.75rem;
+  }
+
+  .dt-prompt {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dev-terminal__body {
+    font-size: 0.7rem;
+    height: 300px;
+  }
+
+  .dev-terminal__chips {
+    padding: 10px;
+  }
+
+  .dev-terminal__chip {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+}

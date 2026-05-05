@@ -11,7 +11,7 @@ function Footer() {
       <div className="footer-inner">
         <div className="footer-top">
           <div className="footer-brand">
-            <Link to="/" className="footer-logo">JOE.DEV</Link>
+            <Link to="/" className="footer-logo">Dev.Vibe</Link>
             <p className="footer-desc">
               아이디어를 현실로 만드는 개발 파트너.<br />
               웹, 앱, 시스템 개발 외주 전문.
@@ -50,7 +50,7 @@ function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2026 JOE.DEV All rights reserved.</p>
+          <p>&copy; 2026 Dev.Vibe All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -197,11 +197,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, filter 0.6s ease;
+  filter: saturate(0.75) contrast(1.08) brightness(0.92);
 }
 
 .about-banner-item:hover img {
   transform: scale(1.08);
+  filter: saturate(1) contrast(1.08) brightness(1);
 }
 
 .about-banner-overlay {
@@ -281,14 +283,44 @@
 
 /* ===== Values ===== */
 .values-section {
-  padding: 80px 0;
-  background: var(--bg-secondary);
+  padding: 100px 0;
+  background:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(99, 102, 241, 0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 80% 100%, rgba(139, 92, 246, 0.05), transparent 60%),
+    var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.values-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  pointer-events: none;
+}
+
+.values-section .container {
+  position: relative;
+  z-index: 1;
 }
 
 .values-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 .value-card {
@@ -348,7 +380,31 @@
 
 /* ===== Process ===== */
 .about-process-section {
-  padding: 80px 0;
+  padding: 100px 0 120px;
+  background:
+    radial-gradient(ellipse 700px 400px at 80% 0%, rgba(139, 92, 246, 0.05), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 20% 100%, rgba(99, 102, 241, 0.05), transparent 60%),
+    var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-process-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  pointer-events: none;
+}
+
+.about-process-section .container {
+  position: relative;
+  z-index: 1;
 }
 
 .about-process-grid {
@@ -399,9 +455,42 @@
   line-height: 1.6;
 }
 
-/* ===== CTA with Game ===== */
+/* ===== CTA with Terminal ===== */
 .about-cta {
-  padding: 80px 0;
+  padding: 100px 0 120px;
+  background:
+    radial-gradient(ellipse 800px 500px at 50% 100%, rgba(99, 102, 241, 0.06), transparent 60%),
+    var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+.about-cta .container {
+  position: relative;
+  z-index: 1;
+}
+
+.about-cta .section-desc code {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.85em;
+  padding: 2px 8px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #6366f1;
+  border-radius: 4px;
 }
 
 .game-wrapper {

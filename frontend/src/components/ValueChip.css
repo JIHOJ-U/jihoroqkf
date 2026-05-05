@@ -1,0 +1,295 @@
+.value-chip {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+
+  position: relative;
+  background:
+    radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.12), transparent 50%),
+    linear-gradient(140deg, #0d1117 0%, #161b26 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 14px;
+  padding: 28px 32px 24px;
+  overflow: hidden;
+  transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.18s ease-out, border-color 0.4s, box-shadow 0.4s;
+  color: #e0e7ff;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  will-change: transform;
+}
+
+.value-chip:hover {
+  border-color: rgba(99, 102, 241, 0.55);
+  box-shadow:
+    0 25px 60px -15px rgba(99, 102, 241, 0.4),
+    0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+
+.value-chip__spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    420px circle at var(--mouse-x) var(--mouse-y),
+    rgba(139, 92, 246, 0.22),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.value-chip:hover .value-chip__spotlight {
+  opacity: 1;
+}
+
+/* IC chip pin markers */
+.value-chip__pins {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.value-chip__pins--left { left: -1px; }
+.value-chip__pins--right { right: -1px; }
+
+.value-chip__pins span {
+  width: 9px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.7), rgba(99, 102, 241, 0.2));
+  border-radius: 1px;
+}
+
+.value-chip__pins--right span {
+  align-self: flex-end;
+  background: linear-gradient(270deg, rgba(99, 102, 241, 0.7), rgba(99, 102, 241, 0.2));
+}
+
+/* Header bar */
+.value-chip__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(99, 102, 241, 0.25);
+  position: relative;
+  z-index: 2;
+}
+
+.value-chip__model {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: rgba(167, 139, 250, 0.95);
+}
+
+.value-chip__lights {
+  display: flex;
+  gap: 6px;
+}
+
+.value-chip__light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.value-chip__light--red {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+}
+
+.value-chip__light--yellow {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.value-chip__light--green {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+  animation: chip-pulse 2s ease-in-out infinite;
+}
+
+@keyframes chip-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Body */
+.value-chip__body {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.value-chip__index {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.72rem;
+  color: rgba(196, 181, 253, 0.6);
+  letter-spacing: 1.2px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.value-chip__title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  min-height: 1.4em;
+}
+
+.value-chip__desc {
+  font-size: 0.92rem;
+  color: rgba(224, 231, 255, 0.65);
+  line-height: 1.75;
+}
+
+/* Footer (meter + tags) */
+.value-chip__footer {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+  margin-top: 24px;
+}
+
+/* Calibration dial */
+.value-chip__meter {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-chip__dial {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.value-chip__dial-track {
+  fill: none;
+  stroke: rgba(99, 102, 241, 0.18);
+  stroke-width: 3;
+}
+
+.value-chip__dial-fill {
+  fill: none;
+  stroke: #8b5cf6;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.6));
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.value-chip__meter-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Courier New', 'Consolas', monospace;
+  line-height: 1.1;
+}
+
+.value-chip__meter-label {
+  font-size: 0.5rem;
+  color: rgba(224, 231, 255, 0.5);
+  letter-spacing: 1.2px;
+}
+
+.value-chip__meter-value {
+  font-size: 0.85rem;
+  color: #c4b5fd;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* Capability tags */
+.value-chip__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+}
+
+.value-chip__tag {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.65rem;
+  padding: 4px 10px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: rgba(196, 181, 253, 0.95);
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Animated circuit traces */
+.value-chip__trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.value-chip__trace path {
+  fill: none;
+  stroke: rgba(99, 102, 241, 0.5);
+  stroke-width: 1;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 2.2s ease-out 0.3s;
+}
+
+.value-chip.in-view .value-chip__trace path {
+  stroke-dashoffset: 0;
+}
+
+.value-chip__trace circle {
+  fill: rgba(139, 92, 246, 0.7);
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.value-chip.in-view .value-chip__trace circle {
+  opacity: 1;
+  transition-delay: 1.8s;
+}
+
+@media (max-width: 1024px) {
+  .value-chip {
+    min-height: auto;
+    padding: 24px 24px 20px;
+  }
+
+  .value-chip__title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .value-chip {
+    transform: none !important;
+  }
+}
