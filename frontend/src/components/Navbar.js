@@ -28,7 +28,7 @@ function Navbar() {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${isHome && !scrolled ? 'navbar--overlay' : ''}`}>
       <div className="navbar-inner">
-        <Link to="/" className="navbar-logo">
+        <Link to="/" className="navbar-logo" translate="no">
           Dev.Vibe
         </Link>
 

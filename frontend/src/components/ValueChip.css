@@ -291,5 +291,61 @@
 @media (max-width: 768px) {
   .value-chip {
     transform: none !important;
+    padding: 22px 22px 18px;
+    min-height: auto;
+  }
+
+  .value-chip__title {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+
+  .value-chip__desc {
+    font-size: 0.85rem;
+  }
+
+  .value-chip__footer {
+    margin-top: 18px;
+    gap: 12px;
+  }
+
+  .value-chip__meter {
+    width: 56px;
+    height: 56px;
+  }
+
+  .value-chip__pins {
+    gap: 10px;
+  }
+
+  .value-chip__pins span {
+    width: 7px;
+  }
+}
+
+@media (max-width: 480px) {
+  .value-chip {
+    padding: 20px 18px 16px;
+  }
+
+  .value-chip__header {
+    margin-bottom: 22px;
+  }
+
+  .value-chip__model {
+    font-size: 0.62rem;
+  }
+
+  .value-chip__title {
+    font-size: 1.25rem;
+  }
+
+  .value-chip__index {
+    font-size: 0.65rem;
+  }
+
+  .value-chip__tag {
+    font-size: 0.6rem;
+    padding: 3px 8px;
   }
 }

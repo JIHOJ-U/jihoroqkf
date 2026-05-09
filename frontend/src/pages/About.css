@@ -541,9 +541,13 @@
 }
 
 @media (max-width: 768px) {
+  .about-hero {
+    padding: 110px 0 40px;
+  }
+
   .about-hero-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 32px;
   }
 
   .about-hero-photo {
@@ -551,23 +555,143 @@
   }
 
   .photo-frame {
-    width: 260px;
-    height: 320px;
+    width: 240px;
+    height: 300px;
+  }
+
+  .photo-deco--1 {
+    top: 8px;
+    left: 8px;
+  }
+
+  .photo-deco--2 {
+    width: 60px;
+    height: 60px;
+    top: -14px;
+    right: -10px;
+  }
+
+  .about-desc {
+    font-size: 0.95rem;
+    margin-bottom: 28px;
   }
 
   .about-stats {
-    gap: 28px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .about-stat-num {
+    font-size: 1.7rem;
+  }
+
+  .about-stat-label {
+    font-size: 0.78rem;
+  }
+
+  .about-banner {
+    padding: 10px 0 40px;
+  }
+
+  .about-banner-overlay {
+    opacity: 1;
+    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+    align-items: flex-end;
+    padding-bottom: 12px;
+  }
+
+  .about-banner-overlay span {
+    font-size: 0.72rem;
+    letter-spacing: 1.4px;
+  }
+
+  .skills-section {
+    padding: 60px 0;
   }
 
   .skills-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
 
-  .values-grid, .about-process-grid {
+  .skill-item {
+    padding: 18px 8px;
+    gap: 8px;
+  }
+
+  .skill-icon {
+    font-size: 1.5rem;
+  }
+
+  .skill-name {
+    font-size: 0.68rem;
+  }
+
+  .values-section,
+  .about-process-section,
+  .about-cta {
+    padding: 70px 0;
+  }
+
+  .values-grid {
     grid-template-columns: 1fr;
+  }
+
+  .about-process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-bottom h3 {
+    font-size: 1.3rem;
+  }
+
+  .cta-bottom p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-hero {
+    padding: 100px 0 30px;
+  }
+
+  .about-title {
+    font-size: clamp(1.6rem, 8vw, 2rem);
+    margin-bottom: 16px;
+  }
+
+  .photo-frame {
+    width: 200px;
+    height: 260px;
+  }
+
+  .photo-deco--2 {
+    width: 50px;
+    height: 50px;
+  }
+
+  .about-stats {
+    gap: 20px;
   }
 
   .about-banner-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  }
+
+  .skill-item {
+    padding: 14px 6px;
+  }
+
+  .skill-icon {
+    font-size: 1.3rem;
+  }
+
+  .skill-name {
+    font-size: 0.62rem;
+    letter-spacing: 0.1px;
   }
 }

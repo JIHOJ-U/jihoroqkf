@@ -68,7 +68,7 @@ function Home() {
         <div className="hero-full__content">
           <motion.div className="hero-full__text" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}>
             <h1 className="hero-full__title">
-              Dev.Vibe
+              <span translate="no">Dev.Vibe</span>
               <div className="hero-roller">
                 <div className="hero-roller__track" style={{ transform: `translateY(-${rollingIndex * 100}%)` }}>
                   {rollingWords.map((word, i) => (
@@ -239,7 +239,7 @@ function Home() {
       </section>
 
       {/* Marquee 2 */}
-      <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" />
+      <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" noTranslate />
 
       {/* CTA */}
       <section className="cta-section">

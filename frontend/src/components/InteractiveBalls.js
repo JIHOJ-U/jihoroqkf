@@ -17,6 +17,10 @@ function InteractiveBalls({ count = 15 }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
+    const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+    const effectiveCount = isSmallScreen ? Math.max(6, Math.floor(count * 0.55)) : count;
+    const radiusScale = isSmallScreen ? 0.7 : 1;
+
     const resize = () => {
       canvas.width = canvas.parentElement.offsetWidth;
       canvas.height = canvas.parentElement.offsetHeight;
@@ -26,8 +30,8 @@ function InteractiveBalls({ count = 15 }) {
 
     // Create balls
     const balls = [];
-    for (let i = 0; i < count; i++) {
-      const radius = Math.random() * 25 + 12;
+    for (let i = 0; i < effectiveCount; i++) {
+      const radius = (Math.random() * 25 + 12) * radiusScale;
       balls.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -41,21 +45,29 @@ function InteractiveBalls({ count = 15 }) {
     }
     ballsRef.current = balls;
 
-    // Mouse events
-    const handleMouseMove = (e) => {
+    // Pointer events (mouse + touch)
+    const updatePointer = (clientX, clientY) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: clientX - rect.left,
+        y: clientY - rect.top,
       };
     };
 
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000 };
+    const handleMouseMove = (e) => updatePointer(e.clientX, e.clientY);
+    const handleMouseLeave = () => { mouseRef.current = { x: -1000, y: -1000 }; };
+    const handleTouch = (e) => {
+      if (e.touches && e.touches[0]) {
+        updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
+    const handleTouchEnd = () => { mouseRef.current = { x: -1000, y: -1000 }; };
 
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('touchmove', handleTouch, { passive: true });
+    canvas.addEventListener('touchstart', handleTouch, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd);
 
     // Animation loop
     const animate = () => {
@@ -176,6 +188,9 @@ function InteractiveBalls({ count = 15 }) {
       window.removeEventListener('resize', resize);
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchmove', handleTouch);
+      canvas.removeEventListener('touchstart', handleTouch);
+      canvas.removeEventListener('touchend', handleTouchEnd);
       if (animRef.current) cancelAnimationFrame(animRef.current);
     };
   }, [count]);

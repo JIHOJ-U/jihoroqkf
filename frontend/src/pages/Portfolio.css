@@ -229,6 +229,10 @@
 }
 
 @media (max-width: 768px) {
+  .portfolio-hero {
+    padding: 110px 0 30px;
+  }
+
   .portfolio-grid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -238,15 +242,26 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+    margin-bottom: 28px;
   }
 
   .filter-tabs {
     flex-wrap: wrap;
+    gap: 4px;
   }
 
   .filter-tab {
     padding: 6px 14px;
     font-size: 0.8rem;
+  }
+
+  .filter-tab.active::after {
+    display: none;
+  }
+
+  .filter-tab.active {
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: 6px;
   }
 
   .portfolio-meta {
@@ -267,5 +282,20 @@
 
   .portfolio-name {
     font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-hero {
+    padding: 100px 0 24px;
+  }
+
+  .portfolio-title {
+    font-size: clamp(1.6rem, 8vw, 2.2rem);
+  }
+
+  .btn-add {
+    width: 100%;
+    justify-content: center;
   }
 }

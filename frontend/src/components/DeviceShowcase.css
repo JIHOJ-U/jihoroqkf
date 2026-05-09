@@ -518,6 +518,14 @@
    RESPONSIVE
    =========================== */
 @media (max-width: 1024px) {
+  .devices-section {
+    padding: 100px 0 120px;
+  }
+
+  .devices-header {
+    margin-bottom: 50px;
+  }
+
   .devices-stage {
     height: auto;
     flex-direction: column;
@@ -540,11 +548,70 @@
 
 @media (max-width: 640px) {
   .devices-section {
-    padding: 80px 0 100px;
+    padding: 70px 0 90px;
+  }
+
+  .devices-header {
+    margin-bottom: 40px;
+  }
+
+  .devices-stage {
+    padding: 0;
+  }
+
+  .device-laptop {
+    max-width: 100%;
+  }
+
+  .device-laptop__screen {
+    padding: 14px 10px 22px;
+  }
+
+  .laptop-window__url {
+    font-size: 0.6rem;
+    padding: 4px 10px;
+  }
+
+  .laptop-window__bar {
+    padding: 8px 10px;
+  }
+
+  .laptop-window__lights span {
+    width: 9px;
+    height: 9px;
   }
 
   .device-phone {
     width: 200px;
-    margin-top: -80px;
+    margin-top: -70px;
+  }
+
+  .device-phone__notch {
+    width: 76px;
+    height: 18px;
+    top: 12px;
+  }
+
+  .device-phone__screen {
+    padding: 32px 12px 12px;
+  }
+
+  .phone-app__terminal {
+    font-size: 0.5rem;
+    padding: 8px;
+  }
+
+  .phone-metric__value {
+    font-size: 0.62rem;
+  }
+
+  .phone-metric__label {
+    font-size: 0.4rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .device-phone {
+    width: 180px;
   }
 }
