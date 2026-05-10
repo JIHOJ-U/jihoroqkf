@@ -31,7 +31,6 @@ services:
   - type: web
     name: devvibe-web
     runtime: static
-    region: singapore
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: ./build
