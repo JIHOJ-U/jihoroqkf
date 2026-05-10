@@ -19,6 +19,12 @@
   max-width: 500px;
 }
 
+.contact-quote-section {
+  padding: 20px 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
 .contact-content {
   padding: 20px 0;
 }
@@ -117,6 +123,12 @@
   color: var(--text-secondary);
 }
 
+.info-with-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .info-item span {
   font-size: 0.78rem;
   color: var(--text-muted);
@@ -168,6 +180,40 @@
   margin-bottom: 28px;
 }
 
+/* Form errors */
+.form-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #ef4444;
+  font-weight: 500;
+  animation: error-shake 0.4s ease;
+}
+
+.form-error svg {
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+input.has-error,
+textarea.has-error {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.03);
+}
+
+input.has-error:focus,
+textarea.has-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
 @media (max-width: 1024px) {
   .contact-grid {
     grid-template-columns: 1fr;
@@ -202,6 +248,35 @@
 
   .contact-form input,
   .contact-form textarea {
-    font-size: 0.95rem;
+    font-size: 16px; /* iOS auto-zoom 방지 */
+  }
+
+  .contact-hero {
+    padding: 100px 0 24px;
+  }
+
+  .contact-title {
+    font-size: clamp(1.6rem, 8vw, 2.2rem);
+  }
+
+  .info-item {
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .info-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 1rem;
+  }
+
+  .type-option {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+  }
+
+  .success-state {
+    padding: 80px 24px;
   }
 }

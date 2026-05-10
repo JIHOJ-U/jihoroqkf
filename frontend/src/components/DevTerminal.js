@@ -63,8 +63,8 @@ const COMMANDS = {
     '└───────────────────┘',
   ],
   contact: () => [
-    '✉  email   : hello@joe.dev',
-    '☎  phone   : 010-0000-0000',
+    '✉  email   : roqkfwkwlgh@naver.com',
+    '☎  phone   : 010-8975-2847',
     '⌨  github  : github.com/JIHOJ-U/JIHOJ-U',
     '',
     '→ 또는 /contact 페이지에서 폼 제출',

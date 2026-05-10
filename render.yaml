@@ -1,0 +1,52 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+# 1) Render dashboard → New → Blueprint → Connect this repo
+# 2) Render reads this file and creates services automatically
+
+services:
+  # ============ Backend API ============
+  - type: web
+    name: devvibe-api
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: NODE_ENV
+        value: production
+      - key: GITHUB_USERNAME
+        value: JIHOJ-U
+      - key: NAVER_BLOG_ID
+        value: longnight0719
+      # Set in Render dashboard manually (sensitive):
+      # - NOTIFY_WEBHOOK_URL
+      # - ALLOWED_ORIGINS  (e.g. https://devvibe.onrender.com)
+
+  # ============ Frontend (Static Site) ============
+  - type: web
+    name: devvibe-web
+    runtime: static
+    region: singapore
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    autoDeploy: true
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://devvibe-api.onrender.com

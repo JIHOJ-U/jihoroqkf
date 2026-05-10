@@ -1,0 +1,102 @@
+.konami-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #000;
+  overflow: hidden;
+}
+
+.konami-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.konami-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  color: #a7f3d0;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  padding: 32px 48px;
+  box-shadow: 0 0 60px rgba(16, 185, 129, 0.5);
+}
+
+.konami-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #10b981;
+  text-shadow: 0 0 20px #10b981;
+  margin-bottom: 12px;
+  animation: konami-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes konami-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.konami-sub {
+  font-size: 0.9rem;
+  color: #6ee7b7;
+  letter-spacing: 8px;
+  margin-bottom: 24px;
+  opacity: 0.7;
+}
+
+.konami-text {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.konami-text .prompt {
+  color: #a7f3d0;
+  font-weight: 700;
+}
+
+.konami-text .typed {
+  color: #fff;
+}
+
+.konami-text .dim {
+  color: #6ee7b7;
+  opacity: 0.7;
+}
+
+.konami-exit {
+  margin-top: 24px;
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid #10b981;
+  color: #10b981;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.konami-exit:hover {
+  background: #10b981;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .konami-message {
+    padding: 24px 28px;
+  }
+  .konami-title {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+  }
+}

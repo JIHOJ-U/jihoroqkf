@@ -1,5 +1,46 @@
 .portfolio-page {
   padding-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 700px 400px at 8% 12%, rgba(99, 102, 241, 0.1), transparent 60%),
+    radial-gradient(ellipse 600px 500px at 92% 30%, rgba(236, 72, 153, 0.08), transparent 60%),
+    radial-gradient(ellipse 500px 400px at 50% 95%, rgba(34, 211, 238, 0.08), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+}
+
+.portfolio-bg-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.portfolio-symbol {
+  position: absolute;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: rgba(99, 102, 241, 0.28);
+  user-select: none;
+  animation: portfolio-symbol-anim 22s ease-in-out infinite;
+}
+
+.portfolio-symbol--1 { top: 8%; right: 8%; font-size: 4.5rem; }
+.portfolio-symbol--2 { top: 35%; left: 5%; font-size: 3.5rem; color: rgba(236, 72, 153, 0.3); animation-delay: -4s; }
+.portfolio-symbol--3 { top: 60%; right: 5%; font-size: 5rem; color: rgba(34, 211, 238, 0.28); animation-delay: -8s; }
+.portfolio-symbol--4 { bottom: 18%; left: 10%; font-size: 3rem; color: rgba(245, 158, 11, 0.3); animation-delay: -12s; }
+.portfolio-symbol--5 { bottom: 5%; right: 14%; font-size: 4rem; color: rgba(16, 185, 129, 0.28); animation-delay: -16s; }
+
+@keyframes portfolio-symbol-anim {
+  0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+  33% { transform: translate(20px, -25px) rotate(3deg); }
+  66% { transform: translate(-15px, -40px) rotate(-4deg); }
+}
+
+.portfolio-page > section {
+  position: relative;
+  z-index: 1;
 }
 
 .portfolio-hero {

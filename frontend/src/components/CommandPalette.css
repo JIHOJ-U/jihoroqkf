@@ -1,0 +1,221 @@
+.cmdk-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 20, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 99998;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh 20px 0;
+}
+
+.cmdk-modal {
+  width: 100%;
+  max-width: 600px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border, #e8e8e8);
+  border-radius: 12px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+
+:root[data-theme="dark"] .cmdk-modal {
+  background: #1a1d29;
+  border-color: #2a2f3d;
+}
+
+/* Input */
+.cmdk-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border-light, #f0f0f0);
+}
+
+:root[data-theme="dark"] .cmdk-input-wrap {
+  border-bottom-color: #232732;
+}
+
+.cmdk-search-icon {
+  font-size: 1.25rem;
+  color: var(--text-muted, #999);
+  flex-shrink: 0;
+}
+
+.cmdk-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--text-primary, #1a1a1a);
+  background: transparent;
+  font-family: inherit;
+}
+
+.cmdk-input::placeholder {
+  color: var(--text-muted, #999);
+}
+
+.cmdk-esc {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: var(--bg-secondary, #f8f8f8);
+  border: 1px solid var(--border, #e8e8e8);
+  border-radius: 4px;
+  color: var(--text-muted, #999);
+}
+
+:root[data-theme="dark"] .cmdk-esc {
+  background: #232732;
+  border-color: #2a2f3d;
+}
+
+/* List */
+.cmdk-list {
+  overflow-y: auto;
+  padding: 8px;
+  flex: 1;
+}
+
+.cmdk-group {
+  margin-bottom: 8px;
+}
+
+.cmdk-group-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-muted, #999);
+  padding: 8px 12px 6px;
+  text-transform: uppercase;
+}
+
+.cmdk-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.1s ease;
+}
+
+.cmdk-item.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.06));
+}
+
+:root[data-theme="dark"] .cmdk-item.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(139, 92, 246, 0.1));
+}
+
+.cmdk-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary, #f8f8f8);
+  border-radius: 6px;
+  color: #6366f1;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+:root[data-theme="dark"] .cmdk-icon {
+  background: #232732;
+}
+
+.cmdk-item.active .cmdk-icon {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.cmdk-label {
+  flex: 1;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.cmdk-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted, #999);
+  font-family: 'Courier New', monospace;
+}
+
+.cmdk-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted, #999);
+  font-size: 0.9rem;
+}
+
+.cmdk-empty strong {
+  color: #6366f1;
+}
+
+/* Footer */
+.cmdk-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--border-light, #f0f0f0);
+  background: var(--bg-secondary, #f8f8f8);
+  font-size: 0.72rem;
+  color: var(--text-muted, #999);
+}
+
+:root[data-theme="dark"] .cmdk-footer {
+  border-top-color: #232732;
+  background: #161922;
+}
+
+.cmdk-footer-right {
+  margin-left: auto;
+}
+
+.cmdk-footer kbd {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: var(--bg-card, white);
+  border: 1px solid var(--border, #e8e8e8);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  margin: 0 2px;
+}
+
+:root[data-theme="dark"] .cmdk-footer kbd {
+  background: #1a1d29;
+  border-color: #2a2f3d;
+}
+
+@media (max-width: 768px) {
+  .cmdk-overlay {
+    padding: 5vh 12px 0;
+  }
+  .cmdk-modal {
+    max-height: 85vh;
+  }
+  .cmdk-footer {
+    font-size: 0.65rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cmdk-hint {
+    display: none;
+  }
+}

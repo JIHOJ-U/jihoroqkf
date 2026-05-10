@@ -1,36 +1,85 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CursorFollower from './components/CursorFollower';
+import ScrollToTop from './components/ScrollToTop';
+import CommandPalette from './components/CommandPalette';
+import KonamiCode from './components/KonamiCode';
+import CmdKHint from './components/CmdKHint';
+import ReadingProgress from './components/ReadingProgress';
+import AchievementToast from './components/AchievementToast';
+import ExplorerSidebar from './components/ExplorerSidebar';
+import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
 import PortfolioDetail from './pages/PortfolioDetail';
 import PortfolioForm from './pages/PortfolioForm';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import Admin from './pages/Admin';
+import Privacy from './pages/Privacy';
+import Terminal from './pages/Terminal';
+import NotFound from './pages/NotFound';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { AchievementProvider } from './contexts/AchievementContext';
+import { printConsoleWelcome } from './utils/consoleMessage';
+import { registerServiceWorker } from './utils/registerSW';
 import './App.css';
 
-function App() {
+function AnimatedRoutes() {
+  const location = useLocation();
   return (
-    <Router>
-      <div className="App">
-        <CursorFollower />
-        <Navbar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/portfolio/:id" element={<PortfolioDetail />} />
-            <Route path="/portfolio/new" element={<PortfolioForm />} />
-            <Route path="/portfolio/edit/:id" element={<PortfolioForm />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        <Route path="/portfolio" element={<PageTransition><Portfolio /></PageTransition>} />
+        <Route path="/portfolio/:id" element={<PageTransition><PortfolioDetail /></PageTransition>} />
+        <Route path="/portfolio/new" element={<PageTransition><PortfolioForm /></PageTransition>} />
+        <Route path="/portfolio/edit/:id" element={<PageTransition><PortfolioForm /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+        <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+        <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
+        <Route path="/terminal" element={<PageTransition><Terminal /></PageTransition>} />
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  useEffect(() => {
+    printConsoleWelcome();
+    registerServiceWorker();
+  }, []);
+
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <AchievementProvider>
+          <Router>
+            <ScrollToTop />
+            <ReadingProgress />
+            <div className="App">
+              <CursorFollower />
+              <CommandPalette />
+              <KonamiCode />
+              <CmdKHint />
+              <AchievementToast />
+              <ExplorerSidebar />
+              <Navbar />
+              <main className="main-content">
+                <AnimatedRoutes />
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </AchievementProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

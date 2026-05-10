@@ -1,3 +1,19 @@
+.cursor-trail {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  filter: blur(0.5px);
+  mix-blend-mode: screen;
+  transition: opacity 0.3s ease;
+}
+
+@media (max-width: 768px), (hover: none) {
+  .cursor-trail {
+    display: none;
+  }
+}
+
 .cursor-dot,
 .cursor-ring {
   position: fixed;

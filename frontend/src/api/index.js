@@ -21,6 +21,10 @@ export const deletePortfolio = (id) => api.delete(`/portfolios/${id}`);
 export const submitInquiry = (data) => api.post('/inquiries', data);
 export const getInquiries = () => api.get('/inquiries');
 
+// GitHub & Blog
+export const getGithubStats = () => api.get('/github/stats');
+export const getBlogPosts = () => api.get('/blog/posts');
+
 export const API_BASE = API_URL;
 
 export const getImageUrl = (thumbnail) => {

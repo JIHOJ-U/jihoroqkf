@@ -63,15 +63,26 @@ function BallPitGame({ width = 800, height = 350 }) {
     ballsRef.current = balls;
     scoreRef.current = 0;
 
-    // Mouse
-    const handleMouseMove = (e) => {
+    // Mouse + Touch
+    const setPointer = (clientX, clientY) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.x = clientX - rect.left;
+      mouseRef.current.y = clientY - rect.top;
     };
+    const handleMouseMove = (e) => setPointer(e.clientX, e.clientY);
     const handleMouseDown = () => { mouseRef.current.down = true; };
     const handleMouseUp = () => { mouseRef.current.down = false; };
     const handleMouseLeave = () => {
+      mouseRef.current = { x: -1000, y: -1000, down: false };
+    };
+    const handleTouchStart = (e) => {
+      mouseRef.current.down = true;
+      if (e.touches && e.touches[0]) setPointer(e.touches[0].clientX, e.touches[0].clientY);
+    };
+    const handleTouchMove = (e) => {
+      if (e.touches && e.touches[0]) setPointer(e.touches[0].clientX, e.touches[0].clientY);
+    };
+    const handleTouchEnd = () => {
       mouseRef.current = { x: -1000, y: -1000, down: false };
     };
 
@@ -79,6 +90,9 @@ function BallPitGame({ width = 800, height = 350 }) {
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mouseup', handleMouseUp);
     canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd);
 
     // Spawn new balls periodically
     const spawnInterval = setInterval(() => {
@@ -280,6 +294,9 @@ function BallPitGame({ width = 800, height = 350 }) {
       canvas.removeEventListener('mousedown', handleMouseDown);
       canvas.removeEventListener('mouseup', handleMouseUp);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', handleResize);
       clearInterval(spawnInterval);
       if (animRef.current) cancelAnimationFrame(animRef.current);

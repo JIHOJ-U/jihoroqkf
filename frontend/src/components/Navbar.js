@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HiMenuAlt3, HiX } from 'react-icons/hi';
+import { HiMenuAlt3, HiX, HiSun, HiMoon } from 'react-icons/hi';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { useAchievement } from '../contexts/AchievementContext';
 import './Navbar.css';
 
 function Navbar() {
@@ -8,6 +11,9 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const { lang, setLang, t } = useLanguage();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const { unlock } = useAchievement();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -20,9 +26,9 @@ function Navbar() {
   }, [location]);
 
   const navLinks = [
-    { path: '/portfolio', label: 'PORTFOLIO' },
-    { path: '/about', label: 'ABOUT' },
-    { path: '/contact', label: 'CONTACT' },
+    { path: '/portfolio', label: t.nav.portfolio },
+    { path: '/about', label: t.nav.about },
+    { path: '/contact', label: t.nav.contact },
   ];
 
   return (
@@ -42,6 +48,33 @@ function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          <div className="lang-toggle">
+            <button
+              className={`lang-btn ${lang === 'ko' ? 'active' : ''}`}
+              onClick={() => { setLang('ko'); unlock('LANG_SWITCHED'); }}
+              aria-label="한국어"
+            >
+              KR
+            </button>
+            <span className="lang-divider">|</span>
+            <button
+              className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+              onClick={() => { setLang('en'); unlock('LANG_SWITCHED'); }}
+              aria-label="English"
+            >
+              EN
+            </button>
+          </div>
+
+          <button
+            className="theme-toggle"
+            onClick={() => { toggleTheme(); unlock('THEME_TOGGLED'); }}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          >
+            {theme === 'dark' ? <HiSun /> : <HiMoon />}
+          </button>
         </div>
 
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>

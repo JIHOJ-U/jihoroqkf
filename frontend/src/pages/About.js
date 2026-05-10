@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { HiArrowRight, HiUpload } from 'react-icons/hi';
+import { HiArrowRight, HiUpload, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { FaReact, FaNodeJs, FaPython, FaDocker, FaAws, FaFigma, FaVuejs, FaGitAlt, FaHtml5, FaCss3Alt, FaJava, FaNpm } from 'react-icons/fa';
 import { SiTypescript, SiNextdotjs, SiMongodb, SiPostgresql, SiFlutter, SiTailwindcss, SiRedis, SiGraphql, SiFirebase, SiVercel, SiJavascript, SiMysql, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
 import FloatingParticles from '../components/FloatingParticles';
 import ValueChip from '../components/ValueChip';
 import ProcessPipeline from '../components/ProcessPipeline';
 import DevTerminal from '../components/DevTerminal';
+import GithubPanel from '../components/GithubPanel';
+import BlogPanel from '../components/BlogPanel';
+import { useAchievement, ACHIEVEMENTS } from '../contexts/AchievementContext';
 import './About.css';
 
 const fadeUp = {
@@ -18,17 +21,35 @@ const fadeUp = {
   })
 };
 
+const PROFILE_IMAGES = ['/jiho.jpg', '/jiho2.jpg'];
+
 function About() {
-  const [profileImage, setProfileImage] = useState(null);
+  const [extraImages, setExtraImages] = useState([]);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const { unlocked, totalCount, unlockedCount } = useAchievement();
+
+  const allImages = [...PROFILE_IMAGES, ...extraImages];
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => setProfileImage(event.target.result);
+      reader.onload = (event) => setExtraImages(prev => [...prev, event.target.result]);
       reader.readAsDataURL(file);
     }
   };
+
+  // Auto slide every 4s
+  useEffect(() => {
+    if (allImages.length <= 1) return;
+    const timer = setInterval(() => {
+      setSlideIndex(i => (i + 1) % allImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [allImages.length]);
+
+  const goPrev = () => setSlideIndex(i => (i - 1 + allImages.length) % allImages.length);
+  const goNext = () => setSlideIndex(i => (i + 1) % allImages.length);
 
   const skills = [
     { icon: <SiJavascript />, name: 'JavaScript', color: '#F7DF1E' },
@@ -84,6 +105,16 @@ function About() {
 
   return (
     <div className="about-page">
+      {/* Background symbols */}
+      <div className="about-bg-symbols" aria-hidden="true">
+        <span className="code-symbol">{'</>'}</span>
+        <span className="code-symbol">{'{ }'}</span>
+        <span className="code-symbol">{'=>'}</span>
+        <span className="code-symbol">{'[ ]'}</span>
+        <span className="code-symbol">{'< />'}</span>
+        <span className="code-symbol">{'( )'}</span>
+      </div>
+
       {/* Hero with photo */}
       <section className="about-hero">
         <div className="container">
@@ -115,24 +146,53 @@ function About() {
 
             <motion.div className="about-hero-photo" variants={fadeUp} initial="hidden" animate="visible" custom={2}>
               <div className="photo-frame">
-                {profileImage ? (
-                  <img src={profileImage} alt="프로필" className="photo-img" />
-                ) : (
-                  <div className="photo-placeholder">
-                    <label className="photo-upload-label">
-                      <HiUpload className="photo-upload-icon" />
-                      <span>프로필 사진 등록</span>
-                      <span className="photo-upload-hint">클릭하여 업로드</span>
-                      <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
-                    </label>
-                  </div>
-                )}
-                {profileImage && (
-                  <label className="photo-change">
-                    사진 변경
-                    <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
-                  </label>
-                )}
+                <div className="photo-slider">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={slideIndex}
+                      src={allImages[slideIndex]}
+                      alt={`프로필 ${slideIndex + 1}`}
+                      className="photo-img"
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.97 }}
+                      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                    />
+                  </AnimatePresence>
+
+                  {allImages.length > 1 && (
+                    <>
+                      <button type="button" className="photo-nav photo-nav--prev" onClick={goPrev} aria-label="이전">
+                        <HiChevronLeft />
+                      </button>
+                      <button type="button" className="photo-nav photo-nav--next" onClick={goNext} aria-label="다음">
+                        <HiChevronRight />
+                      </button>
+
+                      <div className="photo-dots">
+                        {allImages.map((_, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            className={`photo-dot ${i === slideIndex ? 'active' : ''}`}
+                            onClick={() => setSlideIndex(i)}
+                            aria-label={`사진 ${i + 1}`}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="photo-counter">
+                        {String(slideIndex + 1).padStart(2, '0')} / {String(allImages.length).padStart(2, '0')}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <label className="photo-change">
+                  <HiUpload /> 사진 추가
+                  <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
+                </label>
+
                 <div className="photo-deco photo-deco--1" />
                 <div className="photo-deco photo-deco--2" />
               </div>
@@ -188,6 +248,52 @@ function About() {
                 <span className="skill-name">{skill.name}</span>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* GitHub & Blog */}
+      <section className="github-blog-section">
+        <div className="container">
+          <motion.div className="section-header" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="section-label">DEVELOPER ACTIVITY</span>
+            <h2 className="section-title">개발 활동</h2>
+            <p className="section-desc">실제 개발 활동과 기술 글을 통해 꾸준히 성장하고 있습니다.</p>
+          </motion.div>
+          <GithubPanel />
+          <BlogPanel />
+        </div>
+      </section>
+
+      {/* Achievements */}
+      <section className="achievements-section">
+        <div className="container">
+          <motion.div className="section-header" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="section-label">ACHIEVEMENTS</span>
+            <h2 className="section-title">트로피 룸</h2>
+            <p className="section-desc">
+              사이트를 탐색하며 발견한 이스터에그들. {' '}
+              <strong style={{ color: '#6366f1' }}>{unlockedCount} / {totalCount}</strong> 달성
+            </p>
+          </motion.div>
+          <div className="achievements-grid">
+            {Object.values(ACHIEVEMENTS).map((ach, i) => {
+              const isUnlocked = !!unlocked[ach.id];
+              return (
+                <motion.div
+                  key={ach.id}
+                  className={`ach-card ${isUnlocked ? 'ach-card--unlocked' : 'ach-card--locked'}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.04 }}
+                >
+                  <div className="ach-card-icon">{isUnlocked ? ach.icon : '🔒'}</div>
+                  <strong>{isUnlocked ? ach.title : '???'}</strong>
+                  <p>{isUnlocked ? ach.desc : '잠금 해제하려면 탐색해보세요'}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -212,9 +212,141 @@
   font-size: 1rem;
 }
 
+/* Live Demo */
+.detail-demo {
+  margin-bottom: 48px;
+}
+
+.detail-demo-frame {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a2e;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08);
+  height: 540px;
+}
+
+.detail-demo-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
 @media (max-width: 768px) {
+  .detail-demo-frame {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-demo-frame {
+    height: 320px;
+  }
+}
+
+/* Gallery */
+.detail-gallery {
+  margin-bottom: 48px;
+}
+
+.detail-gallery-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.detail-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.detail-gallery-item {
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  cursor: zoom-in;
+}
+
+.detail-gallery-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.detail-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.detail-gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .detail-page {
+    padding: 100px 0 60px;
+  }
+
   .detail-content {
     grid-template-columns: 1fr;
     gap: 40px;
+  }
+
+  .detail-title {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+
+  .detail-actions {
+    flex-wrap: wrap;
+  }
+
+  .detail-image,
+  .detail-image img {
+    max-height: 360px;
+  }
+
+  .detail-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-page {
+    padding: 90px 0 40px;
+  }
+
+  .detail-meta {
+    gap: 10px;
+  }
+
+  .detail-meta .detail-info-item {
+    font-size: 0.78rem;
+  }
+
+  .detail-actions .btn-icon {
+    font-size: 0.78rem;
+    padding: 7px 14px;
+  }
+
+  .detail-gallery-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .detail-link {
+    font-size: 0.85rem;
   }
 }

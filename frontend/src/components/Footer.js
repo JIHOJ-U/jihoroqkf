@@ -39,11 +39,11 @@ function Footer() {
             </div>
             <div className="footer-col">
               <h4>CONTACT</h4>
-              <a href="mailto:hello@joe.dev">
-                <HiMail /> hello@joe.dev
+              <a href="mailto:roqkfwkwlgh@naver.com">
+                <HiMail /> roqkfwkwlgh@naver.com
               </a>
-              <a href="tel:010-0000-0000">
-                <HiPhone /> 010-0000-0000
+              <a href="tel:010-8975-2847">
+                <HiPhone /> 010-8975-2847
               </a>
             </div>
           </div>
@@ -51,6 +51,9 @@ function Footer() {
 
         <div className="footer-bottom">
           <p>&copy; 2026 <span translate="no">Dev.Vibe</span> All rights reserved.</p>
+          <div className="footer-bottom-links">
+            <Link to="/privacy">개인정보처리방침</Link>
+          </div>
         </div>
       </div>
     </footer>

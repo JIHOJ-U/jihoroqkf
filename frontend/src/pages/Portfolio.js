@@ -41,6 +41,15 @@ function Portfolio() {
 
   return (
     <div className="portfolio-page">
+      {/* Background decorations */}
+      <div className="portfolio-bg-decor" aria-hidden="true">
+        <span className="portfolio-symbol portfolio-symbol--1">{'</>'}</span>
+        <span className="portfolio-symbol portfolio-symbol--2">{'{ }'}</span>
+        <span className="portfolio-symbol portfolio-symbol--3">{'=>'}</span>
+        <span className="portfolio-symbol portfolio-symbol--4">{'( )'}</span>
+        <span className="portfolio-symbol portfolio-symbol--5">{'[ ]'}</span>
+      </div>
+
       {/* Hero */}
       <section className="portfolio-hero">
         <div className="container">

@@ -1,0 +1,156 @@
+.terminal-page {
+  min-height: 100vh;
+  background: #0a0c14;
+  padding: 100px 20px 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  cursor: text;
+}
+
+.terminal-matrix {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.terminal-window {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 920px;
+  background: #0d1117;
+  border: 1px solid #2a2f3d;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(99, 102, 241, 0.15);
+  overflow: hidden;
+  font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, #232732, #1a1d29);
+  border-bottom: 1px solid #2a2f3d;
+}
+
+.t-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.t-dot--red { background: #ff5f57; }
+.t-dot--yellow { background: #febc2e; }
+.t-dot--green { background: #28c841; }
+
+.terminal-title {
+  margin-left: 10px;
+  font-size: 0.78rem;
+  color: #8a8d96;
+  letter-spacing: 0.5px;
+}
+
+.terminal-body {
+  padding: 20px 24px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  min-height: 480px;
+  max-height: 70vh;
+  overflow-y: auto;
+  color: #e8eaf0;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+  background: #2a2f3d;
+  border-radius: 3px;
+}
+
+.t-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.t-line--system {
+  color: #818cf8;
+  font-weight: 700;
+}
+
+.t-line--cmd {
+  color: #a7f3d0;
+}
+
+.t-line--cmd::selection {
+  background: rgba(167, 243, 208, 0.3);
+}
+
+.t-line--output {
+  color: #d1d5db;
+}
+
+.t-line--error {
+  color: #f87171;
+}
+
+.t-input-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.t-prompt {
+  color: #a7f3d0;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.t-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font: inherit;
+  caret-color: transparent; /* hide native, show custom cursor */
+}
+
+.t-cursor {
+  color: #10b981;
+  animation: t-blink 1s steps(2) infinite;
+  margin-left: -10px;
+  pointer-events: none;
+}
+
+@keyframes t-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .terminal-page {
+    padding: 90px 12px 30px;
+  }
+  .terminal-body {
+    font-size: 0.78rem;
+    padding: 16px 16px;
+    min-height: 380px;
+  }
+  .terminal-title {
+    font-size: 0.72rem;
+  }
+}

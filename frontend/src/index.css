@@ -6,7 +6,8 @@
   box-sizing: border-box;
 }
 
-:root {
+:root,
+:root[data-theme="light"] {
   --bg-primary: #ffffff;
   --bg-secondary: #f8f8f8;
   --bg-card: #ffffff;
@@ -31,6 +32,107 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --max-width: 1280px;
+}
+
+:root[data-theme="dark"] {
+  --bg-primary: #0f1117;
+  --bg-secondary: #161922;
+  --bg-card: #1a1d29;
+  --bg-hover: #232732;
+  --border: #2a2f3d;
+  --border-light: #1f2330;
+  --text-primary: #e8eaf0;
+  --text-secondary: #b8bcc8;
+  --text-muted: #6a7080;
+  --accent: #818cf8;
+  --accent-light: #a5b4fc;
+  --accent-hover: #6366f1;
+  --white: #ffffff;
+  --black: #ffffff; /* "black" used as primary fg in light = white in dark */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Smooth theme transition */
+html, body, .App {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme component overrides */
+:root[data-theme="dark"] .navbar:not(.navbar--overlay) {
+  background: rgba(15, 17, 23, 0.95) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] .privacy-page,
+:root[data-theme="dark"] .about-page,
+:root[data-theme="dark"] .portfolio-page,
+:root[data-theme="dark"] .contact-page,
+:root[data-theme="dark"] .why-section,
+:root[data-theme="dark"] .form-page,
+:root[data-theme="dark"] .home {
+  background: var(--bg-primary) !important;
+}
+
+:root[data-theme="dark"] .compare-table,
+:root[data-theme="dark"] .why-card,
+:root[data-theme="dark"] .quote-calc,
+:root[data-theme="dark"] .privacy-content,
+:root[data-theme="dark"] .github-panel,
+:root[data-theme="dark"] .gh-card-custom,
+:root[data-theme="dark"] .blog-card,
+:root[data-theme="dark"] .info-item,
+:root[data-theme="dark"] .info-note,
+:root[data-theme="dark"] .contact-form,
+:root[data-theme="dark"] .service-card,
+:root[data-theme="dark"] .work-card,
+:root[data-theme="dark"] .gh-repo,
+:root[data-theme="dark"] .qc-option,
+:root[data-theme="dark"] .qc-feature {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+:root[data-theme="dark"] .compare-cell--builder,
+:root[data-theme="dark"] .compare-cell--feature,
+:root[data-theme="dark"] .qc-breakdown {
+  background: var(--bg-secondary) !important;
+}
+
+:root[data-theme="dark"] .qc-row strong,
+:root[data-theme="dark"] .compare-cell--feature {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="dark"] .footer {
+  background: var(--bg-secondary);
+  border-top-color: var(--border);
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+:root[data-theme="dark"] .btn-dark {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+/* Skip transition for elements that animate frequently */
+:root[data-theme="dark"] .scroll-circle__svg,
+:root[data-theme="dark"] .hero-roller__track,
+:root[data-theme="dark"] .marquee__track {
+  transition: none;
 }
 
 html {
@@ -92,8 +194,39 @@ img {
 }
 
 /* Custom cursor - hide default on desktop */
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   * {
     cursor: none !important;
+  }
+}
+
+/* Mobile / touch global fixes */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Ensure all images are responsive */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Touch-friendly minimum tap target */
+  button,
+  a {
+    -webkit-tap-highlight-color: rgba(99, 102, 241, 0.1);
+  }
+}
+
+/* Touch devices: don't hide custom cursor twice */
+@media (hover: none), (pointer: coarse) {
+  * {
+    cursor: auto;
   }
 }

@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { HiArrowLeft, HiExternalLink, HiPencil, HiTrash, HiCode, HiCalendar, HiUser } from 'react-icons/hi';
 import { FaGithub } from 'react-icons/fa';
 import { getPortfolio, deletePortfolio, getImageUrl } from '../api';
+import { useAchievement } from '../contexts/AchievementContext';
+import MarkdownContent from '../components/MarkdownContent';
 import './PortfolioDetail.css';
 
 function PortfolioDetail() {
@@ -11,13 +13,14 @@ function PortfolioDetail() {
   const navigate = useNavigate();
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { unlock } = useAchievement();
 
   useEffect(() => {
     getPortfolio(id)
-      .then(res => setPortfolio(res.data))
+      .then(res => { setPortfolio(res.data); unlock('PORTFOLIO_VIEWED'); })
       .catch(() => navigate('/portfolio'))
       .finally(() => setLoading(false));
-  }, [id, navigate]);
+  }, [id, navigate, unlock]);
 
   const handleDelete = async () => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
@@ -79,10 +82,38 @@ function PortfolioDetail() {
             </div>
           )}
 
+          {portfolio.demoUrl && (
+            <div className="detail-demo">
+              <h2 className="detail-gallery-title">LIVE CODE DEMO</h2>
+              <div className="detail-demo-frame">
+                <iframe
+                  src={portfolio.demoUrl}
+                  title={`${portfolio.title} demo`}
+                  loading="lazy"
+                  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; microphone; midi; usb; xr-spatial-tracking"
+                  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+                />
+              </div>
+            </div>
+          )}
+
+          {Array.isArray(portfolio.images) && portfolio.images.length > 0 && (
+            <div className="detail-gallery">
+              <h2 className="detail-gallery-title">PROJECT IMAGES</h2>
+              <div className="detail-gallery-grid">
+                {portfolio.images.map((img, i) => (
+                  <a key={i} href={getImageUrl(img)} target="_blank" rel="noopener noreferrer" className="detail-gallery-item">
+                    <img src={getImageUrl(img)} alt={`${portfolio.title}-${i + 1}`} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="detail-content">
             <div className="detail-main">
               <h2>프로젝트 설명</h2>
-              <p className="detail-description">{portfolio.description}</p>
+              <MarkdownContent className="detail-description">{portfolio.description}</MarkdownContent>
             </div>
 
             <div className="detail-sidebar">
@@ -95,10 +126,15 @@ function PortfolioDetail() {
                 </div>
               </div>
 
-              {(portfolio.projectUrl || portfolio.githubUrl) && (
+              {(portfolio.projectUrl || portfolio.githubUrl || portfolio.demoUrl) && (
                 <div className="sidebar-block">
                   <h3>LINKS</h3>
                   <div className="detail-link-list">
+                    {portfolio.demoUrl && (
+                      <a href={portfolio.demoUrl} target="_blank" rel="noopener noreferrer" className="detail-link">
+                        <HiExternalLink /> Live Demo
+                      </a>
+                    )}
                     {portfolio.projectUrl && (
                       <a href={portfolio.projectUrl} target="_blank" rel="noopener noreferrer" className="detail-link">
                         <HiExternalLink /> Live Site

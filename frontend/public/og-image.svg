@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1a2e"/>
+      <stop offset="0.5" stop-color="#16213e"/>
+      <stop offset="1" stop-color="#0f3460"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="0.5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#ec4899"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0.2" cy="0.3" r="0.4">
+      <stop offset="0" stop-color="#6366f1" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.85" cy="0.75" r="0.4">
+      <stop offset="0" stop-color="#ec4899" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#ec4899" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- Floating code symbols -->
+  <text x="80" y="120" font-family="Courier New, monospace" font-size="64" font-weight="700" fill="rgba(99,102,241,0.18)">&lt;/&gt;</text>
+  <text x="1020" y="180" font-family="Courier New, monospace" font-size="56" font-weight="700" fill="rgba(236,72,153,0.20)">{ }</text>
+  <text x="100" y="540" font-family="Courier New, monospace" font-size="50" font-weight="700" fill="rgba(34,211,238,0.20)">[ ]</text>
+  <text x="1050" y="500" font-family="Courier New, monospace" font-size="46" font-weight="700" fill="rgba(245,158,11,0.18)">=&gt;</text>
+
+  <!-- Main brand -->
+  <text x="600" y="290" font-family="Inter, sans-serif" font-size="120" font-weight="900" fill="white" text-anchor="middle" letter-spacing="-4">Dev.Vibe</text>
+
+  <!-- Tagline -->
+  <text x="600" y="350" font-family="Inter, sans-serif" font-size="34" font-weight="600" fill="url(#brand)" text-anchor="middle">아이디어를 현실로 만드는 개발 파트너</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="410" font-family="Inter, sans-serif" font-size="22" font-weight="400" fill="rgba(255,255,255,0.6)" text-anchor="middle">Full-Stack · Web · App · UI/UX</text>
+
+  <!-- Bottom badge -->
+  <rect x="500" y="475" width="200" height="50" rx="25" fill="rgba(99,102,241,0.2)" stroke="rgba(99,102,241,0.4)" stroke-width="1.5"/>
+  <text x="600" y="507" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="white" text-anchor="middle" letter-spacing="2">FREELANCE DEV</text>
+</svg>
