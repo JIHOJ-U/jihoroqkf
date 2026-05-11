@@ -27,12 +27,19 @@ export const getBlogPosts = () => api.get('/blog/posts');
 
 export const API_BASE = API_URL;
 
+// Folders under frontend/public that should be served directly (not via backend)
+const FRONTEND_STATIC_FOLDERS = [
+  '/portfolio-images/',
+  '/autowant/',
+  '/velcrocat/',
+];
+
 export const getImageUrl = (thumbnail) => {
   if (!thumbnail) return '';
   // External URLs (https://...)
   if (thumbnail.startsWith('http')) return thumbnail;
   // Static images served from frontend public/ folder (committed to git, permanent)
-  if (thumbnail.startsWith('/portfolio-images/')) return thumbnail;
+  if (FRONTEND_STATIC_FOLDERS.some(prefix => thumbnail.startsWith(prefix))) return thumbnail;
   // Backend uploads (volatile on Render free tier)
   return `${API_URL}${thumbnail}`;
 };
