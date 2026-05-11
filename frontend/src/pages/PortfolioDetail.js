@@ -72,16 +72,6 @@ function PortfolioDetail() {
             </div>
           </div>
 
-          {portfolio.thumbnail ? (
-            <div className="detail-image">
-              <img src={getImageUrl(portfolio.thumbnail)} alt={portfolio.title} />
-            </div>
-          ) : (
-            <div className="detail-image detail-no-image">
-              <HiCode />
-            </div>
-          )}
-
           {portfolio.demoUrl && (
             <div className="detail-demo">
               <h2 className="detail-gallery-title">LIVE CODE DEMO</h2>
