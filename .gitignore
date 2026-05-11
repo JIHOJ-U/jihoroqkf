@@ -31,9 +31,10 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Backend uploads & data
+# Backend uploads & data (runtime data — committed seed file is the exception)
 backend/uploads/
-backend/data/
+backend/data/*.json
+!backend/data/seed-portfolios.json
 
 # Misc
 .claude/

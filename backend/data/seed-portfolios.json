@@ -1,0 +1,47 @@
+[
+  {
+    "id": "90b25ebd-da6a-4870-99bb-c21088c5ea6b",
+    "title": "Autowant - 렌트 리스 플랫폼",
+    "description": "## 프로젝트 개요\n\n렌트/리스 차량 비교 및 상담 신청 플랫폼. 차량 검색부터 견적 비교, 실시간 상담 신청까지 **한 페이지에서 모두 처리**할 수 있도록 사용자 흐름을 최적화한 풀스택 프로젝트입니다.\n\n## 주요 기능\n\n- 🚗 **차량 검색 & 필터링** — 브랜드, 차종, 연식, 월 납입금 범위별 필터\n- 📋 **상세 견적 비교** — 차량 스펙·옵션·월 납입금·보증금 한눈에 비교\n- 📞 **상담 신청 시스템** — 실시간 폼 + 자동 SMS 알림\n- 🛠️ **관리자 백오피스** — 차량 등록/수정/삭제, 상담 내역 관리\n- 📱 **반응형 웹** — 데스크탑/태블릿/모바일 완전 대응\n- 🔍 **SEO 최적화** — 메타 태그, OG, 사이트맵, 구조화 데이터\n\n## 기술적 포인트\n\n```javascript\n// 월 납입금 자동 계산 로직 (PMT formula)\nconst calculateMonthlyPayment = (carPrice, leaseTerm, downPayment, rate = 0.05) => {\n  const principal = carPrice - downPayment;\n  const monthlyRate = rate / 12;\n  const months = leaseTerm * 12;\n  return (principal * monthlyRate) /\n         (1 - Math.pow(1 + monthlyRate, -months));\n};\n```\n\n## 성과\n\n- ⚡ **Lighthouse 90+** (Performance, SEO, Accessibility)\n- 🚀 **반응형 완벽 구현** — 모든 디바이스 호환\n- 💯 **클라이언트 만족도 5.0 / 5.0**\n\n## 링크\n\n- [라이브 사이트 →](https://www.autowant.co.kr)",
+    "techStack": [
+      "Vue.js 3",
+      "Composition API",
+      "Vite",
+      "Pinia",
+      "Vue Router",
+      "Node.js",
+      "Express",
+      "MySQL",
+      "Sequelize",
+      "Tailwind CSS",
+      "Responsive Web",
+      "RESTful API"
+    ],
+    "projectUrl": "https://www.autowant.co.kr",
+    "githubUrl": "https://github.com/JIHOJ-U/autowant",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 2개월",
+    "client": "렌트/리스 업체",
+    "thumbnail": "",
+    "images": [],
+    "createdAt": "2026-05-11T15:28:25.200Z",
+    "updatedAt": "2026-05-11T15:28:25.200Z"
+  },
+  {
+    "id": "eda0af51-44e5-40b7-b731-361e2d2a902f",
+    "title": "Velcrocat 의류 쇼핑몰 플랫폼",
+    "description": "프로젝트 개요\r\n\r\n벨크로켓** 컨셉의 빈티지·스트릿 의류 쇼핑몰 플랫폼. 일본 현지에서 직접 큐레이팅한 의류를 한국 고객에게 판매하는 D2C 쇼핑몰을 풀스택으로 구축했습니다.\r\n\r\n> 일본 오사카 빈티지 마켓의 감성을 그대로 디지털로 옮기는 것이 핵심 목표였습니다.\r\n\r\n## 주요 기능\r\n\r\n- 🛍 **상품 카탈로그** — 카테고리, 사이즈, 색상, 가격대별 필터링\r\n- 🔍 **검색 & 정렬** — 키워드 검색, 최신순/인기순/가격순 정렬\r\n- 🛒 **장바구니 & 위시리스트** — 비회원도 사용 가능, 회원 전환 시 자동 동기화\r\n- 💳 **결제 시스템** — 카드 / 무통장입금 / 간편결제 (PG 연동)\r\n- 📦 **주문 관리** — 주문 조회, 배송 추적, 교환·환불 신청\r\n- 👤 **회원 시스템** — 소셜 로그인 (카카오/네이버), 마이페이지, 적립금\r\n- 🛠 **관리자 백오피스** — 상품 등록, 재고 관리, 주문 처리, 통계 대시보드\r\n- 📱 **반응형 + 모바일 최적화** — 모바일 트래픽 70% 대응\r\n\r\n기술적 포인트\r\n\r\njavascript\r\n// 장바구니 상태 관리 (비회원/회원 자동 머지)\r\nconst mergeCart = async (userId, localCart) => {\r\n  const dbCart = await fetchUserCart(userId);\r\n  const merged = [...dbCart];\r\n\r\n  localCart.forEach(localItem => {\r\n    const existing = merged.find(i => i.productId === localItem.productId);\r\n    if (existing) existing.quantity += localItem.quantity;\r\n    else merged.push(localItem);\r\n  });\r\n\r\n  await saveUserCart(userId, merged);\r\n  localStorage.removeItem('guestCart');\r\n  return merged;\r\n};\r\n\r\n\r\ncss\r\n빈티지 마켓 감성 — 시즌별 컬러 테마 \r\n:root[data-season=\"osaka-spring\"] {\r\n  --accent: #f5a623;\r\n  --bg-warm: #fdf6e3;\r\n  --vintage-paper: url('/textures/paper-grain.png');\r\n}\r\n\r\n 개발 과정\r\n\r\n| 단계 | 기간 | 내용 |\r\n|------|------|------|\r\n| 1주차 | 기획 | IA 설계, 쇼핑몰 플로우 정의, 디자인 톤매너 확정 |\r\n| 2~3주차 | 개발 (1차) | 상품/카테고리/카트/결제 핵심 플로우 |\r\n| 4~5주차 | 개발 (2차) | 회원 시스템, 관리자, 통계 |\r\n| 6주차 | 통합·QA | PG 결제 테스트, 부하 테스트, 배포 |\r\n| 7~8주차 | 운영 반영 | 클라이언트 피드백, SEO, 마케팅 픽셀 연동 |\r\n\r\n## 디자인 컨셉\r\n\r\n빈티지 마켓 특유의 따뜻한 종이 질감과 손글씨 폰트를 디지털에서 재현. 일본 잡지 레이아웃에서 영감받은 비대칭 그리드 적용.\r\n\r\n성과\r\n\r\n- 🎯 **출시 1개월 내** 정식 운영 시작\r\n- 📊 **모바일 전환율 4.2%** (의류 쇼핑몰 평균 2.5% 대비 +60%)\r\n- ⚡ **Lighthouse 92점** (Performance)\r\n- 💯 클라이언트 만족도 5.0 / 5.0\r\n",
+    "techStack": [],
+    "projectUrl": "https://www.vcat.kr",
+    "githubUrl": "https://github.com/JIHOJ-U/osakamarket",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 2개월",
+    "client": "의류 쇼핑몰",
+    "thumbnail": "",
+    "images": [],
+    "createdAt": "2026-05-11T15:13:00.247Z",
+    "updatedAt": "2026-05-11T15:13:00.247Z"
+  }
+]

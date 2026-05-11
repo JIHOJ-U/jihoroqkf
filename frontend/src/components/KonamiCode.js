@@ -13,7 +13,8 @@ function KonamiCode() {
 
   useEffect(() => {
     const handler = (e) => {
-      const key = e.key.toLowerCase().startsWith('arrow') ? e.key : e.key.toLowerCase();
+      if (!e.key || typeof e.key !== 'string') return;
+      const key = e.key.startsWith('Arrow') ? e.key : e.key.toLowerCase();
       buffer.current.push(key);
       if (buffer.current.length > KONAMI.length) buffer.current.shift();
 

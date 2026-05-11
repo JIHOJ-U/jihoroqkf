@@ -25,7 +25,11 @@ services:
         value: longnight0719
       # Set in Render dashboard manually (sensitive):
       # - NOTIFY_WEBHOOK_URL
-      # - ALLOWED_ORIGINS  (e.g. https://devvibe.onrender.com)
+      # - ALLOWED_ORIGINS         (e.g. https://devvibe-web.onrender.com)
+      # - MONGODB_URI             (MongoDB Atlas connection string)
+      # - CLOUDINARY_CLOUD_NAME
+      # - CLOUDINARY_API_KEY
+      # - CLOUDINARY_API_SECRET
 
   # ============ Frontend (Static Site) ============
   - type: web

@@ -11,23 +11,20 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Config (env override possible)
+// Config
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'JIHOJ-U';
 const NAVER_BLOG_ID = process.env.NAVER_BLOG_ID || 'longnight0719';
 const NOTIFY_WEBHOOK_URL = process.env.NOTIFY_WEBHOOK_URL || '';
-// Comma-separated list of allowed origins; empty = allow all (dev)
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
+  .split(',').map(s => s.trim()).filter(Boolean);
 
 const rssParser = new Parser();
 
-// CORS — production: restrict to ALLOWED_ORIGINS; dev: allow all
+// CORS
 const corsOptions = ALLOWED_ORIGINS.length
   ? {
       origin: (origin, cb) => {
-        if (!origin) return cb(null, true); // server-to-server, mobile etc.
+        if (!origin) return cb(null, true);
         if (ALLOWED_ORIGINS.some(a => origin === a || origin.endsWith(a.replace(/^https?:\/\//, '')))) {
           return cb(null, true);
         }
@@ -41,25 +38,47 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Health check (Render uses this)
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
+// Ensure directories
+['uploads', 'data'].forEach(d => {
+  const p = path.join(__dirname, d);
+  if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
 });
 
-// Ensure directories exist
-const dirs = ['uploads', 'data'];
-dirs.forEach(dir => {
-  const dirPath = path.join(__dirname, dir);
-  if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
-});
+// ========== Seed: ensure committed default portfolios always exist ==========
+const SEED_PATH = path.join(__dirname, 'data', 'seed-portfolios.json');
+const DATA_PATH = path.join(__dirname, 'data', 'portfolios.json');
 
-// File storage for portfolio images
+function ensureSeed() {
+  if (!fs.existsSync(SEED_PATH)) return;
+  let current = [];
+  if (fs.existsSync(DATA_PATH)) {
+    try { current = JSON.parse(fs.readFileSync(DATA_PATH, 'utf-8')); } catch (e) { current = []; }
+  }
+  const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf-8'));
+
+  // Add any seed entries that don't exist in current (by title)
+  let changed = false;
+  seed.forEach(s => {
+    if (!current.find(c => c.id === s.id || c.title === s.title)) {
+      current.unshift(s);
+      changed = true;
+    }
+  });
+
+  if (changed || !fs.existsSync(DATA_PATH)) {
+    fs.writeFileSync(DATA_PATH, JSON.stringify(current, null, 2), 'utf-8');
+    console.log(`[seed] Loaded ${seed.length} portfolio(s) from seed file`);
+  }
+}
+ensureSeed();
+
+// File storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     cb(null, `${uuidv4()}${ext}`);
-  }
+  },
 });
 const upload = multer({
   storage,
@@ -70,52 +89,49 @@ const upload = multer({
     const mime = allowed.test(file.mimetype);
     if (ext && mime) return cb(null, true);
     cb(new Error('이미지 파일만 업로드 가능합니다.'));
-  }
+  },
 });
+const portfolioUpload = upload.fields([
+  { name: 'thumbnail', maxCount: 1 },
+  { name: 'images', maxCount: 20 },
+]);
 
-// JSON file helpers
 const DATA_DIR = path.join(__dirname, 'data');
 const getFilePath = (name) => path.join(DATA_DIR, `${name}.json`);
-
 function readData(name) {
-  const filePath = getFilePath(name);
-  if (!fs.existsSync(filePath)) return [];
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  const fp = getFilePath(name);
+  if (!fs.existsSync(fp)) return [];
+  try { return JSON.parse(fs.readFileSync(fp, 'utf-8')); } catch (e) { return []; }
 }
-
 function writeData(name, data) {
   fs.writeFileSync(getFilePath(name), JSON.stringify(data, null, 2), 'utf-8');
 }
 
-// ========== Portfolio API ==========
-
-// Get all portfolios
-app.get('/api/portfolios', (req, res) => {
-  const portfolios = readData('portfolios');
-  res.json(portfolios);
+// ========== Health ==========
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
-// Get single portfolio
+// ========== Portfolio API ==========
+
+app.get('/api/portfolios', (req, res) => {
+  res.json(readData('portfolios'));
+});
+
 app.get('/api/portfolios/:id', (req, res) => {
-  const portfolios = readData('portfolios');
-  const item = portfolios.find(p => p.id === req.params.id);
+  const items = readData('portfolios');
+  const item = items.find(p => p.id === req.params.id);
   if (!item) return res.status(404).json({ error: '포트폴리오를 찾을 수 없습니다.' });
   res.json(item);
 });
 
-const portfolioUpload = upload.fields([
-  { name: 'thumbnail', maxCount: 1 },
-  { name: 'images', maxCount: 20 }
-]);
-
-// Create portfolio
 app.post('/api/portfolios', portfolioUpload, (req, res) => {
-  const portfolios = readData('portfolios');
+  const items = readData('portfolios');
   const { title, description, techStack, projectUrl, githubUrl, demoUrl, category, duration, client } = req.body;
   const thumbnailFile = req.files?.thumbnail?.[0];
   const imageFiles = req.files?.images || [];
 
-  const newPortfolio = {
+  const newItem = {
     id: uuidv4(),
     title,
     description,
@@ -129,112 +145,110 @@ app.post('/api/portfolios', portfolioUpload, (req, res) => {
     thumbnail: thumbnailFile ? `/uploads/${thumbnailFile.filename}` : '',
     images: imageFiles.map(f => `/uploads/${f.filename}`),
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
-
-  portfolios.unshift(newPortfolio);
-  writeData('portfolios', portfolios);
-  res.status(201).json(newPortfolio);
+  items.unshift(newItem);
+  writeData('portfolios', items);
+  res.status(201).json(newItem);
 });
 
-// Update portfolio
 app.put('/api/portfolios/:id', portfolioUpload, (req, res) => {
-  const portfolios = readData('portfolios');
-  const index = portfolios.findIndex(p => p.id === req.params.id);
-  if (index === -1) return res.status(404).json({ error: '포트폴리오를 찾을 수 없습니다.' });
+  const items = readData('portfolios');
+  const idx = items.findIndex(p => p.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: '포트폴리오를 찾을 수 없습니다.' });
 
   const { title, description, techStack, projectUrl, githubUrl, demoUrl, category, duration, client, existingImages } = req.body;
   const thumbnailFile = req.files?.thumbnail?.[0];
   const imageFiles = req.files?.images || [];
 
-  let mergedImages = portfolios[index].images || [];
+  let mergedImages = items[idx].images || [];
   if (existingImages !== undefined) {
     try { mergedImages = JSON.parse(existingImages); } catch (e) { mergedImages = []; }
   }
   mergedImages = [...mergedImages, ...imageFiles.map(f => `/uploads/${f.filename}`)];
 
-  portfolios[index] = {
-    ...portfolios[index],
-    title: title || portfolios[index].title,
-    description: description || portfolios[index].description,
-    techStack: techStack ? techStack.split(',').map(s => s.trim()) : portfolios[index].techStack,
-    projectUrl: projectUrl !== undefined ? projectUrl : portfolios[index].projectUrl,
-    githubUrl: githubUrl !== undefined ? githubUrl : portfolios[index].githubUrl,
-    demoUrl: demoUrl !== undefined ? demoUrl : (portfolios[index].demoUrl || ''),
-    category: category || portfolios[index].category,
-    duration: duration || portfolios[index].duration,
-    client: client || portfolios[index].client,
-    thumbnail: thumbnailFile ? `/uploads/${thumbnailFile.filename}` : portfolios[index].thumbnail,
+  items[idx] = {
+    ...items[idx],
+    title: title || items[idx].title,
+    description: description !== undefined ? description : items[idx].description,
+    techStack: techStack ? techStack.split(',').map(s => s.trim()) : items[idx].techStack,
+    projectUrl: projectUrl !== undefined ? projectUrl : items[idx].projectUrl,
+    githubUrl: githubUrl !== undefined ? githubUrl : items[idx].githubUrl,
+    demoUrl: demoUrl !== undefined ? demoUrl : (items[idx].demoUrl || ''),
+    category: category || items[idx].category,
+    duration: duration !== undefined ? duration : items[idx].duration,
+    client: client !== undefined ? client : items[idx].client,
+    thumbnail: thumbnailFile ? `/uploads/${thumbnailFile.filename}` : items[idx].thumbnail,
     images: mergedImages,
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
-
-  writeData('portfolios', portfolios);
-  res.json(portfolios[index]);
+  writeData('portfolios', items);
+  res.json(items[idx]);
 });
 
-// Delete portfolio
 app.delete('/api/portfolios/:id', (req, res) => {
-  let portfolios = readData('portfolios');
-  const item = portfolios.find(p => p.id === req.params.id);
+  let items = readData('portfolios');
+  const item = items.find(p => p.id === req.params.id);
   if (!item) return res.status(404).json({ error: '포트폴리오를 찾을 수 없습니다.' });
 
+  // Delete local files
   if (item.thumbnail && !item.thumbnail.startsWith('http')) {
-    const filePath = path.join(__dirname, item.thumbnail);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    const fp = path.join(__dirname, item.thumbnail);
+    if (fs.existsSync(fp)) fs.unlinkSync(fp);
   }
   if (Array.isArray(item.images)) {
     item.images.forEach(img => {
       if (img && !img.startsWith('http')) {
-        const filePath = path.join(__dirname, img);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        const fp = path.join(__dirname, img);
+        if (fs.existsSync(fp)) fs.unlinkSync(fp);
       }
     });
   }
 
-  portfolios = portfolios.filter(p => p.id !== req.params.id);
-  writeData('portfolios', portfolios);
+  items = items.filter(p => p.id !== req.params.id);
+  writeData('portfolios', items);
   res.json({ message: '삭제되었습니다.' });
 });
 
-// ========== Contact / Inquiry API ==========
-
-// Submit inquiry
+// ========== Inquiry API ==========
 app.post('/api/inquiries', async (req, res) => {
   const inquiries = readData('inquiries');
   const { name, email, phone, company, projectType, budget, timeline, description } = req.body;
-
   if (!name || !email || !description) {
     return res.status(400).json({ error: '이름, 이메일, 프로젝트 설명은 필수입니다.' });
   }
-
   const newInquiry = {
     id: uuidv4(),
     name, email,
-    phone: phone || '',
-    company: company || '',
+    phone: phone || '', company: company || '',
     projectType: projectType || '웹 개발',
-    budget: budget || '',
-    timeline: timeline || '',
-    description,
-    status: '접수됨',
-    createdAt: new Date().toISOString()
+    budget: budget || '', timeline: timeline || '',
+    description, status: '접수됨',
+    createdAt: new Date().toISOString(),
   };
-
   inquiries.unshift(newInquiry);
   writeData('inquiries', inquiries);
-
-  // Notify via webhook (Discord/Slack/custom)
   notifyNewInquiry(newInquiry).catch(err => console.error('[notify] failed:', err.message));
-
   res.status(201).json({ message: '문의가 접수되었습니다.', inquiry: newInquiry });
 });
 
-// ========== GitHub Stats Proxy ==========
+app.get('/api/inquiries', (req, res) => {
+  res.json(readData('inquiries'));
+});
+
+app.patch('/api/inquiries/:id', (req, res) => {
+  const inquiries = readData('inquiries');
+  const idx = inquiries.findIndex(i => i.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+  inquiries[idx] = { ...inquiries[idx], ...req.body, updatedAt: new Date().toISOString() };
+  writeData('inquiries', inquiries);
+  res.json(inquiries[idx]);
+});
+
+// ========== GitHub Stats ==========
 app.get('/api/github/stats', async (req, res) => {
   try {
     const headers = { 'User-Agent': 'devvibe', 'Accept': 'application/vnd.github+json' };
-
     const [userResp, reposResp] = await Promise.all([
       fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, { headers }),
       fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`, { headers }),
@@ -242,46 +256,23 @@ app.get('/api/github/stats', async (req, res) => {
     if (!userResp.ok) throw new Error(`GitHub ${userResp.status}`);
     const data = await userResp.json();
     const repos = reposResp.ok ? await reposResp.json() : [];
-
-    // Compute stars + language stats from repos
-    const totalStars = repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
-    const totalForks = repos.reduce((sum, r) => sum + (r.forks_count || 0), 0);
+    const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+    const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
     const langCount = {};
-    repos.forEach(r => {
-      if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1;
-    });
+    repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
     const totalLangCount = Object.values(langCount).reduce((a, b) => a + b, 0) || 1;
     const topLanguages = Object.entries(langCount)
       .map(([name, count]) => ({ name, count, percent: Math.round(count / totalLangCount * 1000) / 10 }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 8);
-
-    const topRepos = repos
-      .filter(r => !r.fork)
+      .sort((a, b) => b.count - a.count).slice(0, 8);
+    const topRepos = repos.filter(r => !r.fork)
       .sort((a, b) => (b.stargazers_count - a.stargazers_count) || (new Date(b.updated_at) - new Date(a.updated_at)))
       .slice(0, 4)
-      .map(r => ({
-        name: r.name,
-        description: r.description,
-        url: r.html_url,
-        stars: r.stargazers_count,
-        forks: r.forks_count,
-        language: r.language,
-      }));
+      .map(r => ({ name: r.name, description: r.description, url: r.html_url, stars: r.stargazers_count, forks: r.forks_count, language: r.language }));
 
     res.json({
-      username: data.login,
-      name: data.name,
-      avatar: data.avatar_url,
-      bio: data.bio,
-      publicRepos: data.public_repos,
-      followers: data.followers,
-      following: data.following,
-      url: data.html_url,
-      totalStars,
-      totalForks,
-      topLanguages,
-      topRepos,
+      username: data.login, name: data.name, avatar: data.avatar_url, bio: data.bio,
+      publicRepos: data.public_repos, followers: data.followers, following: data.following, url: data.html_url,
+      totalStars, totalForks, topLanguages, topRepos,
       contributionGraph: `https://ghchart.rshah.org/6366f1/${GITHUB_USERNAME}`,
     });
   } catch (e) {
@@ -289,14 +280,12 @@ app.get('/api/github/stats', async (req, res) => {
   }
 });
 
-// ========== Naver Blog RSS Proxy ==========
+// ========== Blog RSS ==========
 app.get('/api/blog/posts', async (req, res) => {
   try {
     const feed = await rssParser.parseURL(`https://rss.blog.naver.com/${NAVER_BLOG_ID}.xml`);
     const posts = (feed.items || []).slice(0, 6).map(item => ({
-      title: item.title,
-      link: item.link,
-      pubDate: item.pubDate,
+      title: item.title, link: item.link, pubDate: item.pubDate,
       contentSnippet: (item.contentSnippet || '').slice(0, 140),
       categories: item.categories || [],
     }));
@@ -306,54 +295,27 @@ app.get('/api/blog/posts', async (req, res) => {
   }
 });
 
-// ========== Notification helper ==========
+// ========== Webhook ==========
 async function notifyNewInquiry(inq) {
   if (!NOTIFY_WEBHOOK_URL) return;
   const lines = [
-    `📩 **새 프로젝트 문의가 접수되었습니다!**`,
-    ``,
-    `**이름:** ${inq.name}`,
-    `**이메일:** ${inq.email}`,
+    `📩 **새 프로젝트 문의가 접수되었습니다!**`, ``,
+    `**이름:** ${inq.name}`, `**이메일:** ${inq.email}`,
     inq.phone ? `**연락처:** ${inq.phone}` : '',
     inq.company ? `**회사:** ${inq.company}` : '',
     `**프로젝트 유형:** ${inq.projectType}`,
     inq.budget ? `**예산:** ${inq.budget}` : '',
     inq.timeline ? `**일정:** ${inq.timeline}` : '',
-    ``,
-    `**설명:**`,
+    ``, `**설명:**`,
     inq.description.slice(0, 400) + (inq.description.length > 400 ? '...' : ''),
   ].filter(Boolean).join('\n');
-
-  // Discord-style payload (also works for many webhooks)
-  const payload = {
-    content: lines,
-    text: lines, // Slack-style fallback
-  };
-
   await fetch(NOTIFY_WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ content: lines, text: lines }),
   });
 }
 
-// Get all inquiries (admin)
-app.get('/api/inquiries', (req, res) => {
-  const inquiries = readData('inquiries');
-  res.json(inquiries);
-});
-
-// Update inquiry status
-app.patch('/api/inquiries/:id', (req, res) => {
-  const inquiries = readData('inquiries');
-  const index = inquiries.findIndex(i => i.id === req.params.id);
-  if (index === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
-
-  inquiries[index] = { ...inquiries[index], ...req.body, updatedAt: new Date().toISOString() };
-  writeData('inquiries', inquiries);
-  res.json(inquiries[index]);
-});
-
 app.listen(PORT, () => {
-  console.log(`🚀 Backend server running on http://localhost:${PORT}`);
+  console.log(`🚀 Backend server running on port ${PORT}`);
 });
