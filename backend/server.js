@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const Parser = require('rss-parser');
 const fetch = require('node-fetch');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -15,6 +16,27 @@ const PORT = process.env.PORT || 3001;
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'JIHOJ-U';
 const NAVER_BLOG_ID = process.env.NAVER_BLOG_ID || 'longnight0719';
 const NOTIFY_WEBHOOK_URL = process.env.NOTIFY_WEBHOOK_URL || '';
+
+// Email notification config (Naver SMTP / Gmail / etc.)
+const EMAIL_HOST = process.env.EMAIL_HOST || '';
+const EMAIL_PORT = parseInt(process.env.EMAIL_PORT || '587', 10);
+const EMAIL_USER = process.env.EMAIL_USER || '';
+const EMAIL_PASS = process.env.EMAIL_PASS || '';
+const NOTIFY_EMAIL_TO = process.env.NOTIFY_EMAIL_TO || 'roqkfwkwlgh@naver.com';
+
+let mailTransporter = null;
+if (EMAIL_HOST && EMAIL_USER && EMAIL_PASS) {
+  mailTransporter = nodemailer.createTransport({
+    host: EMAIL_HOST,
+    port: EMAIL_PORT,
+    secure: EMAIL_PORT === 465,
+    auth: { user: EMAIL_USER, pass: EMAIL_PASS },
+  });
+  mailTransporter.verify().then(
+    () => console.log('✅ Email transporter ready'),
+    err => console.warn('[email] verify failed:', err.message)
+  );
+}
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
   .split(',').map(s => s.trim()).filter(Boolean);
 
@@ -295,25 +317,87 @@ app.get('/api/blog/posts', async (req, res) => {
   }
 });
 
-// ========== Webhook ==========
+// ========== Notifications (Email + Webhook) ==========
 async function notifyNewInquiry(inq) {
-  if (!NOTIFY_WEBHOOK_URL) return;
-  const lines = [
-    `📩 **새 프로젝트 문의가 접수되었습니다!**`, ``,
-    `**이름:** ${inq.name}`, `**이메일:** ${inq.email}`,
-    inq.phone ? `**연락처:** ${inq.phone}` : '',
-    inq.company ? `**회사:** ${inq.company}` : '',
-    `**프로젝트 유형:** ${inq.projectType}`,
-    inq.budget ? `**예산:** ${inq.budget}` : '',
-    inq.timeline ? `**일정:** ${inq.timeline}` : '',
-    ``, `**설명:**`,
-    inq.description.slice(0, 400) + (inq.description.length > 400 ? '...' : ''),
+  const summary = [
+    `📩 새 프로젝트 문의가 접수되었습니다!`, ``,
+    `이름:     ${inq.name}`,
+    `이메일:   ${inq.email}`,
+    inq.phone ? `연락처:   ${inq.phone}` : '',
+    inq.company ? `회사:     ${inq.company}` : '',
+    `프로젝트: ${inq.projectType}`,
+    inq.budget ? `예산:     ${inq.budget}` : '',
+    inq.timeline ? `일정:     ${inq.timeline}` : '',
+    ``, `[프로젝트 설명]`,
+    inq.description,
   ].filter(Boolean).join('\n');
-  await fetch(NOTIFY_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: lines, text: lines }),
-  });
+
+  // 1) Webhook (Discord/Slack)
+  if (NOTIFY_WEBHOOK_URL) {
+    try {
+      await fetch(NOTIFY_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: summary, text: summary }),
+      });
+    } catch (e) { console.error('[webhook]', e.message); }
+  }
+
+  // 2) Email
+  if (mailTransporter) {
+    try {
+      await mailTransporter.sendMail({
+        from: `"Dev.Vibe 문의 알림" <${EMAIL_USER}>`,
+        to: NOTIFY_EMAIL_TO,
+        replyTo: inq.email,
+        subject: `📩 [Dev.Vibe] ${inq.name}님의 새 프로젝트 문의 — ${inq.projectType}`,
+        text: summary,
+        html: buildInquiryEmailHTML(inq),
+      });
+      console.log(`[email] sent → ${NOTIFY_EMAIL_TO}`);
+    } catch (e) { console.error('[email]', e.message); }
+  }
+}
+
+function buildInquiryEmailHTML(inq) {
+  const esc = (s) => String(s || '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const row = (label, value) => value
+    ? `<tr><td style="padding:8px 14px;color:#6a7080;font-size:12px;font-weight:600;background:#fafbff;border-bottom:1px solid #f0f0f5;width:110px;letter-spacing:0.5px;">${label}</td>
+       <td style="padding:8px 14px;color:#1a1a1a;font-size:14px;border-bottom:1px solid #f0f0f5;">${esc(value)}</td></tr>`
+    : '';
+  return `<!DOCTYPE html>
+<html><body style="margin:0;padding:24px;background:#f0f2f8;font-family:'Apple SD Gothic Neo',sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.06);">
+    <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:24px 28px;color:white;">
+      <div style="font-size:12px;letter-spacing:2px;opacity:0.85;font-weight:700;">DEV.VIBE NOTIFICATION</div>
+      <div style="font-size:22px;font-weight:800;margin-top:4px;">📩 새 프로젝트 문의 접수</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;">
+      ${row('이름', inq.name)}
+      ${row('이메일', inq.email)}
+      ${row('연락처', inq.phone)}
+      ${row('회사', inq.company)}
+      ${row('프로젝트 유형', inq.projectType)}
+      ${row('예산', inq.budget)}
+      ${row('일정', inq.timeline)}
+    </table>
+    <div style="padding:18px 28px;">
+      <div style="font-size:12px;letter-spacing:1.5px;color:#6a7080;font-weight:700;margin-bottom:10px;">PROJECT DESCRIPTION</div>
+      <div style="background:#fafbff;border:1px solid #f0f0f5;border-radius:8px;padding:14px 16px;font-size:14px;line-height:1.7;color:#333;white-space:pre-wrap;">${esc(inq.description)}</div>
+    </div>
+    <div style="padding:16px 28px 28px;border-top:1px solid #f0f0f5;">
+      <a href="mailto:${esc(inq.email)}?subject=Re: ${encodeURIComponent('프로젝트 문의 회신')}"
+         style="display:inline-block;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;
+                padding:11px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">
+        💬 답장 보내기
+      </a>
+      <div style="margin-top:14px;font-size:11px;color:#999;">
+        접수 시간: ${new Date(inq.createdAt || Date.now()).toLocaleString('ko-KR')}
+      </div>
+    </div>
+  </div>
+</body></html>`;
 }
 
 app.listen(PORT, () => {
