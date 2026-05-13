@@ -69,3 +69,8 @@
     font-size: 0.78rem;
   }
 }
+
+/* Hide on mobile — Ctrl+K is desktop-only */
+@media (max-width: 768px) {
+  .cmdk-hint { display: none; }
+}

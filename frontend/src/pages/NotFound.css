@@ -260,3 +260,13 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 480px) {
+  .nf-page { padding: 80px 12px 30px; }
+  .nf-code { font-size: clamp(5rem, 25vw, 8rem); letter-spacing: -4px; }
+  .nf-error { font-size: 0.82rem; }
+  .nf-stack-body { font-size: 0.7rem; padding: 12px 14px; }
+  .nf-stack-header { padding: 8px 12px; }
+  .nf-stack-title { font-size: 0.7rem; }
+  .nf-btn { font-size: 0.82rem; padding: 11px 18px; }
+}

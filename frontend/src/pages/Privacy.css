@@ -175,3 +175,18 @@
     font-size: 0.85rem;
   }
 }
+
+@media (max-width: 480px) {
+  .privacy-page { padding: 90px 0 40px; }
+  .privacy-content { padding: 24px 18px; border-radius: 10px; }
+  .privacy-title { font-size: clamp(1.4rem, 7vw, 1.8rem); }
+  .privacy-section h2 { font-size: 1rem; padding-left: 10px; }
+  .privacy-section p, .privacy-section li { font-size: 0.88rem; }
+  .privacy-row { grid-template-columns: 1fr; }
+  .privacy-row > div:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--border-light);
+    padding: 8px 14px;
+  }
+  .privacy-contact { padding: 16px 18px; }
+}

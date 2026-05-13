@@ -229,3 +229,8 @@
     max-width: 290px;
   }
 }
+
+/* Hide floating toggle on small mobile — sidebar UX is desktop-first */
+@media (max-width: 480px) {
+  .exp-toggle { display: none; }
+}

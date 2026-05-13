@@ -154,3 +154,16 @@
     font-size: 0.72rem;
   }
 }
+
+@media (max-width: 480px) {
+  .terminal-page { padding: 84px 8px 24px; }
+  .terminal-window { border-radius: 8px; }
+  .terminal-header { padding: 8px 10px; }
+  .terminal-title { font-size: 0.6rem; }
+  .terminal-body {
+    font-size: 0.7rem;
+    padding: 12px 10px;
+    min-height: 320px;
+    max-height: 75vh;
+  }
+}
