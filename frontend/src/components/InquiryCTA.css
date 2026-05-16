@@ -1,0 +1,202 @@
+.iqcta {
+  position: relative;
+  padding: 140px 24px 160px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1f1b4d 100%);
+  color: white;
+  overflow: hidden;
+  border-radius: 32px 32px 0 0;
+  margin-top: -32px;
+}
+
+/* Giant editorial "CONTACT" watermark */
+.iqcta-curtain {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.iqcta-curtain-text {
+  font-size: clamp(8rem, 22vw, 22rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: white;
+  opacity: 0.04;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.iqcta-inner {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 56px;
+  z-index: 1;
+}
+
+/* Headline with vertical pill slider */
+.iqcta-headline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 24px;
+  font-size: clamp(1.6rem, 4.5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-align: center;
+  margin: 0;
+}
+
+.iqcta-prefix,
+.iqcta-suffix {
+  color: white;
+}
+
+/* Word pill that rotates vertically — fixed line-height so the translateY math lines up */
+.iqcta-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 999px;
+  padding: 0 clamp(22px, 2.6vw, 44px);
+  height: 1.4em;
+  min-width: clamp(220px, 26vw, 480px);
+  overflow: hidden;
+  position: relative;
+  vertical-align: middle;
+  box-shadow: 0 10px 36px rgba(255, 255, 255, 0.18);
+}
+
+.iqcta-pill-track {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.iqcta-pill-word {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.4em;
+  line-height: 1.4em;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Actions */
+.iqcta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.iqcta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 32px;
+  border-radius: 999px;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.iqcta-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: currentColor;
+  transition: transform 0.3s ease;
+}
+
+.iqcta-btn-icon svg {
+  color: var(--btn-icon-fg, #1a1d29);
+  font-size: 1rem;
+}
+
+.iqcta-btn:hover .iqcta-btn-icon {
+  transform: translateX(4px);
+}
+
+.iqcta-btn--primary {
+  background: white;
+  color: #1a1d29;
+  --btn-icon-fg: white;
+}
+
+.iqcta-btn--primary .iqcta-btn-icon {
+  background: #1a1d29;
+}
+
+.iqcta-btn--primary .iqcta-btn-icon svg {
+  color: white;
+}
+
+.iqcta-btn--primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px rgba(255, 255, 255, 0.22);
+}
+
+.iqcta-btn--ghost {
+  background: transparent;
+  color: white;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.iqcta-btn--ghost .iqcta-btn-icon {
+  background: white;
+}
+
+.iqcta-btn--ghost .iqcta-btn-icon svg {
+  color: #1a1d29;
+}
+
+.iqcta-btn--ghost:hover {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .iqcta {
+    padding: 90px 16px 110px;
+    border-radius: 24px 24px 0 0;
+    margin-top: -20px;
+  }
+  .iqcta-inner {
+    gap: 40px;
+  }
+  .iqcta-headline {
+    gap: 10px 14px;
+  }
+  .iqcta-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .iqcta-btn {
+    justify-content: space-between;
+    width: 100%;
+  }
+}

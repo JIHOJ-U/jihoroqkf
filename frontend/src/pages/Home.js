@@ -5,9 +5,14 @@ import { HiArrowRight, HiCode, HiDeviceMobile, HiServer, HiColorSwatch } from 'r
 import { getPortfolios, getImageUrl } from '../api';
 import Marquee from '../components/Marquee';
 import FloatingParticles from '../components/FloatingParticles';
-import InteractiveBalls from '../components/InteractiveBalls';
-import Hero3D from '../components/Hero3D';
+import CodeRainTerminal from '../components/CodeRainTerminal';
 import DeviceShowcase from '../components/DeviceShowcase';
+import ProcessSection from '../components/ProcessSection';
+import TestimonialsMarquee from '../components/TestimonialsMarquee';
+import FaqSection from '../components/FaqSection';
+import AvailabilityBadge from '../components/AvailabilityBadge';
+import RevealImage from '../components/RevealImage';
+import InquiryCTA from '../components/InquiryCTA';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Home.css';
 
@@ -58,11 +63,18 @@ function Home() {
       {/* Hero - Full Screen */}
       <section className="hero-full">
         <div className="hero-full__bg" />
-        <Hero3D />
-        <InteractiveBalls count={18} />
+        <CodeRainTerminal />
 
         <div className="hero-full__content">
           <motion.div className="hero-full__text" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              style={{ marginBottom: 24 }}
+            >
+              <AvailabilityBadge variant="chip" />
+            </motion.div>
             <h1 className="hero-full__title">
               <span translate="no">Dev.Vibe</span>
               <div className="hero-roller">
@@ -99,6 +111,9 @@ function Home() {
         </div>
       </section>
 
+      {/* Curtain wrapper — content slides UP over the sticky hero */}
+      <div className="home-curtain">
+
       {/* Marquee */}
       <Marquee />
 
@@ -128,10 +143,19 @@ function Home() {
             <motion.div className="intro-right" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <div className="intro-image-stack">
                 <div className="intro-img intro-img--1">
-                  <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="circuit board macro" />
+                  <RevealImage
+                    src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80"
+                    alt="circuit board macro"
+                    direction="left"
+                  />
                 </div>
                 <div className="intro-img intro-img--2">
-                  <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80" alt="pcb detail" />
+                  <RevealImage
+                    src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
+                    alt="pcb detail"
+                    direction="right"
+                    delay={0.15}
+                  />
                 </div>
                 <div className="intro-img-deco" />
               </div>
@@ -300,6 +324,12 @@ function Home() {
         </div>
       </section>
 
+      {/* Process — how we work */}
+      <ProcessSection />
+
+      {/* Testimonials — client voices, auto-scroll marquee */}
+      <TestimonialsMarquee />
+
       {/* Works */}
       <section className="works-section">
         <div className="container-wide">
@@ -352,28 +382,16 @@ function Home() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <FaqSection />
+
       {/* Marquee 2 */}
       <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" noTranslate />
 
-      {/* CTA */}
-      <section className="cta-section">
-        <div className="container">
-          <motion.div className="cta-box" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <div className="cta-bg-image">
-              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400&q=80" alt="" aria-hidden="true" />
-            </div>
-            <FloatingParticles count={15} colors={['#6366f1', '#8b5cf6', '#c4b5fd', '#e0e7ff']} />
-            <div className="cta-inner">
-              <span className="cta-label">LET'S WORK TOGETHER</span>
-              <h2>{t.cta.title}</h2>
-              <p><strong>{t.cta.desc1}</strong>{t.cta.desc2}</p>
-              <Link to="/contact" className="btn btn-dark btn-lg btn-bounce">
-                {t.cta.btn} <HiArrowRight />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      </div>{/* end .home-curtain */}
+
+      {/* CTA — vertical word slider, full-bleed */}
+      <InquiryCTA />
     </div>
   );
 }

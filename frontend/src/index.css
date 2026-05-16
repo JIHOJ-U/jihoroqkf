@@ -6,6 +6,21 @@
   box-sizing: border-box;
 }
 
+/* View Transitions API — disable default cross-fade so the JS circular reveal owns the animation */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
 :root,
 :root[data-theme="light"] {
   --bg-primary: #ffffff;
@@ -193,7 +208,7 @@ img {
   background: #999;
 }
 
-/* Custom cursor - hide default on desktop */
+/* Custom cursor - hide default on desktop only (touch devices keep native cursor) */
 @media (hover: hover) and (pointer: fine) {
   * {
     cursor: none !important;

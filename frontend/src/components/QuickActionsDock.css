@@ -1,0 +1,198 @@
+.qdock {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9990;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.qdock-btn {
+  --i: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  pointer-events: auto;
+  font-family: inherit;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.18),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transform: translateX(40px) scale(0.85);
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.qdock--in .qdock-btn {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  transition-delay: calc(var(--i) * 100ms);
+}
+
+.qdock-btn--quote {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.qdock-btn--chat {
+  background: linear-gradient(135deg, #ff8a00, #ff5b6c);
+}
+
+.qdock-btn--top {
+  background: linear-gradient(135deg, #1a1d29, #2a2f3d);
+}
+
+:root[data-theme="light"] .qdock-btn--top {
+  background: linear-gradient(135deg, #2a2f3d, #4a4f5d);
+}
+
+/* Scroll-to-top: fade in/out */
+.qdock--in .qdock-btn--hidden {
+  opacity: 0;
+  transform: translateX(40px) scale(0.85);
+  pointer-events: none;
+  transition-delay: 0ms;
+}
+
+.qdock--in .qdock-btn--visible {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.qdock-btn:hover {
+  transform: translateX(-3px) scale(1.08);
+  box-shadow:
+    0 14px 32px rgba(99, 102, 241, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.qdock-btn--chat:hover {
+  box-shadow:
+    0 14px 32px rgba(255, 138, 0, 0.35),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.qdock-btn--top:hover {
+  box-shadow:
+    0 14px 32px rgba(26, 29, 41, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.qdock-icon {
+  font-size: 1.35rem;
+  display: inline-flex;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.qdock-btn:hover .qdock-icon {
+  transform: rotate(-6deg) scale(1.05);
+}
+
+/* Pulse ring on primary button */
+.qdock-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(99, 102, 241, 0.6);
+  animation: qdock-pulse 2.2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes qdock-pulse {
+  0% { transform: scale(0.95); opacity: 0.9; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Sliding label that appears on hover */
+.qdock-label {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  background: rgba(15, 17, 23, 0.92);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.qdock-label::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: rgba(15, 17, 23, 0.92);
+}
+
+:root[data-theme="light"] .qdock-label {
+  background: #1a1d29;
+}
+
+:root[data-theme="light"] .qdock-label::after {
+  background: #1a1d29;
+}
+
+.qdock-btn:hover .qdock-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Mobile: shrink slightly, keep visible */
+@media (max-width: 768px) {
+  .qdock {
+    right: 12px;
+    gap: 10px;
+  }
+  .qdock-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .qdock-icon {
+    font-size: 1.15rem;
+  }
+  .qdock-label {
+    display: none;
+  }
+}
+
+/* Avoid covering CTA button area when very narrow */
+@media (max-width: 380px) {
+  .qdock {
+    top: auto;
+    bottom: 130px;
+    transform: none;
+  }
+}
+
+/* Reduced motion: kill pulse */
+@media (prefers-reduced-motion: reduce) {
+  .qdock-pulse { animation: none; opacity: 0; }
+  .qdock-btn { transition: opacity 0.2s ease; }
+  .qdock-btn:hover .qdock-icon { transform: none; }
+}

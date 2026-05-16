@@ -69,7 +69,7 @@ function Navbar() {
 
           <button
             className="theme-toggle"
-            onClick={() => { toggleTheme(); unlock('THEME_TOGGLED'); }}
+            onClick={(e) => { toggleTheme(e); unlock('THEME_TOGGLED'); }}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
           >

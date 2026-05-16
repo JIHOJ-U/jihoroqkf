@@ -4,6 +4,9 @@
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 16px 0;
+  /* Skip paint/layout when scrolled off-screen — saves CPU on long pages */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 56px;
 }
 
 .marquee__container {

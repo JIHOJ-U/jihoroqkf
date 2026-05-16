@@ -1,0 +1,227 @@
+.tm-section {
+  padding: 120px 0 140px;
+  background: var(--bg-secondary, #f7f8fc);
+  overflow: hidden;
+  /* Skip paint when off-screen — two infinite marquees are expensive */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+
+:root[data-theme="dark"] .tm-section {
+  background: #14161e;
+}
+
+.tm-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 60px;
+}
+
+.tm-head .section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.tm-head-desc {
+  margin-top: 18px;
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Rows wrapper */
+.tm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: relative;
+}
+
+/* Edge fade — content peeks but fades into background */
+.tm-rows::before,
+.tm-rows::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.tm-rows::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg-secondary, #f7f8fc) 0%, transparent 100%);
+}
+
+.tm-rows::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--bg-secondary, #f7f8fc) 0%, transparent 100%);
+}
+
+:root[data-theme="dark"] .tm-rows::before {
+  background: linear-gradient(90deg, #14161e 0%, transparent 100%);
+}
+
+:root[data-theme="dark"] .tm-rows::after {
+  background: linear-gradient(-90deg, #14161e 0%, transparent 100%);
+}
+
+.tm-row {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+}
+
+.tm-row-track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  animation: tm-slide-left linear infinite;
+  will-change: transform;
+}
+
+.tm-row[data-direction="right"] .tm-row-track {
+  animation-name: tm-slide-right;
+}
+
+.tm-row:hover .tm-row-track {
+  animation-play-state: paused;
+}
+
+@keyframes tm-slide-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes tm-slide-right {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* Card */
+.tm-card {
+  flex-shrink: 0;
+  width: 380px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px 26px 22px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: default;
+}
+
+.tm-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="dark"] .tm-card:hover {
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.4);
+}
+
+.tm-card-quote-mark {
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: rgba(99, 102, 241, 0.12);
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.tm-card-body {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 22px;
+  min-height: 4.8em;
+  position: relative;
+  z-index: 1;
+}
+
+.tm-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.tm-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.tm-card-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.tm-card-client {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.tm-card-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .tm-section {
+    padding: 80px 0 90px;
+  }
+  .tm-head {
+    margin-bottom: 40px;
+    padding: 0 20px;
+  }
+  .tm-rows {
+    gap: 16px;
+  }
+  .tm-rows::before,
+  .tm-rows::after {
+    width: 50px;
+  }
+  .tm-row-track {
+    gap: 14px;
+  }
+  .tm-card {
+    width: 290px;
+    padding: 22px 20px 18px;
+    border-radius: 14px;
+  }
+  .tm-card-body {
+    font-size: 0.88rem;
+    min-height: 5.2em;
+  }
+  .tm-card-quote-mark {
+    font-size: 3.2rem;
+    top: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-row-track { animation: none; }
+}

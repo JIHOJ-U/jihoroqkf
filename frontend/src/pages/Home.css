@@ -1,12 +1,39 @@
-/* ===== Hero Full Screen ===== */
-.hero-full {
+/* ===== Hero Full Screen — sticky for curtain reveal ===== */
+.home {
   position: relative;
+}
+
+.hero-full {
+  position: sticky;
+  top: 0;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   margin-top: -72px;
+  z-index: 0;
+}
+
+/* Everything after the hero scrolls UP over it (curtain reveal) */
+.home-curtain {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-primary);
+  border-radius: 32px 32px 0 0;
+  margin-top: -32px;
+  box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.18);
+}
+
+:root[data-theme="dark"] .home-curtain {
+  box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .home-curtain {
+    border-radius: 20px 20px 0 0;
+    margin-top: -20px;
+  }
 }
 
 .hero-full__bg {

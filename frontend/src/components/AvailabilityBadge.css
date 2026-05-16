@@ -1,0 +1,141 @@
+/* Shared dot — pulsing green */
+.avb-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  flex-shrink: 0;
+}
+
+.avb-dot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(16, 185, 129, 0.6);
+  animation: avb-pulse 2s ease-out infinite;
+}
+
+@keyframes avb-pulse {
+  0%   { transform: scale(0.9); opacity: 1; }
+  80%  { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* === Chip variant — for hero === */
+.avb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  pointer-events: auto;
+}
+
+.avb-chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+  transform: translateY(-2px);
+}
+
+.avb-chip-label {
+  color: white;
+}
+
+.avb-chip-hint {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 500;
+}
+
+/* === Bar variant — fixed bottom, slim === */
+.avb-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 9985;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  background: rgba(15, 17, 23, 0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 999px;
+  color: white;
+  font-size: 0.78rem;
+  text-decoration: none;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  animation: avb-bar-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s backwards;
+}
+
+@keyframes avb-bar-in {
+  0%   { opacity: 0; transform: translate(-50%, 30px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.avb-bar:hover {
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 0 18px 42px rgba(99, 102, 241, 0.4);
+}
+
+.avb-bar-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.avb-bar-sep {
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 2px;
+}
+
+.avb-bar-time {
+  color: rgba(255, 255, 255, 0.65);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+}
+
+.avb-bar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 999px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+}
+
+/* Hide bottom bar on small mobile (collides with QuickDock) */
+@media (max-width: 480px) {
+  .avb-bar { display: none; }
+}
+
+@media (max-width: 768px) {
+  .avb-bar {
+    padding: 8px 14px;
+    gap: 10px;
+    font-size: 0.72rem;
+  }
+  .avb-bar-time { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avb-dot::after { animation: none; opacity: 0; }
+  .avb-bar { animation: none; }
+}
