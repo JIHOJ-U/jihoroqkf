@@ -359,7 +359,7 @@
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -372,6 +372,10 @@
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .service-card:hover {

@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HiMail, HiPhone } from 'react-icons/hi';
+import { HiMail, HiPhone, HiArrowSmRight } from 'react-icons/hi';
 import { FaGithub, FaBlog } from 'react-icons/fa';
-import { SiNaver } from 'react-icons/si';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Footer.css';
 
 function Footer() {
+  const { t, lang } = useLanguage();
+  const services = t.services.list;
+
   return (
     <footer className="footer">
       <div className="footer-inner">
@@ -13,12 +16,13 @@ function Footer() {
           <div className="footer-brand">
             <Link to="/" className="footer-logo" translate="no">Dev.Vibe</Link>
             <p className="footer-desc">
-              아이디어를 현실로 만드는 개발 파트너.<br />
-              웹, 앱, 시스템 개발 외주 전문.
+              {lang === 'ko'
+                ? <>아이디어를 현실로 만드는 개발 파트너.<br />웹, 앱, 시스템 개발 외주 전문.</>
+                : <>Your partner from idea to reality.<br />Freelance web, app & systems development.</>}
             </p>
             <div className="footer-socials">
-              <a href="https://github.com/JIHOJ-U/JIHOJ-U" target="_blank" rel="noopener noreferrer"><FaGithub /></a>
-              <a href="https://blog.naver.com/longnight0719" target="_blank" rel="noopener noreferrer"><FaBlog /></a>
+              <a href="https://github.com/JIHOJ-U/JIHOJ-U" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub /></a>
+              <a href="https://blog.naver.com/longnight0719" target="_blank" rel="noopener noreferrer" aria-label="Blog"><FaBlog /></a>
             </div>
           </div>
 
@@ -32,10 +36,16 @@ function Footer() {
             </div>
             <div className="footer-col">
               <h4>SERVICES</h4>
-              <span>Web Development</span>
-              <span>App Development</span>
-              <span>UI/UX Design</span>
-              <span>Publishing</span>
+              {services.map((s) => (
+                <Link
+                  key={s.key}
+                  to={`/services#svc-${s.key}`}
+                  className="footer-service-link"
+                >
+                  <span>{lang === 'ko' ? s.titleKo : s.title}</span>
+                  <HiArrowSmRight className="footer-arrow" />
+                </Link>
+              ))}
             </div>
             <div className="footer-col">
               <h4>CONTACT</h4>
@@ -52,7 +62,7 @@ function Footer() {
         <div className="footer-bottom">
           <p>&copy; 2026 <span translate="no">Dev.Vibe</span> All rights reserved.</p>
           <div className="footer-bottom-links">
-            <Link to="/privacy">개인정보처리방침</Link>
+            <Link to="/privacy">{lang === 'ko' ? '개인정보처리방침' : 'Privacy Policy'}</Link>
           </div>
         </div>
       </div>

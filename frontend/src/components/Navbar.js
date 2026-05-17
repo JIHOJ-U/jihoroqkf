@@ -26,6 +26,7 @@ function Navbar() {
   }, [location]);
 
   const navLinks = [
+    { path: '/services', label: t.nav.services },
     { path: '/portfolio', label: t.nav.portfolio },
     { path: '/about', label: t.nav.about },
     { path: '/contact', label: t.nav.contact },

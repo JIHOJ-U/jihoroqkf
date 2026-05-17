@@ -15,6 +15,7 @@ import QuickActionsDock from './components/QuickActionsDock';
 import AvailabilityBadge from './components/AvailabilityBadge';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
+import Services from './pages/Services';
 import Portfolio from './pages/Portfolio';
 import PortfolioDetail from './pages/PortfolioDetail';
 import PortfolioForm from './pages/PortfolioForm';
@@ -37,6 +38,7 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
         <Route path="/portfolio" element={<PageTransition><Portfolio /></PageTransition>} />
         <Route path="/portfolio/:id" element={<PageTransition><PortfolioDetail /></PageTransition>} />
         <Route path="/portfolio/new" element={<PageTransition><PortfolioForm /></PageTransition>} />

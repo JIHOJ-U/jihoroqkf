@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { HiCode, HiPlus, HiSearch, HiArrowRight } from 'react-icons/hi';
 import { getPortfolios, getImageUrl } from '../api';
@@ -66,9 +66,12 @@ function PortfolioCard({ item, index }) {
 }
 
 function Portfolio() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
+  const location = useLocation();
   const [portfolios, setPortfolios] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('ALL');
+  // activeKey: 'ALL' or a service key ('landing', 'mobile', etc.)
+  // or a raw data-only category string (for portfolios with categories outside services)
+  const [activeKey, setActiveKey] = useState('ALL');
   const [search, setSearch] = useState('');
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(true);
@@ -80,32 +83,66 @@ function Portfolio() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Build category tabs dynamically from data + a curated base set
-  const baseCategories = lang === 'ko'
-    ? ['전체', '웹 개발', '앱 개발', '백엔드/API', 'UI/UX 디자인', '플랫폼', '쇼핑몰', '랜딩 페이지', '기타']
-    : ['ALL', 'Web', 'App', 'Backend/API', 'UI/UX', 'Platform', 'Shop', 'Landing', 'Etc'];
+  // Read ?category=... from URL (Footer / Home links use this)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('category');
+    setActiveKey(cat ? decodeURIComponent(cat) : 'ALL');
+  }, [location.search]);
 
-  const categories = useMemo(() => {
-    const fromData = Array.from(new Set(portfolios.map(p => p.category).filter(Boolean)));
-    const merged = [...baseCategories];
-    fromData.forEach(c => { if (!merged.includes(c)) merged.push(c); });
-    return merged;
-  }, [portfolios, baseCategories]);
+  const services = t.services?.list || [];
+
+  // Service tabs (key-based) + any extra raw categories found in data
+  const tabs = useMemo(() => {
+    const serviceKeys = services.map(s => s.key);
+    const serviceLabels = services.flatMap(s => [s.titleKo, s.title]).filter(Boolean);
+    const extraFromData = Array.from(
+      new Set(
+        portfolios
+          .map(p => p.category)
+          .filter(Boolean)
+          .filter(c => !serviceLabels.includes(c))
+      )
+    );
+    return [
+      { key: 'ALL', label: lang === 'ko' ? '전체' : 'ALL' },
+      ...services.map(s => ({ key: s.key, label: lang === 'ko' ? s.titleKo : s.title })),
+      ...extraFromData.map(c => ({ key: c, label: c })),
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [services, portfolios, lang]);
+
+  // Build a lookup: key → { titleKo, title } so we can match raw category strings in either language
+  const keyToService = useMemo(() => {
+    const map = {};
+    services.forEach(s => { map[s.key] = s; });
+    return map;
+  }, [services]);
 
   const filtered = useMemo(() => {
-    const isAll = activeCategory === 'ALL' || activeCategory === '전체';
-    const byCat = isAll ? portfolios : portfolios.filter(p => p.category === activeCategory);
+    let byCat;
+    if (activeKey === 'ALL') {
+      byCat = portfolios;
+    } else if (keyToService[activeKey]) {
+      // Service key — match against BOTH Korean and English label so DB stays language-agnostic
+      const s = keyToService[activeKey];
+      byCat = portfolios.filter(p => p.category === s.titleKo || p.category === s.title);
+    } else {
+      // Raw category string (legacy or custom)
+      byCat = portfolios.filter(p => p.category === activeKey);
+    }
+
     const q = search.trim().toLowerCase();
     if (!q) return byCat;
     return byCat.filter(p => {
       const haystack = [p.title, p.client, p.category, ...(p.techStack || [])].join(' ').toLowerCase();
       return haystack.includes(q);
     });
-  }, [portfolios, activeCategory, search]);
+  }, [portfolios, activeKey, search, keyToService]);
 
   useEffect(() => {
     setVisible(PAGE_SIZE);
-  }, [activeCategory, search]);
+  }, [activeKey, search]);
 
   const shown = filtered.slice(0, visible);
   const hasMore = filtered.length > visible;
@@ -169,21 +206,17 @@ function Portfolio() {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <ul className="pf-tabs">
-            {categories.map((cat) => {
-              const isAll = cat === 'ALL' || cat === '전체';
-              const isActive = isAll ? (activeCategory === 'ALL' || activeCategory === '전체') : activeCategory === cat;
-              return (
-                <li key={cat}>
-                  <button
-                    type="button"
-                    className={`pf-tab ${isActive ? 'pf-tab--active' : ''}`}
-                    onClick={() => setActiveCategory(isAll ? 'ALL' : cat)}
-                  >
-                    {cat}
-                  </button>
-                </li>
-              );
-            })}
+            {tabs.map((tab) => (
+              <li key={tab.key}>
+                <button
+                  type="button"
+                  className={`pf-tab ${activeKey === tab.key ? 'pf-tab--active' : ''}`}
+                  onClick={() => setActiveKey(tab.key)}
+                >
+                  {tab.label}
+                </button>
+              </li>
+            ))}
             <li className="pf-tabs-spacer" />
             <li>
               <Link to="/portfolio/new" className="pf-tab pf-tab--add">

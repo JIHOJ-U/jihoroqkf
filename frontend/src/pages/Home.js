@@ -8,6 +8,7 @@ import FloatingParticles from '../components/FloatingParticles';
 import CodeRainTerminal from '../components/CodeRainTerminal';
 import DeviceShowcase from '../components/DeviceShowcase';
 import ProcessSection from '../components/ProcessSection';
+import CapabilitiesSection from '../components/CapabilitiesSection';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import AvailabilityBadge from '../components/AvailabilityBadge';
@@ -176,14 +177,16 @@ function Home() {
           </motion.div>
           <div className="services-grid">
             {services.map((service, i) => (
-              <motion.div key={i} className="service-card" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
-                <div className="service-icon-wrap">
-                  <div className="service-icon">{service.icon}</div>
-                </div>
-                <h3 className="service-title-en">{service.title}</h3>
-                {service.titleKo && <span className="service-title-ko">{service.titleKo}</span>}
-                <p>{service.desc}</p>
-                <div className="service-shine" />
+              <motion.div key={service.key || i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
+                <Link to={`/services#svc-${service.key}`} className="service-card">
+                  <div className="service-icon-wrap">
+                    <div className="service-icon">{service.icon}</div>
+                  </div>
+                  <h3 className="service-title-en">{service.title}</h3>
+                  {service.titleKo && <span className="service-title-ko">{service.titleKo}</span>}
+                  <p>{service.desc}</p>
+                  <div className="service-shine" />
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -327,8 +330,11 @@ function Home() {
       {/* Process — how we work */}
       <ProcessSection />
 
-      {/* Testimonials — client voices, auto-scroll marquee */}
-      <TestimonialsMarquee />
+      {/* Capabilities — what I can build (plain language for non-devs) */}
+      <CapabilitiesSection />
+
+      {/* Testimonials — temporarily hidden, re-enable when ready */}
+      {/* <TestimonialsMarquee /> */}
 
       {/* Works */}
       <section className="works-section">
