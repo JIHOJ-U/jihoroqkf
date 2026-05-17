@@ -16,6 +16,8 @@ import AvailabilityBadge from './components/AvailabilityBadge';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
 import Services from './pages/Services';
+import References from './pages/References';
+import ReferenceDetail from './pages/ReferenceDetail';
 import Portfolio from './pages/Portfolio';
 import PortfolioDetail from './pages/PortfolioDetail';
 import PortfolioForm from './pages/PortfolioForm';
@@ -39,6 +41,8 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
         <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
+        <Route path="/references" element={<PageTransition><References /></PageTransition>} />
+        <Route path="/references/:slug" element={<PageTransition><ReferenceDetail /></PageTransition>} />
         <Route path="/portfolio" element={<PageTransition><Portfolio /></PageTransition>} />
         <Route path="/portfolio/:id" element={<PageTransition><PortfolioDetail /></PageTransition>} />
         <Route path="/portfolio/new" element={<PageTransition><PortfolioForm /></PageTransition>} />

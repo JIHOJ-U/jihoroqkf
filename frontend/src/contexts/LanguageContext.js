@@ -5,7 +5,7 @@ const LanguageContext = createContext();
 
 export const translations = {
   ko: {
-    nav: { services: 'SERVICES', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
+    nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
     hero: {
       title: 'DEVIBE',
       tagline: '그냥 해봐!',
@@ -224,7 +224,7 @@ export const translations = {
     },
   },
   en: {
-    nav: { services: 'SERVICES', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
+    nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
     hero: {
       title: 'DEVIBE',
       tagline: 'Just Go For It',
