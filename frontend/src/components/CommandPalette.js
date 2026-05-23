@@ -11,6 +11,47 @@ import './CommandPalette.css';
 const ADMIN_KEY = 'wnwlgh0719';
 const STORAGE_KEY = 'joe_dev_admin_auth';
 
+const COPY = {
+  ko: {
+    placeholder: '명령어 또는 페이지 검색...',
+    noResultPre: '"', noResultPost: '"에 대한 결과가 없습니다.',
+    fNav: '탐색', fRun: '실행', fClose: '닫기', fToggle: '토글',
+    cmd: {
+      home: { label: '홈으로 이동', hint: 'Home' },
+      about: { label: 'About 페이지', hint: '소개' },
+      portfolio: { label: 'Portfolio 페이지', hint: '포트폴리오 목록' },
+      contact: { label: 'Contact 페이지', hint: '프로젝트 문의' },
+      terminal: '터미널 열기',
+      privacy: '개인정보처리방침',
+      admin: '관리자 (문의 관리)',
+      portfolioNew: '포트폴리오 등록',
+      adminLogout: '관리자 로그아웃',
+      themeLight: '라이트 모드로 전환', themeDark: '다크 모드로 전환',
+      langKo: '한국어로 전환', langEn: 'Switch to English',
+      github: 'GitHub 프로필', blog: '네이버 블로그', email: '이메일 보내기',
+    },
+  },
+  en: {
+    placeholder: 'Search commands or pages...',
+    noResultPre: 'No results for "', noResultPost: '"',
+    fNav: 'Navigate', fRun: 'Run', fClose: 'Close', fToggle: 'Toggle',
+    cmd: {
+      home: { label: 'Go to Home', hint: 'Home' },
+      about: { label: 'About page', hint: 'About' },
+      portfolio: { label: 'Portfolio page', hint: 'Project list' },
+      contact: { label: 'Contact page', hint: 'Project inquiry' },
+      terminal: 'Open terminal',
+      privacy: 'Privacy Policy',
+      admin: 'Admin (manage inquiries)',
+      portfolioNew: 'Add portfolio',
+      adminLogout: 'Admin logout',
+      themeLight: 'Switch to light mode', themeDark: 'Switch to dark mode',
+      langKo: '한국어로 전환', langEn: 'Switch to English',
+      github: 'GitHub profile', blog: 'Naver blog', email: 'Send email',
+    },
+  },
+};
+
 function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -19,7 +60,9 @@ function CommandPalette() {
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const { theme, toggle: toggleTheme } = useTheme();
-  const { setLang } = useLanguage();
+  const { lang, setLang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
+  const L = c.cmd;
   const { unlock } = useAchievement();
 
   // Check admin auth state when palette opens
@@ -31,20 +74,20 @@ function CommandPalette() {
 
   const commands = useMemo(() => {
     const base = [
-      { id: 'home', label: '홈으로 이동', hint: 'Home', icon: <HiHome />, action: () => navigate('/'), category: 'NAV' },
-      { id: 'about', label: 'About 페이지', hint: '소개', icon: <HiUser />, action: () => navigate('/about'), category: 'NAV' },
-      { id: 'portfolio', label: 'Portfolio 페이지', hint: '포트폴리오 목록', icon: <HiCode />, action: () => navigate('/portfolio'), category: 'NAV' },
-      { id: 'contact', label: 'Contact 페이지', hint: '프로젝트 문의', icon: <HiMail />, action: () => navigate('/contact'), category: 'NAV' },
-      { id: 'terminal', label: '터미널 열기', hint: '/terminal', icon: <HiTerminal />, action: () => navigate('/terminal'), category: 'NAV' },
-      { id: 'privacy', label: '개인정보처리방침', hint: '/privacy', icon: <HiDocumentText />, action: () => navigate('/privacy'), category: 'NAV' },
+      { id: 'home', label: L.home.label, hint: L.home.hint, icon: <HiHome />, action: () => navigate('/'), category: 'NAV' },
+      { id: 'about', label: L.about.label, hint: L.about.hint, icon: <HiUser />, action: () => navigate('/about'), category: 'NAV' },
+      { id: 'portfolio', label: L.portfolio.label, hint: L.portfolio.hint, icon: <HiCode />, action: () => navigate('/portfolio'), category: 'NAV' },
+      { id: 'contact', label: L.contact.label, hint: L.contact.hint, icon: <HiMail />, action: () => navigate('/contact'), category: 'NAV' },
+      { id: 'terminal', label: L.terminal, hint: '/terminal', icon: <HiTerminal />, action: () => navigate('/terminal'), category: 'NAV' },
+      { id: 'privacy', label: L.privacy, hint: '/privacy', icon: <HiDocumentText />, action: () => navigate('/privacy'), category: 'NAV' },
     ];
 
     // Admin entries only shown when already authenticated
     if (isAdminAuth) {
       base.push(
-        { id: 'admin', label: '관리자 (문의 관리)', hint: '/admin', icon: <HiLockClosed />, action: () => navigate('/admin'), category: 'NAV' },
-        { id: 'portfolio-new', label: '포트폴리오 등록', hint: '/portfolio/new', icon: <HiCode />, action: () => navigate('/portfolio/new'), category: 'NAV' },
-        { id: 'admin-logout', label: '관리자 로그아웃', hint: 'logout', icon: <HiLockClosed />, action: () => {
+        { id: 'admin', label: L.admin, hint: '/admin', icon: <HiLockClosed />, action: () => navigate('/admin'), category: 'NAV' },
+        { id: 'portfolio-new', label: L.portfolioNew, hint: '/portfolio/new', icon: <HiCode />, action: () => navigate('/portfolio/new'), category: 'NAV' },
+        { id: 'admin-logout', label: L.adminLogout, hint: 'logout', icon: <HiLockClosed />, action: () => {
           localStorage.removeItem(STORAGE_KEY);
           setIsAdminAuth(false);
         }, category: 'ACTION' }
@@ -53,17 +96,17 @@ function CommandPalette() {
 
     return base.concat(commonExtras());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, theme, toggleTheme, setLang, isAdminAuth]);
+  }, [navigate, theme, toggleTheme, setLang, isAdminAuth, lang]);
 
   function commonExtras() {
     return [
-      { id: 'theme', label: theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환', hint: 'Theme', icon: theme === 'dark' ? <HiSun /> : <HiMoon />, action: toggleTheme, category: 'ACTION' },
-      { id: 'lang-ko', label: '한국어로 전환', hint: 'KR', icon: <HiGlobe />, action: () => setLang('ko'), category: 'ACTION' },
-      { id: 'lang-en', label: 'Switch to English', hint: 'EN', icon: <HiGlobe />, action: () => setLang('en'), category: 'ACTION' },
+      { id: 'theme', label: theme === 'dark' ? L.themeLight : L.themeDark, hint: 'Theme', icon: theme === 'dark' ? <HiSun /> : <HiMoon />, action: toggleTheme, category: 'ACTION' },
+      { id: 'lang-ko', label: L.langKo, hint: 'KR', icon: <HiGlobe />, action: () => setLang('ko'), category: 'ACTION' },
+      { id: 'lang-en', label: L.langEn, hint: 'EN', icon: <HiGlobe />, action: () => setLang('en'), category: 'ACTION' },
 
-      { id: 'github', label: 'GitHub 프로필', hint: 'github.com/JIHOJ-U', icon: <FaGithub />, action: () => window.open('https://github.com/JIHOJ-U/JIHOJ-U', '_blank'), category: 'EXTERNAL' },
-      { id: 'blog', label: '네이버 블로그', hint: 'blog.naver.com/longnight0719', icon: <FaBlog />, action: () => window.open('https://blog.naver.com/longnight0719', '_blank'), category: 'EXTERNAL' },
-      { id: 'email', label: '이메일 보내기', hint: 'roqkfwkwlgh@naver.com', icon: <HiMail />, action: () => window.location.href = 'mailto:roqkfwkwlgh@naver.com', category: 'EXTERNAL' },
+      { id: 'github', label: L.github, hint: 'github.com/JIHOJ-U', icon: <FaGithub />, action: () => window.open('https://github.com/JIHOJ-U/JIHOJ-U', '_blank'), category: 'EXTERNAL' },
+      { id: 'blog', label: L.blog, hint: 'blog.naver.com/longnight0719', icon: <FaBlog />, action: () => window.open('https://blog.naver.com/longnight0719', '_blank'), category: 'EXTERNAL' },
+      { id: 'email', label: L.email, hint: 'roqkfwkwlgh@naver.com', icon: <HiMail />, action: () => window.location.href = 'mailto:roqkfwkwlgh@naver.com', category: 'EXTERNAL' },
     ];
   }
 
@@ -148,7 +191,7 @@ function CommandPalette() {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="명령어 또는 페이지 검색..."
+                placeholder={c.placeholder}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -160,7 +203,7 @@ function CommandPalette() {
             <div className="cmdk-list">
               {filtered.length === 0 ? (
                 <div className="cmdk-empty">
-                  <span>"<strong>{query}</strong>"에 대한 결과가 없습니다.</span>
+                  <span>{c.noResultPre}<strong>{query}</strong>{c.noResultPost}</span>
                 </div>
               ) : (
                 ['NAV', 'ACTION', 'EXTERNAL'].map(cat => {
@@ -192,11 +235,11 @@ function CommandPalette() {
             </div>
 
             <div className="cmdk-footer">
-              <span><kbd>↑↓</kbd> 탐색</span>
-              <span><kbd>↵</kbd> 실행</span>
-              <span><kbd>ESC</kbd> 닫기</span>
+              <span><kbd>↑↓</kbd> {c.fNav}</span>
+              <span><kbd>↵</kbd> {c.fRun}</span>
+              <span><kbd>ESC</kbd> {c.fClose}</span>
               <span className="cmdk-footer-right">
-                <kbd>Ctrl</kbd> + <kbd>K</kbd> 토글
+                <kbd>Ctrl</kbd> + <kbd>K</kbd> {c.fToggle}
               </span>
             </div>
           </motion.div>

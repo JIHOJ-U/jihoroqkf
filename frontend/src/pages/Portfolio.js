@@ -4,9 +4,11 @@ import { motion, useInView } from 'framer-motion';
 import { HiCode, HiPlus, HiSearch, HiArrowRight } from 'react-icons/hi';
 import { getPortfolios, getImageUrl } from '../api';
 import { useLanguage } from '../contexts/LanguageContext';
+import useTypewriterPlaceholder from '../hooks/useTypewriterPlaceholder';
 import './Portfolio.css';
 
 const REVEAL_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4', '#10b981'];
+const PF_SEARCH_HINTS = ['반응형 웹', '쇼핑몰', '모바일 앱', '관리자 대시보드', 'React', 'Node.js'];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -68,6 +70,7 @@ function PortfolioCard({ item, index }) {
 function Portfolio() {
   const { lang, t } = useLanguage();
   const location = useLocation();
+  const typedPlaceholder = useTypewriterPlaceholder(PF_SEARCH_HINTS, { prefix: '검색: ' });
   const [portfolios, setPortfolios] = useState([]);
   // activeKey: 'ALL' or a service key ('landing', 'mobile', etc.)
   // or a raw data-only category string (for portfolios with categories outside services)
@@ -191,7 +194,7 @@ function Portfolio() {
           <input
             type="text"
             className="pf-search-input"
-            placeholder={T.placeholder}
+            placeholder={lang === 'ko' ? typedPlaceholder : T.placeholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

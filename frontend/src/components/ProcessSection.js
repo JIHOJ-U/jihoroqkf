@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
+import TypeOnView from './TypeOnView';
 import './ProcessSection.css';
 
 function ProcessSection() {
@@ -20,7 +21,8 @@ function ProcessSection() {
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="proc-label-dot" />{label}
+            <span className="proc-label-dot" />
+            <TypeOnView text={label} speed={55} />
           </motion.span>
 
           <motion.h2

@@ -380,9 +380,9 @@ function Home() {
               <div className="works-empty-img">
                 <img src="https://images.unsplash.com/photo-1597733336794-12d05021d510?w=500&q=80" alt="microchip" />
               </div>
-              <h3>아직 등록된 프로젝트가 없습니다</h3>
-              <p>첫 번째 포트폴리오를 등록해보세요.</p>
-              <Link to="/portfolio/new" className="btn btn-dark">포트폴리오 등록</Link>
+              <h3>{lang === 'ko' ? '아직 등록된 프로젝트가 없습니다' : 'No projects registered yet'}</h3>
+              <p>{lang === 'ko' ? '첫 번째 포트폴리오를 등록해보세요.' : 'Add your first portfolio.'}</p>
+              <Link to="/portfolio/new" className="btn btn-dark">{lang === 'ko' ? '포트폴리오 등록' : 'Add portfolio'}</Link>
             </div>
           )}
         </div>

@@ -2,9 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiArrowLeft, HiHome, HiTerminal } from 'react-icons/hi';
+import { useLanguage } from '../contexts/LanguageContext';
 import './NotFound.css';
 
+const COPY = {
+  ko: {
+    hint: '// 페이지가 존재하지 않거나 이동되었습니다.',
+    home: '홈으로 가기', back: '이전 페이지', terminal: '터미널로',
+    tipPre: '를 눌러 빠르게 이동할 수 있습니다.',
+  },
+  en: {
+    hint: '// This page does not exist or has been moved.',
+    home: 'Go home', back: 'Go back', terminal: 'Terminal',
+    tipPre: 'to navigate quickly.',
+  },
+};
+
 function NotFound() {
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const location = useLocation();
   const [glitch, setGlitch] = useState(false);
 
@@ -72,7 +88,7 @@ function NotFound() {
               ))}
               <div className="nf-line nf-line--hint">
                 <span className="nf-line-num">→</span>
-                <span className="nf-dim">// 페이지가 존재하지 않거나 이동되었습니다.</span>
+                <span className="nf-dim">{c.hint}</span>
               </div>
             </div>
           </div>
@@ -80,18 +96,18 @@ function NotFound() {
           {/* Actions */}
           <div className="nf-actions">
             <Link to="/" className="nf-btn nf-btn--primary">
-              <HiHome /> 홈으로 가기
+              <HiHome /> {c.home}
             </Link>
             <button className="nf-btn nf-btn--ghost" onClick={() => window.history.back()}>
-              <HiArrowLeft /> 이전 페이지
+              <HiArrowLeft /> {c.back}
             </button>
             <Link to="/terminal" className="nf-btn nf-btn--ghost">
-              <HiTerminal /> 터미널로
+              <HiTerminal /> {c.terminal}
             </Link>
           </div>
 
           <p className="nf-tip">
-            <kbd>Ctrl</kbd> + <kbd>K</kbd> 를 눌러 빠르게 이동할 수 있습니다.
+            <kbd>Ctrl</kbd> + <kbd>K</kbd> {c.tipPre}
           </p>
         </motion.div>
       </div>

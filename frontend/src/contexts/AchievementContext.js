@@ -3,16 +3,16 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 const STORAGE_KEY = 'devvibe_achievements';
 
 export const ACHIEVEMENTS = {
-  CMDK_USED: { id: 'CMDK_USED', icon: '⌨️', title: 'Power User', desc: 'Cmd+K 커맨드 팔레트 첫 사용' },
-  KONAMI: { id: 'KONAMI', icon: '🎮', title: 'Cheat Code', desc: 'Konami code 발견!' },
-  TERMINAL_5_CMDS: { id: 'TERMINAL_5_CMDS', icon: '📟', title: 'Terminal Master', desc: '터미널에서 명령어 5개 실행' },
-  THEME_TOGGLED: { id: 'THEME_TOGGLED', icon: '🌙', title: 'Night Owl', desc: '다크/라이트 모드 전환' },
-  ALL_PAGES: { id: 'ALL_PAGES', icon: '🗺️', title: 'Explorer', desc: '모든 메인 페이지 방문' },
-  CONSOLE_OPENED: { id: 'CONSOLE_OPENED', icon: '🖥️', title: 'Curious Mind', desc: '개발자 콘솔 열기' },
-  PORTFOLIO_VIEWED: { id: 'PORTFOLIO_VIEWED', icon: '👁️', title: 'Portfolio Stalker', desc: '포트폴리오 상세 페이지 열람' },
-  QUOTE_USED: { id: 'QUOTE_USED', icon: '💰', title: 'Smart Buyer', desc: '견적 계산기 사용' },
-  LANG_SWITCHED: { id: 'LANG_SWITCHED', icon: '🌐', title: 'Polyglot', desc: '언어 전환' },
-  CODE_COPIED: { id: 'CODE_COPIED', icon: '📋', title: 'Code Collector', desc: '코드 스니펫 복사' },
+  CMDK_USED: { id: 'CMDK_USED', icon: '⌨️', title: 'Power User', desc: { ko: 'Cmd+K 커맨드 팔레트 첫 사용', en: 'First use of the Cmd+K command palette' } },
+  KONAMI: { id: 'KONAMI', icon: '🎮', title: 'Cheat Code', desc: { ko: 'Konami code 발견!', en: 'Found the Konami code!' } },
+  TERMINAL_5_CMDS: { id: 'TERMINAL_5_CMDS', icon: '📟', title: 'Terminal Master', desc: { ko: '터미널에서 명령어 5개 실행', en: 'Ran 5 commands in the terminal' } },
+  THEME_TOGGLED: { id: 'THEME_TOGGLED', icon: '🌙', title: 'Night Owl', desc: { ko: '다크/라이트 모드 전환', en: 'Toggled dark / light mode' } },
+  ALL_PAGES: { id: 'ALL_PAGES', icon: '🗺️', title: 'Explorer', desc: { ko: '모든 메인 페이지 방문', en: 'Visited every main page' } },
+  CONSOLE_OPENED: { id: 'CONSOLE_OPENED', icon: '🖥️', title: 'Curious Mind', desc: { ko: '개발자 콘솔 열기', en: 'Opened the developer console' } },
+  PORTFOLIO_VIEWED: { id: 'PORTFOLIO_VIEWED', icon: '👁️', title: 'Portfolio Stalker', desc: { ko: '포트폴리오 상세 페이지 열람', en: 'Viewed a portfolio detail page' } },
+  QUOTE_USED: { id: 'QUOTE_USED', icon: '💰', title: 'Smart Buyer', desc: { ko: '견적 계산기 사용', en: 'Used the quote calculator' } },
+  LANG_SWITCHED: { id: 'LANG_SWITCHED', icon: '🌐', title: 'Polyglot', desc: { ko: '언어 전환', en: 'Switched language' } },
+  CODE_COPIED: { id: 'CODE_COPIED', icon: '📋', title: 'Code Collector', desc: { ko: '코드 스니펫 복사', en: 'Copied a code snippet' } },
 };
 
 const AchievementContext = createContext();

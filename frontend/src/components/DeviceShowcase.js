@@ -1,8 +1,25 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 import './DeviceShowcase.css';
 
+const COPY = {
+  ko: {
+    label: 'MULTI-PLATFORM',
+    title: ['하나의 코드로', '모든 기기에 닿다'],
+    desc: '웹부터 모바일까지, 같은 품질의 경험을 일관되게 전달합니다.',
+  },
+  en: {
+    label: 'MULTI-PLATFORM',
+    title: ['One codebase,', 'every device'],
+    desc: 'From web to mobile — one consistent, high-quality experience.',
+  },
+};
+
 function DeviceShowcase() {
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
+
   return (
     <section className="devices-section">
       <div className="devices-bg-grid" />
@@ -15,10 +32,10 @@ function DeviceShowcase() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <span className="section-label">MULTI-PLATFORM</span>
-          <h2 className="section-title">하나의 코드로<br />모든 기기에 닿다</h2>
+          <span className="section-label">{c.label}</span>
+          <h2 className="section-title">{c.title[0]}<br />{c.title[1]}</h2>
           <p className="devices-desc">
-            웹부터 모바일까지, 같은 품질의 경험을 일관되게 전달합니다.
+            {c.desc}
           </p>
         </motion.div>
 

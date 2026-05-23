@@ -1,12 +1,36 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { getPortfolios, getBlogPosts } from '../api';
+import { useLanguage } from '../contexts/LanguageContext';
 import './ActivityHeatmap.css';
 
 const DAYS = 365;
 const WEEKS = Math.ceil(DAYS / 7);
 
+const COPY = {
+  ko: {
+    title: '최근 1년 활동',
+    total: '총 활동',
+    streak: '최장 연속일',
+    max: '최다 / 일',
+    less: '적음',
+    more: '많음',
+    unit: (n) => `${n}건`,
+  },
+  en: {
+    title: 'Activity in the last year',
+    total: 'Total activity',
+    streak: 'Longest streak',
+    max: 'Busiest day',
+    less: 'Less',
+    more: 'More',
+    unit: (n) => `${n} ${n === 1 ? 'item' : 'items'}`,
+  },
+};
+
 function ActivityHeatmap() {
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const [activity, setActivity] = useState({});
   const [stats, setStats] = useState({ total: 0, max: 0, longestStreak: 0 });
   const [hovered, setHovered] = useState(null);
@@ -110,20 +134,20 @@ function ActivityHeatmap() {
       <div className="heatmap__header">
         <div>
           <span className="section-label">ACTIVITY</span>
-          <h3 className="heatmap__title">최근 1년 활동</h3>
+          <h3 className="heatmap__title">{c.title}</h3>
         </div>
         <div className="heatmap__stats">
           <div className="heatmap__stat">
             <strong>{stats.total}</strong>
-            <span>총 활동</span>
+            <span>{c.total}</span>
           </div>
           <div className="heatmap__stat">
             <strong>{stats.longestStreak}</strong>
-            <span>최장 연속일</span>
+            <span>{c.streak}</span>
           </div>
           <div className="heatmap__stat">
             <strong>{stats.max}</strong>
-            <span>최다 / 일</span>
+            <span>{c.max}</span>
           </div>
         </div>
       </div>
@@ -160,7 +184,7 @@ function ActivityHeatmap() {
                     className={`heatmap__cell ${day ? `heatmap__cell--lvl-${level(day.count)}` : 'heatmap__cell--empty'}`}
                     onMouseEnter={() => day && setHovered(day)}
                     onMouseLeave={() => setHovered(null)}
-                    title={day ? `${day.key}: ${day.count}건` : ''}
+                    title={day ? `${day.key}: ${c.unit(day.count)}` : ''}
                   />
                 ))}
               </div>
@@ -169,7 +193,7 @@ function ActivityHeatmap() {
 
           {hovered && (
             <div className="heatmap__tooltip">
-              <strong>{hovered.count}건</strong>
+              <strong>{c.unit(hovered.count)}</strong>
               <span>{hovered.key}</span>
             </div>
           )}
@@ -177,13 +201,13 @@ function ActivityHeatmap() {
       </div>
 
       <div className="heatmap__legend">
-        <span>적음</span>
+        <span>{c.less}</span>
         <div className="heatmap__cell heatmap__cell--lvl-0" />
         <div className="heatmap__cell heatmap__cell--lvl-1" />
         <div className="heatmap__cell heatmap__cell--lvl-2" />
         <div className="heatmap__cell heatmap__cell--lvl-3" />
         <div className="heatmap__cell heatmap__cell--lvl-4" />
-        <span>많음</span>
+        <span>{c.more}</span>
       </div>
     </motion.div>
   );

@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 import './CmdKHint.css';
 
+const COPY = {
+  ko: { hint: '로 빠른 이동', close: '닫기' },
+  en: { hint: 'for quick navigation', close: 'Close' },
+};
+
 function CmdKHint() {
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -43,9 +51,9 @@ function CmdKHint() {
         >
           <span className="cmdk-hint-icon">💡</span>
           <span className="cmdk-hint-text">
-            <kbd>Ctrl</kbd>+<kbd>K</kbd> 로 빠른 이동
+            <kbd>Ctrl</kbd>+<kbd>K</kbd> {c.hint}
           </span>
-          <button className="cmdk-hint-close" onClick={dismiss} aria-label="닫기">×</button>
+          <button className="cmdk-hint-close" onClick={dismiss} aria-label={c.close}>×</button>
         </motion.div>
       )}
     </AnimatePresence>

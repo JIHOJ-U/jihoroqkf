@@ -6,6 +6,8 @@ import {
   HiSearch, HiBell, HiTrendingUp,
 } from 'react-icons/hi';
 import { useLanguage } from '../contexts/LanguageContext';
+import CountUp from './CountUp';
+import TypeOnView from './TypeOnView';
 import './CapabilitiesSection.css';
 
 const ICONS = {
@@ -21,8 +23,22 @@ const ICONS = {
 };
 
 function CapabilitiesSection() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { label, title, desc, items } = t.capabilities;
+
+  const stats = lang === 'ko'
+    ? [
+        { end: 9,   suffix: '+', label: '구현 가능 기능' },
+        { end: 100, suffix: '%', label: '풀스택 단독 진행' },
+        { end: 24,  suffix: 'h', label: '평균 응답 시간' },
+        { end: 4.9, suffix: '',  label: '평균 만족도', decimals: 1 },
+      ]
+    : [
+        { end: 9,   suffix: '+', label: 'Buildable features' },
+        { end: 100, suffix: '%', label: 'Full-stack solo' },
+        { end: 24,  suffix: 'h', label: 'Avg. response' },
+        { end: 4.9, suffix: '',  label: 'Avg. rating', decimals: 1 },
+      ];
 
   return (
     <section className="caps-section">
@@ -37,7 +53,8 @@ function CapabilitiesSection() {
           transition={{ duration: 0.6 }}
         >
           <span className="caps-label">
-            <span className="caps-label-dot" />{label}
+            <span className="caps-label-dot" />
+            <TypeOnView text={label} speed={55} />
           </span>
           <h2 className="caps-title">
             {title.split('\n').map((line, i, arr) => (
@@ -75,6 +92,17 @@ function CapabilitiesSection() {
             </motion.li>
           ))}
         </ul>
+
+        <div className="caps-stats">
+          {stats.map((s, i) => (
+            <div key={i} className="caps-stat">
+              <span className="caps-stat-value">
+                <CountUp end={s.end} suffix={s.suffix} decimals={s.decimals || 0} />
+              </span>
+              <span className="caps-stat-label">{s.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

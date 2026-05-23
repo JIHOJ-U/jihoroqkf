@@ -4,12 +4,17 @@ import { motion } from 'framer-motion';
 import { HiSearch, HiInformationCircle, HiViewGrid, HiArrowRight } from 'react-icons/hi';
 import { useLanguage } from '../contexts/LanguageContext';
 import { REFERENCES, CATEGORIES } from '../data/references';
+import useTypewriterPlaceholder from '../hooks/useTypewriterPlaceholder';
 import './References.css';
+
+const SEARCH_HINTS = ['홈페이지 제작', '쇼핑몰', 'AI 연동', '관리자 시스템', '예약 시스템', '병원 포털'];
+const REVEAL_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4', '#10b981', '#f59e0b', '#3b82f6', '#14b8a6'];
 
 function References() {
   const { lang } = useLanguage();
   const [activeCat, setActiveCat] = useState('all');
   const [search, setSearch] = useState('');
+  const typedPlaceholder = useTypewriterPlaceholder(SEARCH_HINTS, { prefix: '검색: ' });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -119,7 +124,7 @@ function References() {
             <HiSearch className="ref-search-icon" />
             <input
               type="text"
-              placeholder={T.placeholder}
+              placeholder={lang === 'ko' ? typedPlaceholder : T.placeholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -147,6 +152,15 @@ function References() {
                     <div className="ref-card-img">
                       <img src={r.img} alt={lang === 'ko' ? r.titleKo : r.titleEn} loading="lazy" />
                       <span className="ref-card-overlay">{T.cta} →</span>
+                      {/* color block that covers the image, then slides up to reveal */}
+                      <motion.span
+                        className="ref-card-curtain"
+                        style={{ background: REVEAL_COLORS[i % REVEAL_COLORS.length] }}
+                        initial={{ y: '0%' }}
+                        whileInView={{ y: '-101%' }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.85, delay: 0.1 + (i % 3) * 0.1, ease: [0.76, 0, 0.24, 1] }}
+                      />
                     </div>
                     <div className="ref-card-body">
                       <span className={`ref-card-cat ref-card-cat--${r.cat}`}>

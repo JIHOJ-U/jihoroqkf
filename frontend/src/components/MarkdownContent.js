@@ -6,11 +6,13 @@ import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/
 import { HiClipboard, HiCheck } from 'react-icons/hi';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAchievement } from '../contexts/AchievementContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import './MarkdownContent.css';
 
 function CodeBlock({ inline, className, children, ...props }) {
   const { theme } = useTheme();
   const { unlock } = useAchievement();
+  const { lang: uiLang } = useLanguage();
   const [copied, setCopied] = useState(false);
   const match = /language-(\w+)/.exec(className || '');
   const lang = match ? match[1] : '';
@@ -32,7 +34,9 @@ function CodeBlock({ inline, className, children, ...props }) {
       <div className="md-code-header">
         <span className="md-code-lang">{lang || 'code'}</span>
         <button className="md-code-copy" onClick={handleCopy}>
-          {copied ? <><HiCheck /> 복사됨</> : <><HiClipboard /> 복사</>}
+          {copied
+            ? <><HiCheck /> {uiLang === 'en' ? 'Copied' : '복사됨'}</>
+            : <><HiClipboard /> {uiLang === 'en' ? 'Copy' : '복사'}</>}
         </button>
       </div>
       <SyntaxHighlighter

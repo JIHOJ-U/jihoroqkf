@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiClipboard, HiCheck } from 'react-icons/hi';
+import { useLanguage } from '../contexts/LanguageContext';
 import './CopyButton.css';
 
+const COPY = {
+  ko: { copy: '복사', copied: '복사됨!' },
+  en: { copy: 'Copy', copied: 'Copied!' },
+};
+
 function CopyButton({ value, label = '', size = 'sm', className = '' }) {
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async (e) => {
@@ -33,7 +41,7 @@ function CopyButton({ value, label = '', size = 'sm', className = '' }) {
       type="button"
       className={`copy-btn copy-btn--${size} ${className}`}
       onClick={handleCopy}
-      title="복사"
+      title={c.copy}
     >
       <AnimatePresence mode="wait">
         {copied ? (
@@ -60,7 +68,7 @@ function CopyButton({ value, label = '', size = 'sm', className = '' }) {
           </motion.span>
         )}
       </AnimatePresence>
-      {label && <span className="copy-btn__label">{copied ? '복사됨!' : label}</span>}
+      {label && <span className="copy-btn__label">{copied ? c.copied : label}</span>}
     </button>
   );
 }

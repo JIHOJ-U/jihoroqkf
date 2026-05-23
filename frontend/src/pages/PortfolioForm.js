@@ -3,13 +3,60 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiUpload, HiX, HiSave, HiPhotograph, HiPlus } from 'react-icons/hi';
 import { createPortfolio, getPortfolio, updatePortfolio, getImageUrl } from '../api';
+import { useLanguage } from '../contexts/LanguageContext';
 import './PortfolioForm.css';
 
-const categories = ['웹 개발', '앱 개발', '백엔드/API', 'UI/UX 디자인', '기타'];
+// `value` is the stored category (kept in Korean for data consistency); `en` is the display label.
+const CATEGORIES = [
+  { value: '웹 개발', en: 'Web Development' },
+  { value: '앱 개발', en: 'App Development' },
+  { value: '백엔드/API', en: 'Backend / API' },
+  { value: 'UI/UX 디자인', en: 'UI/UX Design' },
+  { value: '기타', en: 'Other' },
+];
+
+const COPY = {
+  ko: {
+    editTitle: '포트폴리오 수정', newTitle: '새 포트폴리오 등록',
+    title: '프로젝트 제목 *', titlePh: '프로젝트 이름을 입력하세요',
+    desc: '프로젝트 설명 *', descPh: '프로젝트에 대한 상세 설명을 작성하세요',
+    tech: '기술 스택', techPh: 'React, Node.js, MongoDB (콤마로 구분)',
+    projectUrl: '프로젝트 URL', githubUrl: 'GitHub URL',
+    demo: '라이브 코드 데모 (선택)', demoPh: 'CodeSandbox / StackBlitz / CodePen 등 임베드 가능한 URL',
+    demoHint1: '예: https://codesandbox.io/embed/xxxxx, https://stackblitz.com/edit/yyyy?embed=1',
+    demoHint2: '상세 페이지에서 iframe으로 코드를 직접 보여줍니다.',
+    addImages: '추가 이미지 (여러장 가능)', addImage: '이미지 추가',
+    addImagesHint: '대표 이미지 외에 추가로 보여줄 이미지를 여러 장 업로드할 수 있습니다.',
+    thumb: '대표 이미지 (썸네일)', uploadImage: '이미지 업로드', uploadHint: 'JPG, PNG, GIF (최대 5MB)',
+    category: '카테고리', duration: '개발 기간', durationPh: '예: 2개월',
+    client: '클라이언트', clientPh: '클라이언트 이름 (선택)',
+    saving: '저장 중...', editDone: '수정 완료', create: '포트폴리오 등록',
+    reqAlert: '제목과 설명은 필수입니다.', saveFail: '저장에 실패했습니다.',
+  },
+  en: {
+    editTitle: 'Edit portfolio', newTitle: 'Add new portfolio',
+    title: 'Project title *', titlePh: 'Enter the project name',
+    desc: 'Project description *', descPh: 'Write a detailed description of the project',
+    tech: 'Tech stack', techPh: 'React, Node.js, MongoDB (comma separated)',
+    projectUrl: 'Project URL', githubUrl: 'GitHub URL',
+    demo: 'Live code demo (optional)', demoPh: 'Embeddable URL — CodeSandbox / StackBlitz / CodePen, etc.',
+    demoHint1: 'e.g. https://codesandbox.io/embed/xxxxx, https://stackblitz.com/edit/yyyy?embed=1',
+    demoHint2: 'Shown directly as an iframe on the detail page.',
+    addImages: 'Additional images (multiple)', addImage: 'Add image',
+    addImagesHint: 'You can upload multiple extra images beyond the thumbnail.',
+    thumb: 'Cover image (thumbnail)', uploadImage: 'Upload image', uploadHint: 'JPG, PNG, GIF (max 5MB)',
+    category: 'Category', duration: 'Development period', durationPh: 'e.g. 2 months',
+    client: 'Client', clientPh: 'Client name (optional)',
+    saving: 'Saving...', editDone: 'Save changes', create: 'Add portfolio',
+    reqAlert: 'Title and description are required.', saveFail: 'Failed to save.',
+  },
+};
 
 function PortfolioForm() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState({
@@ -79,7 +126,7 @@ function PortfolioForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title || !form.description) {
-      alert('제목과 설명은 필수입니다.');
+      alert(c.reqAlert);
       return;
     }
 
@@ -98,7 +145,7 @@ function PortfolioForm() {
       }
       navigate('/portfolio');
     } catch (err) {
-      alert('저장에 실패했습니다.');
+      alert(c.saveFail);
     } finally {
       setSubmitting(false);
     }
@@ -110,7 +157,7 @@ function PortfolioForm() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="form-header">
             <span className="section-tag">{isEdit ? 'Edit' : 'New'}</span>
-            <h1 className="section-title">{isEdit ? '포트폴리오 수정' : '새 포트폴리오 등록'}</h1>
+            <h1 className="section-title">{isEdit ? c.editTitle : c.newTitle}</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="portfolio-form">
@@ -118,43 +165,43 @@ function PortfolioForm() {
               {/* Left */}
               <div className="form-main">
                 <div className="form-group">
-                  <label>프로젝트 제목 *</label>
+                  <label>{c.title}</label>
                   <input
                     type="text"
                     name="title"
                     value={form.title}
                     onChange={handleChange}
-                    placeholder="프로젝트 이름을 입력하세요"
+                    placeholder={c.titlePh}
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>프로젝트 설명 *</label>
+                  <label>{c.desc}</label>
                   <textarea
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    placeholder="프로젝트에 대한 상세 설명을 작성하세요"
+                    placeholder={c.descPh}
                     rows={8}
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>기술 스택</label>
+                  <label>{c.tech}</label>
                   <input
                     type="text"
                     name="techStack"
                     value={form.techStack}
                     onChange={handleChange}
-                    placeholder="React, Node.js, MongoDB (콤마로 구분)"
+                    placeholder={c.techPh}
                   />
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>프로젝트 URL</label>
+                    <label>{c.projectUrl}</label>
                     <input
                       type="text"
                       name="projectUrl"
@@ -164,7 +211,7 @@ function PortfolioForm() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>GitHub URL</label>
+                    <label>{c.githubUrl}</label>
                     <input
                       type="text"
                       name="githubUrl"
@@ -176,17 +223,17 @@ function PortfolioForm() {
                 </div>
 
                 <div className="form-group">
-                  <label>라이브 코드 데모 (선택)</label>
+                  <label>{c.demo}</label>
                   <input
                     type="text"
                     name="demoUrl"
                     value={form.demoUrl}
                     onChange={handleChange}
-                    placeholder="CodeSandbox / StackBlitz / CodePen 등 임베드 가능한 URL"
+                    placeholder={c.demoPh}
                   />
                   <p className="form-hint">
-                    예: https://codesandbox.io/embed/xxxxx, https://stackblitz.com/edit/yyyy?embed=1
-                    <br />상세 페이지에서 iframe으로 코드를 직접 보여줍니다.
+                    {c.demoHint1}
+                    <br />{c.demoHint2}
                   </p>
                 </div>
 
@@ -194,7 +241,7 @@ function PortfolioForm() {
                 <div className="form-group">
                   <label>
                     <HiPhotograph style={{ verticalAlign: 'middle', marginRight: 4 }} />
-                    추가 이미지 (여러장 가능)
+                    {c.addImages}
                   </label>
                   <div className="gallery-grid">
                     {existingImages.map((img, idx) => (
@@ -216,18 +263,18 @@ function PortfolioForm() {
                     ))}
                     <label className="gallery-add">
                       <HiPlus />
-                      <span>이미지 추가</span>
+                      <span>{c.addImage}</span>
                       <input type="file" accept="image/*" multiple onChange={handleAddImages} hidden />
                     </label>
                   </div>
-                  <p className="form-hint">대표 이미지 외에 추가로 보여줄 이미지를 여러 장 업로드할 수 있습니다.</p>
+                  <p className="form-hint">{c.addImagesHint}</p>
                 </div>
               </div>
 
               {/* Right */}
               <div className="form-sidebar">
                 <div className="form-group">
-                  <label>대표 이미지 (썸네일)</label>
+                  <label>{c.thumb}</label>
                   <div className="upload-area">
                     {preview ? (
                       <div className="upload-preview">
@@ -239,8 +286,8 @@ function PortfolioForm() {
                     ) : (
                       <label className="upload-label">
                         <HiUpload />
-                        <span>이미지 업로드</span>
-                        <span className="upload-hint">JPG, PNG, GIF (최대 5MB)</span>
+                        <span>{c.uploadImage}</span>
+                        <span className="upload-hint">{c.uploadHint}</span>
                         <input type="file" accept="image/*" onChange={handleFile} hidden />
                       </label>
                     )}
@@ -248,38 +295,38 @@ function PortfolioForm() {
                 </div>
 
                 <div className="form-group">
-                  <label>카테고리</label>
+                  <label>{c.category}</label>
                   <select name="category" value={form.category} onChange={handleChange}>
-                    {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
+                    {CATEGORIES.map(cat => (
+                      <option key={cat.value} value={cat.value}>{lang === 'ko' ? cat.value : cat.en}</option>
                     ))}
                   </select>
                 </div>
 
                 <div className="form-group">
-                  <label>개발 기간</label>
+                  <label>{c.duration}</label>
                   <input
                     type="text"
                     name="duration"
                     value={form.duration}
                     onChange={handleChange}
-                    placeholder="예: 2개월"
+                    placeholder={c.durationPh}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>클라이언트</label>
+                  <label>{c.client}</label>
                   <input
                     type="text"
                     name="client"
                     value={form.client}
                     onChange={handleChange}
-                    placeholder="클라이언트 이름 (선택)"
+                    placeholder={c.clientPh}
                   />
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-lg btn-full" disabled={submitting}>
-                  <HiSave /> {submitting ? '저장 중...' : isEdit ? '수정 완료' : '포트폴리오 등록'}
+                  <HiSave /> {submitting ? c.saving : isEdit ? c.editDone : c.create}
                 </button>
               </div>
             </div>

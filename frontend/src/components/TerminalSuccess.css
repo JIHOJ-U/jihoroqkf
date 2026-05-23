@@ -1,0 +1,102 @@
+.tsx {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 80px 0 100px;
+}
+
+.tsx-window {
+  width: min(560px, 100%);
+  background: #0f1117;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
+.tsx-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: #1a1d29;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tsx-dot { width: 11px; height: 11px; border-radius: 50%; }
+.tsx-dot--r { background: #ff5f57; }
+.tsx-dot--y { background: #febc2e; }
+.tsx-dot--g { background: #28c841; }
+
+.tsx-title {
+  margin-left: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tsx-body {
+  padding: 22px 20px 26px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.9rem;
+  line-height: 1.9;
+  min-height: 180px;
+  color: #e8eaf0;
+}
+
+.tsx-line {
+  display: flex;
+  gap: 8px;
+  animation: tsx-in 0.25s ease both;
+}
+
+@keyframes tsx-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tsx-prompt { color: #a78bfa; font-weight: 700; flex-shrink: 0; }
+
+.tsx-line--cmd .tsx-text { color: #e8eaf0; }
+.tsx-line--dim .tsx-text { color: #6a7080; }
+.tsx-line--ok .tsx-text { color: #6ee7b7; font-weight: 700; }
+.tsx-line--soft .tsx-text { color: #a0a4ae; }
+
+.tsx-caret {
+  display: inline-block;
+  width: 8px;
+  height: 1.05em;
+  background: #a78bfa;
+  vertical-align: middle;
+  animation: tsx-blink 1s steps(2, start) infinite;
+}
+
+@keyframes tsx-blink { 50% { opacity: 0; } }
+
+.tsx-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  animation: tsx-in 0.4s ease both;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tsx-reset:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+}
+
+@media (max-width: 768px) {
+  .tsx { padding: 50px 0 70px; }
+  .tsx-body { font-size: 0.82rem; padding: 18px 16px 22px; min-height: 160px; }
+}

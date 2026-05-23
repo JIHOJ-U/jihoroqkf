@@ -276,6 +276,15 @@
   transition: opacity 0.3s ease;
 }
 
+/* Color block that covers the image, then slides up to reveal (scroll-in) */
+.ref-card-curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  will-change: transform;
+}
+
 .ref-card:hover .ref-card-overlay {
   opacity: 1;
 }

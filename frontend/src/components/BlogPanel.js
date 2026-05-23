@@ -3,9 +3,17 @@ import { motion } from 'framer-motion';
 import { FaBlog } from 'react-icons/fa';
 import { HiArrowRight, HiCalendar } from 'react-icons/hi';
 import { getBlogPosts } from '../api';
+import { useLanguage } from '../contexts/LanguageContext';
 import './BlogPanel.css';
 
+const COPY = {
+  ko: { heading: '최근 블로그 글', viewAll: '블로그 전체 보기' },
+  en: { heading: 'Latest blog posts', viewAll: 'View all posts' },
+};
+
 function BlogPanel() {
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -29,7 +37,7 @@ function BlogPanel() {
 
   const formatDate = (dateStr) => {
     try {
-      return new Date(dateStr).toLocaleDateString('ko-KR', {
+      return new Date(dateStr).toLocaleDateString(lang === 'en' ? 'en-US' : 'ko-KR', {
         year: 'numeric', month: 'short', day: 'numeric'
       });
     } catch (e) {
@@ -42,7 +50,7 @@ function BlogPanel() {
       <div className="blog-panel-header">
         <div>
           <span className="section-label">LATEST POSTS</span>
-          <h3>최근 블로그 글</h3>
+          <h3>{c.heading}</h3>
         </div>
         <a
           href="https://blog.naver.com/longnight0719"
@@ -50,7 +58,7 @@ function BlogPanel() {
           rel="noopener noreferrer"
           className="blog-view-all"
         >
-          블로그 전체 보기 <HiArrowRight />
+          {c.viewAll} <HiArrowRight />
         </a>
       </div>
 

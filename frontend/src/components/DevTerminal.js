@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import './DevTerminal.css';
 
 const ASCII_LOGO = [
@@ -9,8 +10,21 @@ const ASCII_LOGO = [
   ' |____/ \\___| \\_/     \\_/  |_|_.__/ \\___|',
 ];
 
-const COMMANDS = {
-  help: () => [
+const buildCommands = (lang) => ({
+  help: () => (lang === 'en' ? [
+    'Available commands:',
+    '',
+    '  about       — About Dev.Vibe',
+    '  services    — Services offered',
+    '  skills      — Tech stack',
+    '  stack       — System architecture',
+    '  contact     — Contact info',
+    '  whoami      — Visitor info',
+    '  joke        — Developer joke',
+    '  clear       — Clear the screen',
+    '',
+    'Press Tab or click a chip above to enter a command.',
+  ] : [
     'Available commands:',
     '',
     '  about       — Dev.Vibe 소개',
@@ -23,12 +37,12 @@ const COMMANDS = {
     '  clear       — 화면 지우기',
     '',
     'Tab 또는 위 칩을 클릭해서도 입력할 수 있습니다.',
-  ],
+  ]),
   about: () => [
     ...ASCII_LOGO,
     '',
-    '> 프리랜서 개발 콜렉티브',
-    '> 기획부터 배포까지, 풀스택으로 만듭니다.',
+    lang === 'en' ? '> Freelance dev collective' : '> 프리랜서 개발 콜렉티브',
+    lang === 'en' ? '> From planning to deployment — built full-stack.' : '> 기획부터 배포까지, 풀스택으로 만듭니다.',
     '> Stack: React · Node · Python · Flutter · AWS',
   ],
   services: () => [
@@ -67,7 +81,7 @@ const COMMANDS = {
     '☎  phone   : 010-8975-2847',
     '⌨  github  : github.com/JIHOJ-U/JIHOJ-U',
     '',
-    '→ 또는 /contact 페이지에서 폼 제출',
+    lang === 'en' ? '→ or submit the form on the /contact page' : '→ 또는 /contact 페이지에서 폼 제출',
   ],
   whoami: () => {
     const now = new Date();
@@ -80,7 +94,12 @@ const COMMANDS = {
     ];
   },
   joke: () => {
-    const jokes = [
+    const jokes = lang === 'en' ? [
+      ['Q: Why do programmers prefer dark mode?', 'A: Because light attracts bugs.'],
+      ["Q: What's a programmer's hardest task?", 'A: Naming variables.'],
+      ['Q: Why was the function feeling down?', "A: It never got called."],
+      ['Q: Why do programmers lose sleep?', 'A: They got stuck in an infinite loop.'],
+    ] : [
       ['Q: 개발자가 어두운 모드를 좋아하는 이유?', 'A: 빛에 버그가 꼬이니까.'],
       ['Q: 개발자에게 가장 어려운 것은?', 'A: 변수 이름 짓기.'],
       ['Q: 함수가 두 개인 친구는?', 'A: 양함수 친구.'],
@@ -93,11 +112,13 @@ const COMMANDS = {
   date: () => [new Date().toString()],
   clear: () => 'CLEAR',
   exit: () => ['nice try. you cannot leave the vibe.'],
-};
+});
 
 const SUGGESTIONS = ['help', 'about', 'services', 'skills', 'stack', 'contact', 'joke'];
 
 function DevTerminal() {
+  const { lang } = useLanguage();
+  const COMMANDS = useMemo(() => buildCommands(lang), [lang]);
   const [history, setHistory] = useState([]);
   const [input, setInput] = useState('');
   const [booted, setBooted] = useState(false);

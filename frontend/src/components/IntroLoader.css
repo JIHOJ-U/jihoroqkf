@@ -1,0 +1,199 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #0b0e16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transform: translateY(0);
+  transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform;
+  font-family: 'SFMono-Regular', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
+}
+
+.intro--exit {
+  transform: translateY(-100%);
+}
+
+/* ---- CRT scanline overlays ---- */
+.intro-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.035) 0px,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: intro-flicker 3s ease-in-out infinite;
+}
+@keyframes intro-flicker {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.8; }
+}
+
+.intro-scanbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 180px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.10), transparent);
+  animation: intro-scan 3.6s linear infinite;
+}
+@keyframes intro-scan {
+  from { transform: translateY(-200px); }
+  to   { transform: translateY(100vh); }
+}
+
+.intro-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 460px;
+  max-width: 88vw;
+}
+
+/* ---- terminal window ---- */
+.intro-term {
+  width: 100%;
+  border-radius: 12px;
+  background: rgba(18, 22, 33, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.06);
+  overflow: hidden;
+  animation: intro-term-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes intro-term-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.intro-term__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.intro-term__dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.intro-term__dot--r { background: #ff5f57; }
+.intro-term__dot--y { background: #febc2e; }
+.intro-term__dot--g { background: #28c840; }
+.intro-term__title {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  letter-spacing: 0.2px;
+}
+
+.intro-term__body {
+  padding: 18px 18px 20px;
+  font-size: 13.5px;
+  line-height: 1.9;
+  min-height: 200px;
+}
+
+/* log lines */
+.intro-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+.intro-line--cmd { margin-bottom: 4px; }
+
+.intro-term__prompt { color: #8b5cf6; font-weight: 700; }
+.intro-term__cmd    { color: #e6e9ef; white-space: pre; }
+
+.intro-caret {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-left: 2px;
+  background: #6366f1;
+  transform: translateY(2px);
+}
+.intro-caret--blink { animation: intro-blink 1s steps(1) infinite; }
+@keyframes intro-blink { 50% { opacity: 0; } }
+
+/* boot log lines fade-in-up as they appear */
+.intro-line--head,
+.intro-line--ok {
+  animation: intro-line-in 0.34s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes intro-line-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.intro-line__mark { font-weight: 700; }
+.intro-line--ok   .intro-line__mark { color: #10b981; }
+.intro-line--head .intro-line__mark { color: #6366f1; }
+.intro-line__text   { color: #c4c9d4; }
+.intro-line--head .intro-line__text { color: #fff; font-weight: 700; }
+.intro-line__detail { color: #5b6373; margin-left: 4px; }
+
+/* ---- brand reveal ---- */
+.intro-brand {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.intro-brand--in { opacity: 1; transform: translateY(0); }
+
+.intro-logo {
+  margin: 0;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  line-height: 1.05;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.45);
+}
+.intro-dot { color: #6366f1; }
+
+.intro-tag {
+  margin: 14px 0 0;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-size: clamp(0.95rem, 2.4vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #8b93a7;
+}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .intro-scanlines,
+  .intro-scanbar,
+  .intro-term,
+  .intro-line--head,
+  .intro-line--ok,
+  .intro-caret--blink { animation: none; }
+  .intro-scanbar { display: none; }
+  .intro { transition: opacity 0.4s ease; }
+  .intro--exit { transform: none; opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .intro-inner { gap: 24px; }
+  .intro-term__body { font-size: 12.5px; line-height: 1.8; min-height: 184px; }
+}

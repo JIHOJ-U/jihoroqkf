@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaUsers, FaCodeBranch, FaStar, FaCode } from 'react-icons/fa';
 import { HiExternalLink } from 'react-icons/hi';
 import { getGithubStats } from '../api';
+import { useLanguage } from '../contexts/LanguageContext';
 import './GithubPanel.css';
 
 // Brand-style colors per language for accents
@@ -27,6 +28,7 @@ const LANG_COLORS = {
 };
 
 function GithubPanel() {
+  const { lang } = useLanguage();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -144,7 +146,7 @@ function GithubPanel() {
               ))}
             </div>
           ) : (
-            <p className="gh-empty">언어 데이터가 없습니다</p>
+            <p className="gh-empty">{lang === 'ko' ? '언어 데이터가 없습니다' : 'No language data'}</p>
           )}
         </div>
 
@@ -179,7 +181,7 @@ function GithubPanel() {
               ))}
             </div>
           ) : (
-            <p className="gh-empty">레포 데이터가 없습니다</p>
+            <p className="gh-empty">{lang === 'ko' ? '레포 데이터가 없습니다' : 'No repo data'}</p>
           )}
         </div>
       </div>

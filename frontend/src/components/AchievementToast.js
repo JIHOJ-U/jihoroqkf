@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAchievement } from '../contexts/AchievementContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import './AchievementToast.css';
 
 function AchievementToast() {
   const { recent, dismissRecent } = useAchievement();
+  const { lang } = useLanguage();
 
   useEffect(() => {
     if (recent) {
@@ -29,7 +31,7 @@ function AchievementToast() {
           <div className="ach-toast__body">
             <span className="ach-toast__label">🏆 Achievement Unlocked!</span>
             <strong className="ach-toast__title">{recent.title}</strong>
-            <span className="ach-toast__desc">{recent.desc}</span>
+            <span className="ach-toast__desc">{recent.desc?.[lang] || recent.desc?.ko}</span>
           </div>
         </motion.div>
       )}

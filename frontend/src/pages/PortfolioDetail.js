@@ -5,12 +5,20 @@ import { HiArrowLeft, HiExternalLink, HiPencil, HiTrash, HiCode, HiCalendar, HiU
 import { FaGithub } from 'react-icons/fa';
 import { getPortfolio, deletePortfolio, getImageUrl } from '../api';
 import { useAchievement } from '../contexts/AchievementContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import MarkdownContent from '../components/MarkdownContent';
 import './PortfolioDetail.css';
+
+const COPY = {
+  ko: { confirmDelete: '정말 삭제하시겠습니까?', deleteFail: '삭제에 실패했습니다.', edit: '수정', remove: '삭제', desc: '프로젝트 설명' },
+  en: { confirmDelete: 'Are you sure you want to delete this?', deleteFail: 'Failed to delete.', edit: 'Edit', remove: 'Delete', desc: 'Project Description' },
+};
 
 function PortfolioDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { lang } = useLanguage();
+  const c = COPY[lang] || COPY.ko;
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
   const { unlock } = useAchievement();
@@ -23,12 +31,12 @@ function PortfolioDetail() {
   }, [id, navigate, unlock]);
 
   const handleDelete = async () => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
+    if (window.confirm(c.confirmDelete)) {
       try {
         await deletePortfolio(id);
         navigate('/portfolio');
       } catch (err) {
-        alert('삭제에 실패했습니다.');
+        alert(c.deleteFail);
       }
     }
   };
@@ -64,10 +72,10 @@ function PortfolioDetail() {
             <h1 className="detail-title">{portfolio.title}</h1>
             <div className="detail-actions">
               <Link to={`/portfolio/edit/${id}`} className="btn-icon">
-                <HiPencil /> 수정
+                <HiPencil /> {c.edit}
               </Link>
               <button onClick={handleDelete} className="btn-icon btn-icon-danger">
-                <HiTrash /> 삭제
+                <HiTrash /> {c.remove}
               </button>
             </div>
           </div>
@@ -102,7 +110,7 @@ function PortfolioDetail() {
 
           <div className="detail-content">
             <div className="detail-main">
-              <h2>프로젝트 설명</h2>
+              <h2>{c.desc}</h2>
               <MarkdownContent className="detail-description">{portfolio.description}</MarkdownContent>
             </div>
 
@@ -155,7 +163,7 @@ function PortfolioDetail() {
 
               <div className="sidebar-block">
                 <h3>DATE</h3>
-                <p className="sidebar-text">{new Date(portfolio.createdAt).toLocaleDateString('ko-KR')}</p>
+                <p className="sidebar-text">{new Date(portfolio.createdAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'ko-KR')}</p>
               </div>
             </div>
           </div>

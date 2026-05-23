@@ -1,0 +1,37 @@
+.tov {
+  position: relative;
+  display: inline-block;
+}
+
+/* ghost reserves the final width/height to avoid layout shift */
+.tov-ghost {
+  visibility: hidden;
+}
+
+.tov-typed {
+  position: absolute;
+  inset: 0;
+  white-space: inherit;
+}
+
+.tov-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: -0.12em;
+  margin-left: 0.04em;
+  background: currentColor;
+  opacity: 0.8;
+}
+
+.tov-caret--blink {
+  animation: tov-blink 1s steps(2, start) infinite;
+}
+
+@keyframes tov-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tov-caret { display: none; }
+}
