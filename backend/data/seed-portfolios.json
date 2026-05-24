@@ -1,5 +1,37 @@
 [
   {
+    "id": "34bea9b8-3802-4c91-8bd9-e1f7f8b01ca2",
+    "title": "카플 (CarplayAuto) — 신차 장기렌트·리스 플랫폼",
+    "description": "## 프로젝트 개요\n\n**카플(CarplayAuto)** 은 신차 장기렌트·리스를 전문으로 하는 업체의 차량 카탈로그·상담 플랫폼입니다. \"정직과 신뢰로 보답한다\"는 브랜드 가치를 화면 전반에 녹여, **차량 탐색 → 견적 상담 → 문의 접수**까지 끊김 없는 흐름으로 설계했습니다.\n\n> 복잡하게 느껴지는 장기렌트·리스를 누구나 쉽게 비교하고 바로 상담 신청할 수 있게 만드는 것이 핵심 목표였습니다.\n\n## 주요 기능\n\n- **렌트·리스 차량 카탈로그** — 카니발·쏘렌토·K5·K8 등 인기 차종을 차량가와 함께 카드형으로 노출\n- **즉시 출고 가능 차량** — 현대·기아·제네시스·쉐보레·KGM·르노·수입차 브랜드별 필터로 대기 없이 받을 수 있는 차량 확인\n- **Carplay 견적 상담** — 차종·조건 기반 맞춤 견적 상담 신청\n- **매니저 소개 & 고객 후기** — 담당 매니저와 실제 이용 후기로 신뢰도 강화\n- **24시간 상담 · 빠른 전국 배송** — 원하는 장소에서 차량 인도\n- **문의 접수 폼** — 이름·연락처·이메일·문의 유형 입력과 개인정보 수집·이용 동의 처리\n- **간편한 4단계 이용 방법 (HOW IT WORKS)** — 상담 → 차량 선택 → 계약 진행 → 출고\n- **반응형 + SEO** — 모바일 최적화, 메타·OG 태그로 검색·공유 대응\n\n## 기술적 포인트\n\n```javascript\n// 월 납입금 즉시 계산 (차량가 · 기간 · 선수금 기반)\nconst monthlyPayment = ({ carPrice, months, prepay, rate = 0.049 }) => {\n  const principal = carPrice - prepay;\n  const r = rate / 12;\n  return Math.round((principal * r) / (1 - Math.pow(1 + r, -months)));\n};\n```\n\n```javascript\n// 브랜드 필터 — 즉시 출고 가능 차량만 추출\nconst availableByBrand = (cars, brand) =>\n  cars.filter(c => c.inStock && (brand === 'all' || c.brand === brand));\n```\n\n## 개발 과정\n\n| 단계 | 내용 |\n|------|------|\n| 기획 | 정보구조(IA) 설계, 렌트·리스 상담 플로우 정의, 브랜드 톤매너 확정 |\n| 디자인 | 히어로 슬라이드·차량 카드·상담 폼 UI/UX |\n| 개발 | 차량 카탈로그·브랜드 필터·견적/문의 폼 구현 |\n| 통합·배포 | 반응형 QA, SEO·OG 세팅, 실서버 배포 |\n\n## 성과\n\n- 차량 탐색 → 상담 신청까지 **이탈 없는 단일 플로우** 구현\n- 모바일 우선 반응형으로 **모바일 유입 대응**\n- 메타·OG·구조화 데이터로 **검색 노출·공유 미리보기 최적화**\n\n## 링크\n\n- [라이브 사이트 →](https://www.carplayauto.com)",
+    "techStack": [
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Node.js",
+      "Express",
+      "RESTful API",
+      "Responsive Web",
+      "SEO"
+    ],
+    "projectUrl": "https://www.carplayauto.com",
+    "githubUrl": "",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 1.5개월",
+    "client": "신차 장기렌트·리스 업체",
+    "thumbnail": "/carplayauto/1.webp",
+    "images": [
+      "/carplayauto/1.webp",
+      "/carplayauto/2.webp",
+      "/carplayauto/3.webp",
+      "/carplayauto/4.webp",
+      "/carplayauto/5.webp"
+    ],
+    "createdAt": "2026-05-24T04:00:56.945Z",
+    "updatedAt": "2026-05-24T04:16:57.606Z"
+  },
+  {
     "id": "90b25ebd-da6a-4870-99bb-c21088c5ea6b",
     "title": "Autowant - 렌트 리스 플랫폼",
     "description": "## 프로젝트 개요\n\n렌트/리스 차량 비교 및 상담 신청 플랫폼. 차량 검색부터 견적 비교, 실시간 상담 신청까지 **한 페이지에서 모두 처리**할 수 있도록 사용자 흐름을 최적화한 풀스택 프로젝트입니다.\n\n## 주요 기능\n\n- 🚗 **차량 검색 & 필터링** — 브랜드, 차종, 연식, 월 납입금 범위별 필터\n- 📋 **상세 견적 비교** — 차량 스펙·옵션·월 납입금·보증금 한눈에 비교\n- 📞 **상담 신청 시스템** — 실시간 폼 + 자동 SMS 알림\n- 🛠️ **관리자 백오피스** — 차량 등록/수정/삭제, 상담 내역 관리\n- 📱 **반응형 웹** — 데스크탑/태블릿/모바일 완전 대응\n- 🔍 **SEO 최적화** — 메타 태그, OG, 사이트맵, 구조화 데이터\n\n## 기술적 포인트\n\n```javascript\n// 월 납입금 자동 계산 로직 (PMT formula)\nconst calculateMonthlyPayment = (carPrice, leaseTerm, downPayment, rate = 0.05) => {\n  const principal = carPrice - downPayment;\n  const monthlyRate = rate / 12;\n  const months = leaseTerm * 12;\n  return (principal * monthlyRate) /\n         (1 - Math.pow(1 + monthlyRate, -months));\n};\n```\n\n## 성과\n\n- ⚡ **Lighthouse 90+** (Performance, SEO, Accessibility)\n- 🚀 **반응형 완벽 구현** — 모든 디바이스 호환\n- 💯 **클라이언트 만족도 5.0 / 5.0**\n\n## 링크\n\n- [라이브 사이트 →](https://www.autowant.co.kr)",
