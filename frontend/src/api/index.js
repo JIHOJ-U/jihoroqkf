@@ -34,6 +34,7 @@ const FRONTEND_STATIC_FOLDERS = [
   '/velcrocat/',
   '/carplayauto/',
   '/sonara/',
+  '/qr-order/',
 ];
 
 export const getImageUrl = (thumbnail) => {

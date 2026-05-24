@@ -1,7 +1,39 @@
 [
   {
+    "id": "ab63efae-57d6-4e6c-b2bd-e0f1d8789a54",
+    "title": "QR 테이블 오더 — 실시간 주문·주방(KDS)·매출 대시보드 (판매)",
+    "description": "## 프로젝트 개요\n\n**QR 테이블 오더**는 손님의 QR 주문 → 주방 실시간 화면(KDS) → 사장님 매출 대시보드까지, 외식 매장의 **주문 흐름 전체**를 하나로 묶은 실시간 풀스택 웹앱입니다. 손님·주방·사장님 **3개 역할 화면이 WebSocket(Socket.io)으로 즉시 동기화**됩니다.\n\n## 주요 기능 (화면별)\n\n### 손님 주문 (모바일)\n- QR 스캔으로 **테이블 자동 인식**\n- 카테고리 탭 메뉴판(실제 사진) · 장바구니/수량 조절 · 요청사항 메모\n- **내 주문 실시간 추적** (접수 → 조리중 → 완료 진행바)\n- 직원 호출 · 품절 즉시 반영\n\n### 주방 KDS (주방 화면)\n- 신규 접수 / 조리중 2단 보드\n- 새 주문 **소리 + 하이라이트** 알림\n- 원터치 상태 변경 · **경과시간 색상 경고** (8분 / 15분)\n- 직원 호출 팝업 · 대기 / 조리중 / 완료 카운터\n\n### 사장님 대시보드\n- 매출 · 주문 수 · 객단가 · 진행중 **KPI**\n- 시간대별 / 카테고리별 **차트(Chart.js)** · 인기 메뉴 TOP · 실시간 주문 피드\n- 메뉴 **품절 토글** 관리 · 테이블별 **QR 일괄 발급·인쇄**\n\n## 아키텍처\n\n```\n [손님 모바일]    [주방 KDS]    [사장님 대시보드]\n       │              │               │\n       └───────── Socket.io rooms ────┘\n              table:N · kitchen · admin\n                      │\n         Express  (REST: 주문 생성 · 상태 변경 · 메뉴)\n                      │\n            better-sqlite3 (SQLite, 임베디드)\n```\n\n## 주문 1건의 데이터 흐름\n1. 손님이 장바구니 확정 → `POST /api/orders`\n2. 서버가 **금액을 서버에서 재계산·검증**(클라이언트 값 불신), 품절 동시성 체크 후 **DB 트랜잭션**으로 저장\n3. `kitchen` · `admin` 룸에 신규 주문 push, `table:N` 룸엔 내 주문 상태 push\n4. 주방이 상태 변경 → `PATCH` → 해당 `table:N` + `admin`에 실시간 반영\n5. 대시보드 KPI · 차트 · 주문 피드 실시간 갱신\n\n## 기술 어필 포인트\n- **Socket.io 룸 기반 실시간** — `kitchen` / `admin` / `table:N`으로 나눠 필요한 화면에만 정확히 푸시\n- **서버 측 결제 금액 재계산** — 클라이언트 값을 믿지 않고 서버에서 검증해 가격 위·변조 차단\n- **품절 동시성 검증 + DB 트랜잭션**으로 데이터 정합성 보장\n- **REST(변경) + WebSocket(알림)** 의 단방향 흐름 분리\n- 무빌드 **바닐라 JS** + 공용 디자인 시스템 / SVG 아이콘\n- 임베디드 **SQLite로 제로 설정** 구동\n\n## 기술 스택\nNode.js · Express · Socket.io · SQLite(better-sqlite3) · Vanilla JS · Chart.js · QRCode.js\n\n## 향후 확장\n- 토스 / 카카오페이 결제 연동, 영수증·POS 연동\n- 다매장·프랜차이즈(매장별 데이터 분리), 통계 리포트 PDF 내보내기\n- 푸시(FCM) 알림, 주문 대기시간 예측, 다국어 메뉴",
+    "techStack": [
+      "Node.js",
+      "Express",
+      "Socket.io",
+      "SQLite (better-sqlite3)",
+      "Vanilla JS",
+      "Chart.js",
+      "QRCode.js",
+      "WebSocket"
+    ],
+    "projectUrl": "",
+    "githubUrl": "",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 3주",
+    "client": "자체 제작 (Self-initiated)",
+    "thumbnail": "/qr-order/3.png",
+    "images": [
+      "/qr-order/1.png",
+      "/qr-order/6.png",
+      "/qr-order/2.png",
+      "/qr-order/3.png",
+      "/qr-order/5.png",
+      "/qr-order/4.png"
+    ],
+    "createdAt": "2026-05-24T06:40:32.624Z",
+    "updatedAt": "2026-05-24T06:46:33.827Z"
+  },
+  {
     "id": "7f2c9d14-5e83-4a06-b1d7-9c3e2a4f6b58",
-    "title": "Sonara — WebGL 3D 인터랙티브 제품 랜딩",
+    "title": "Sonara — WebGL 3D 인터랙티브 제품 랜딩 (판매)",
     "description": "## 프로젝트 개요\n\n**Sonara**는 가상의 프리미엄 무선 이어버드 \"SONARA One\"을 위한 **WebGL 3D 인터랙티브 제품 랜딩**입니다. 외부 3D 모델·HDR 에셋 없이 **100% 코드(프로시저럴)로 제작**했으며, 스크롤에 맞춰 제품이 살아 움직이는 몰입형 경험을 구현했습니다.\n\n> **자체 제작 프로젝트** — 3D 모델링부터 스크롤 인터랙션, 디자인 시스템까지 전부 직접 구현해, 프리미엄 브랜드 랜딩의 기술 깊이를 보여주기 위한 작품입니다.\n\n## 핵심 구현 포인트\n\n### 1. 실시간 WebGL 3D 제품 — 외부 모델 0개, 100% 프로시저럴\n- `.glb` 같은 외부 에셋 없이 Three.js primitives(Sphere·Cylinder·Capsule·Torus)만 조합해 이어버드를 **코드로 모델링**\n- `MeshPhysicalMaterial`의 metalness·clearcoat·sheen으로 메탈 셸 질감 구현, **RoomEnvironment + PMREMGenerator**로 외부 HDR 없이 스튜디오급 IBL 반사 구현\n- `EffectComposer → UnrealBloomPass(threshold 0.92)`로 발광 액센트 밴드만 선택적으로 번지게 하는 포스트프로세싱 파이프라인 구성\n\n### 2. 스크롤 안무 시스템 (직접 설계한 포즈 테이블)\n- 9개 섹션마다 `[x, y, z, scale, rotZ, spin]` 6값 포즈를 배열로 정의하고, **GSAP ScrollTrigger**의 scrub으로 이전→현재 포즈를 부드럽게 보간\n- `pivot → floatGroup → spinGroup` 3단 계층으로 스크롤 제어 / 부유 모션 / 연속 회전의 책임을 분리\n- `gsap.matchMedia()`로 데스크톱·모바일 포즈 테이블을 따로 두어, 작은 화면에서는 제품을 중앙·후방 배치해 **텍스트 가독성** 확보\n\n### 3. 단일 RAF 루프로 스크롤·트윈·렌더 동기화\n- Lenis의 자동 RAF를 끄고(`autoRaf: false`) **GSAP ticker가 `lenis.raf()`를 단독 구동** → 스크롤·애니메이션·3D 렌더가 한 프레임에 동기화되어 끊김(jank) 제거\n- `gsap.ticker.lagSmoothing(0)`으로 프레임 드롭 시에도 일관된 모션 유지\n\n### 4. 성능 최적화\n- `devicePixelRatio`를 최대 2로 제한해 고해상도 기기에서 과도한 렌더 비용 차단\n- `visibilitychange`로 탭 비활성 시 렌더 루프 일시정지, 비주얼라이저는 IntersectionObserver로 화면에 보일 때만 동작\n- Vite `manualChunks`로 three·gsap을 별도 청크로 분리해 초기 파싱 부담 감소\n\n### 5. 접근성 & 우아한 폴백 (Graceful Degradation)\n- `prefers-reduced-motion` 감지 → 회전·부유 모션 정지 (모션 민감 사용자 대응)\n- WebGL 컨텍스트 생성 실패 시 try/catch로 잡아 **CSS 그라데이션 배경으로 자동 대체**\n- 시맨틱 마크업(header/main/section/footer/nav) + aria-label, 장식 요소 aria-hidden 처리\n\n### 6. 직접 만든 디자인 시스템\n- 모든 컬러·타이포·간격을 **CSS 커스텀 프로퍼티로 토큰화**, `clamp()` 기반 유동형 타이포 스케일\n- 24px 그리드·stroke 1.5로 통일한 **라인 아이콘 9종 직접 제작**(음파·ANC·공간음향 등) → `[data-icon]` 속성만으로 자동 주입\n- 2-레이어 커스텀 커서(점+링, `mix-blend-mode: difference`), 마우스 추종 카드 광택(`--mx/--my`), 매니페스토 단어 점등 등 디테일 인터랙션\n\n## 문제 해결 (Trouble Shooting)\n- **스크롤 끊김** — Lenis와 GSAP이 각자 RAF를 돌려 프레임이 충돌 → 단일 ticker로 통합해 해결\n- **블룸이 화면 전체를 번지게 함** — bloom threshold를 0.92로 올려 발광 밴드 등 진짜 밝은 부분만 선택적으로 발광하도록 조정\n- **모바일에서 3D가 텍스트를 가림** — matchMedia로 모바일 전용 포즈 테이블을 만들어 제품을 후방 배치, 가독성 확보\n- **WebGL 미지원 환경** — 렌더러 생성 실패를 catch해 정적 그라데이션으로 폴백, 어떤 환경에서도 깨지지 않는 경험 보장\n\n## 기술 스택\n- **3D · 모션:** Three.js r169 · GSAP 3 (ScrollTrigger) · Lenis 1.1\n- **코어:** Vanilla JS (ESM 모듈) · 모던 CSS (커스텀 프로퍼티 · clamp)\n- **빌드:** Vite 5 (코드 스플리팅) · Pretendard / Space Grotesk\n- **No 프레임워크** — React/Vue 없이 순수 모듈 구조로 의존성을 가볍게 유지\n\n## 제작 안내\n이런 **인터랙티브 3D 제품 랜딩**은 **150만원부터 시작**합니다. (제품 종류 · 섹션 수 · 인터랙션 난이도에 따라 견적이 조정됩니다.)",
     "techStack": [
       "Three.js r169",
@@ -30,7 +62,7 @@
       "/sonara/7.png"
     ],
     "createdAt": "2026-05-24T05:35:25.443Z",
-    "updatedAt": "2026-05-24T05:35:25.443Z"
+    "updatedAt": "2026-05-24T06:46:33.827Z"
   },
   {
     "id": "34bea9b8-3802-4c91-8bd9-e1f7f8b01ca2",
