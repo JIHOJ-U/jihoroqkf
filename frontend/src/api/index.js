@@ -33,6 +33,7 @@ const FRONTEND_STATIC_FOLDERS = [
   '/autowant/',
   '/velcrocat/',
   '/carplayauto/',
+  '/sonara/',
 ];
 
 export const getImageUrl = (thumbnail) => {

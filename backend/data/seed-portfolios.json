@@ -1,5 +1,38 @@
 [
   {
+    "id": "7f2c9d14-5e83-4a06-b1d7-9c3e2a4f6b58",
+    "title": "Sonara — WebGL 3D 인터랙티브 제품 랜딩",
+    "description": "## 프로젝트 개요\n\n**Sonara**는 가상의 프리미엄 무선 이어버드 \"SONARA One\"을 위한 **WebGL 3D 인터랙티브 제품 랜딩**입니다. 외부 3D 모델·HDR 에셋 없이 **100% 코드(프로시저럴)로 제작**했으며, 스크롤에 맞춰 제품이 살아 움직이는 몰입형 경험을 구현했습니다.\n\n> **자체 제작 프로젝트** — 3D 모델링부터 스크롤 인터랙션, 디자인 시스템까지 전부 직접 구현해, 프리미엄 브랜드 랜딩의 기술 깊이를 보여주기 위한 작품입니다.\n\n## 핵심 구현 포인트\n\n### 1. 실시간 WebGL 3D 제품 — 외부 모델 0개, 100% 프로시저럴\n- `.glb` 같은 외부 에셋 없이 Three.js primitives(Sphere·Cylinder·Capsule·Torus)만 조합해 이어버드를 **코드로 모델링**\n- `MeshPhysicalMaterial`의 metalness·clearcoat·sheen으로 메탈 셸 질감 구현, **RoomEnvironment + PMREMGenerator**로 외부 HDR 없이 스튜디오급 IBL 반사 구현\n- `EffectComposer → UnrealBloomPass(threshold 0.92)`로 발광 액센트 밴드만 선택적으로 번지게 하는 포스트프로세싱 파이프라인 구성\n\n### 2. 스크롤 안무 시스템 (직접 설계한 포즈 테이블)\n- 9개 섹션마다 `[x, y, z, scale, rotZ, spin]` 6값 포즈를 배열로 정의하고, **GSAP ScrollTrigger**의 scrub으로 이전→현재 포즈를 부드럽게 보간\n- `pivot → floatGroup → spinGroup` 3단 계층으로 스크롤 제어 / 부유 모션 / 연속 회전의 책임을 분리\n- `gsap.matchMedia()`로 데스크톱·모바일 포즈 테이블을 따로 두어, 작은 화면에서는 제품을 중앙·후방 배치해 **텍스트 가독성** 확보\n\n### 3. 단일 RAF 루프로 스크롤·트윈·렌더 동기화\n- Lenis의 자동 RAF를 끄고(`autoRaf: false`) **GSAP ticker가 `lenis.raf()`를 단독 구동** → 스크롤·애니메이션·3D 렌더가 한 프레임에 동기화되어 끊김(jank) 제거\n- `gsap.ticker.lagSmoothing(0)`으로 프레임 드롭 시에도 일관된 모션 유지\n\n### 4. 성능 최적화\n- `devicePixelRatio`를 최대 2로 제한해 고해상도 기기에서 과도한 렌더 비용 차단\n- `visibilitychange`로 탭 비활성 시 렌더 루프 일시정지, 비주얼라이저는 IntersectionObserver로 화면에 보일 때만 동작\n- Vite `manualChunks`로 three·gsap을 별도 청크로 분리해 초기 파싱 부담 감소\n\n### 5. 접근성 & 우아한 폴백 (Graceful Degradation)\n- `prefers-reduced-motion` 감지 → 회전·부유 모션 정지 (모션 민감 사용자 대응)\n- WebGL 컨텍스트 생성 실패 시 try/catch로 잡아 **CSS 그라데이션 배경으로 자동 대체**\n- 시맨틱 마크업(header/main/section/footer/nav) + aria-label, 장식 요소 aria-hidden 처리\n\n### 6. 직접 만든 디자인 시스템\n- 모든 컬러·타이포·간격을 **CSS 커스텀 프로퍼티로 토큰화**, `clamp()` 기반 유동형 타이포 스케일\n- 24px 그리드·stroke 1.5로 통일한 **라인 아이콘 9종 직접 제작**(음파·ANC·공간음향 등) → `[data-icon]` 속성만으로 자동 주입\n- 2-레이어 커스텀 커서(점+링, `mix-blend-mode: difference`), 마우스 추종 카드 광택(`--mx/--my`), 매니페스토 단어 점등 등 디테일 인터랙션\n\n## 문제 해결 (Trouble Shooting)\n- **스크롤 끊김** — Lenis와 GSAP이 각자 RAF를 돌려 프레임이 충돌 → 단일 ticker로 통합해 해결\n- **블룸이 화면 전체를 번지게 함** — bloom threshold를 0.92로 올려 발광 밴드 등 진짜 밝은 부분만 선택적으로 발광하도록 조정\n- **모바일에서 3D가 텍스트를 가림** — matchMedia로 모바일 전용 포즈 테이블을 만들어 제품을 후방 배치, 가독성 확보\n- **WebGL 미지원 환경** — 렌더러 생성 실패를 catch해 정적 그라데이션으로 폴백, 어떤 환경에서도 깨지지 않는 경험 보장\n\n## 기술 스택\n- **3D · 모션:** Three.js r169 · GSAP 3 (ScrollTrigger) · Lenis 1.1\n- **코어:** Vanilla JS (ESM 모듈) · 모던 CSS (커스텀 프로퍼티 · clamp)\n- **빌드:** Vite 5 (코드 스플리팅) · Pretendard / Space Grotesk\n- **No 프레임워크** — React/Vue 없이 순수 모듈 구조로 의존성을 가볍게 유지\n\n## 제작 안내\n이런 **인터랙티브 3D 제품 랜딩**은 **150만원부터 시작**합니다. (제품 종류 · 섹션 수 · 인터랙션 난이도에 따라 견적이 조정됩니다.)",
+    "techStack": [
+      "Three.js r169",
+      "WebGL",
+      "GSAP 3 · ScrollTrigger",
+      "Lenis",
+      "Vanilla JS (ESM)",
+      "CSS Custom Properties",
+      "Vite 5",
+      "Pretendard / Space Grotesk"
+    ],
+    "projectUrl": "",
+    "githubUrl": "",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 2주",
+    "client": "자체 제작 (Self-initiated)",
+    "budget": "150만원~",
+    "thumbnail": "/sonara/2.png",
+    "images": [
+      "/sonara/1.png",
+      "/sonara/3.png",
+      "/sonara/4.png",
+      "/sonara/5.png",
+      "/sonara/6.png",
+      "/sonara/7.png"
+    ],
+    "createdAt": "2026-05-24T05:35:25.443Z",
+    "updatedAt": "2026-05-24T05:35:25.443Z"
+  },
+  {
     "id": "34bea9b8-3802-4c91-8bd9-e1f7f8b01ca2",
     "title": "카플 (CarplayAuto) — 신차 장기렌트·리스 플랫폼",
     "description": "## 프로젝트 개요\n\n**카플(CarplayAuto)** 은 신차 장기렌트·리스를 전문으로 하는 업체의 차량 카탈로그·상담 플랫폼입니다. \"정직과 신뢰로 보답한다\"는 브랜드 가치를 화면 전반에 녹여, **차량 탐색 → 견적 상담 → 문의 접수**까지 끊김 없는 흐름으로 설계했습니다.\n\n> 복잡하게 느껴지는 장기렌트·리스를 누구나 쉽게 비교하고 바로 상담 신청할 수 있게 만드는 것이 핵심 목표였습니다.\n\n## 주요 기능\n\n- **렌트·리스 차량 카탈로그** — 카니발·쏘렌토·K5·K8 등 인기 차종을 차량가와 함께 카드형으로 노출\n- **즉시 출고 가능 차량** — 현대·기아·제네시스·쉐보레·KGM·르노·수입차 브랜드별 필터로 대기 없이 받을 수 있는 차량 확인\n- **Carplay 견적 상담** — 차종·조건 기반 맞춤 견적 상담 신청\n- **매니저 소개 & 고객 후기** — 담당 매니저와 실제 이용 후기로 신뢰도 강화\n- **24시간 상담 · 빠른 전국 배송** — 원하는 장소에서 차량 인도\n- **문의 접수 폼** — 이름·연락처·이메일·문의 유형 입력과 개인정보 수집·이용 동의 처리\n- **간편한 4단계 이용 방법 (HOW IT WORKS)** — 상담 → 차량 선택 → 계약 진행 → 출고\n- **반응형 + SEO** — 모바일 최적화, 메타·OG 태그로 검색·공유 대응\n\n## 기술적 포인트\n\n```javascript\n// 월 납입금 즉시 계산 (차량가 · 기간 · 선수금 기반)\nconst monthlyPayment = ({ carPrice, months, prepay, rate = 0.049 }) => {\n  const principal = carPrice - prepay;\n  const r = rate / 12;\n  return Math.round((principal * r) / (1 - Math.pow(1 + r, -months)));\n};\n```\n\n```javascript\n// 브랜드 필터 — 즉시 출고 가능 차량만 추출\nconst availableByBrand = (cars, brand) =>\n  cars.filter(c => c.inStock && (brand === 'all' || c.brand === brand));\n```\n\n## 개발 과정\n\n| 단계 | 내용 |\n|------|------|\n| 기획 | 정보구조(IA) 설계, 렌트·리스 상담 플로우 정의, 브랜드 톤매너 확정 |\n| 디자인 | 히어로 슬라이드·차량 카드·상담 폼 UI/UX |\n| 개발 | 차량 카탈로그·브랜드 필터·견적/문의 폼 구현 |\n| 통합·배포 | 반응형 QA, SEO·OG 세팅, 실서버 배포 |\n\n## 성과\n\n- 차량 탐색 → 상담 신청까지 **이탈 없는 단일 플로우** 구현\n- 모바일 우선 반응형으로 **모바일 유입 대응**\n- 메타·OG·구조화 데이터로 **검색 노출·공유 미리보기 최적화**\n\n## 링크\n\n- [라이브 사이트 →](https://www.carplayauto.com)",
@@ -34,7 +67,7 @@
   {
     "id": "90b25ebd-da6a-4870-99bb-c21088c5ea6b",
     "title": "Autowant - 렌트 리스 플랫폼",
-    "description": "## 프로젝트 개요\n\n렌트/리스 차량 비교 및 상담 신청 플랫폼. 차량 검색부터 견적 비교, 실시간 상담 신청까지 **한 페이지에서 모두 처리**할 수 있도록 사용자 흐름을 최적화한 풀스택 프로젝트입니다.\n\n## 주요 기능\n\n- 🚗 **차량 검색 & 필터링** — 브랜드, 차종, 연식, 월 납입금 범위별 필터\n- 📋 **상세 견적 비교** — 차량 스펙·옵션·월 납입금·보증금 한눈에 비교\n- 📞 **상담 신청 시스템** — 실시간 폼 + 자동 SMS 알림\n- 🛠️ **관리자 백오피스** — 차량 등록/수정/삭제, 상담 내역 관리\n- 📱 **반응형 웹** — 데스크탑/태블릿/모바일 완전 대응\n- 🔍 **SEO 최적화** — 메타 태그, OG, 사이트맵, 구조화 데이터\n\n## 기술적 포인트\n\n```javascript\n// 월 납입금 자동 계산 로직 (PMT formula)\nconst calculateMonthlyPayment = (carPrice, leaseTerm, downPayment, rate = 0.05) => {\n  const principal = carPrice - downPayment;\n  const monthlyRate = rate / 12;\n  const months = leaseTerm * 12;\n  return (principal * monthlyRate) /\n         (1 - Math.pow(1 + monthlyRate, -months));\n};\n```\n\n## 성과\n\n- ⚡ **Lighthouse 90+** (Performance, SEO, Accessibility)\n- 🚀 **반응형 완벽 구현** — 모든 디바이스 호환\n- 💯 **클라이언트 만족도 5.0 / 5.0**\n\n## 링크\n\n- [라이브 사이트 →](https://www.autowant.co.kr)",
+    "description": "## 프로젝트 개요\n\n렌트/리스 차량 비교 및 상담 신청 플랫폼. 차량 검색부터 견적 비교, 실시간 상담 신청까지 **한 페이지에서 모두 처리**할 수 있도록 사용자 흐름을 최적화한 풀스택 프로젝트입니다.\n\n## 주요 기능\n\n- **차량 검색 & 필터링** — 브랜드, 차종, 연식, 월 납입금 범위별 필터\n- **상세 견적 비교** — 차량 스펙·옵션·월 납입금·보증금 한눈에 비교\n- **상담 신청 시스템** — 실시간 폼 + 자동 SMS 알림\n- **관리자 백오피스** — 차량 등록/수정/삭제, 상담 내역 관리\n- **반응형 웹** — 데스크탑/태블릿/모바일 완전 대응\n- **SEO 최적화** — 메타 태그, OG, 사이트맵, 구조화 데이터\n\n## 기술적 포인트\n\n```javascript\n// 월 납입금 자동 계산 로직 (PMT formula)\nconst calculateMonthlyPayment = (carPrice, leaseTerm, downPayment, rate = 0.05) => {\n  const principal = carPrice - downPayment;\n  const monthlyRate = rate / 12;\n  const months = leaseTerm * 12;\n  return (principal * monthlyRate) /\n         (1 - Math.pow(1 + monthlyRate, -months));\n};\n```\n\n## 성과\n\n- **Lighthouse 90+** (Performance, SEO, Accessibility)\n- **반응형 완벽 구현** — 모든 디바이스 호환\n- **클라이언트 만족도 5.0 / 5.0**\n\n## 링크\n\n- [라이브 사이트 →](https://www.autowant.co.kr)",
     "techStack": [
       "Vue.js 3",
       "Composition API",
@@ -67,12 +100,12 @@
       "/autowant/8.webp"
     ],
     "createdAt": "2026-05-11T15:28:25.200Z",
-    "updatedAt": "2026-05-11T15:28:25.200Z"
+    "updatedAt": "2026-05-24T04:19:59.782Z"
   },
   {
     "id": "eda0af51-44e5-40b7-b731-361e2d2a902f",
     "title": "Velcrocat 의류 쇼핑몰 플랫폼",
-    "description": "## 프로젝트 개요\n\n**오사카 마켓** 컨셉의 빈티지·스트릿 의류 쇼핑몰 플랫폼. 일본 현지에서 직접 큐레이팅한 의류를 한국 고객에게 판매하는 D2C 쇼핑몰을 풀스택으로 구축했습니다.\n\n> 일본 오사카 빈티지 마켓의 감성을 그대로 디지털로 옮기는 것이 핵심 목표였습니다.\n\n## 주요 기능\n\n- 🛍 **상품 카탈로그** — 카테고리, 사이즈, 색상, 가격대별 필터링\n- 🔍 **검색 & 정렬** — 키워드 검색, 최신순/인기순/가격순 정렬\n- 🛒 **장바구니 & 위시리스트** — 비회원도 사용 가능, 회원 전환 시 자동 동기화\n- 💳 **결제 시스템** — 카드 / 무통장입금 / 간편결제 (PG 연동)\n- 📦 **주문 관리** — 주문 조회, 배송 추적, 교환·환불 신청\n- 👤 **회원 시스템** — 소셜 로그인 (카카오/네이버), 마이페이지, 적립금\n- 🛠 **관리자 백오피스** — 상품 등록, 재고 관리, 주문 처리, 통계 대시보드\n- 📱 **반응형 + 모바일 최적화** — 모바일 트래픽 70% 대응\n\n## 기술적 포인트\n\n```javascript\n// 장바구니 상태 관리 (비회원/회원 자동 머지)\nconst mergeCart = async (userId, localCart) => {\n  const dbCart = await fetchUserCart(userId);\n  const merged = [...dbCart];\n\n  localCart.forEach(localItem => {\n    const existing = merged.find(i => i.productId === localItem.productId);\n    if (existing) existing.quantity += localItem.quantity;\n    else merged.push(localItem);\n  });\n\n  await saveUserCart(userId, merged);\n  localStorage.removeItem('guestCart');\n  return merged;\n};\n```\n\n```css\n/* 빈티지 마켓 감성 — 시즌별 컬러 테마 */\n:root[data-season=\"osaka-spring\"] {\n  --accent: #f5a623;\n  --bg-warm: #fdf6e3;\n  --vintage-paper: url('/textures/paper-grain.png');\n}\n```\n\n## 개발 과정\n\n| 단계 | 기간 | 내용 |\n|------|------|------|\n| 1주차 | 기획 | IA 설계, 쇼핑몰 플로우 정의, 디자인 톤매너 확정 |\n| 2~3주차 | 개발 (1차) | 상품/카테고리/카트/결제 핵심 플로우 |\n| 4~5주차 | 개발 (2차) | 회원 시스템, 관리자, 통계 |\n| 6주차 | 통합·QA | PG 결제 테스트, 부하 테스트, 배포 |\n| 7~8주차 | 운영 반영 | 클라이언트 피드백, SEO, 마케팅 픽셀 연동 |\n\n## 디자인 컨셉\n\n빈티지 마켓 특유의 따뜻한 종이 질감과 손글씨 폰트를 디지털에서 재현. 일본 잡지 레이아웃에서 영감받은 비대칭 그리드 적용.\n\n## 성과\n\n- 🎯 **출시 1개월 내** 정식 운영 시작\n- 📊 **모바일 전환율 4.2%** (의류 쇼핑몰 평균 2.5% 대비 +60%)\n- ⚡ **Lighthouse 92점** (Performance)\n- 💯 클라이언트 만족도 5.0 / 5.0\n\n## 링크\n\n- [라이브 사이트 →](https://www.vcat.kr)",
+    "description": "## 프로젝트 개요\n\n**오사카 마켓** 컨셉의 빈티지·스트릿 의류 쇼핑몰 플랫폼. 일본 현지에서 직접 큐레이팅한 의류를 한국 고객에게 판매하는 D2C 쇼핑몰을 풀스택으로 구축했습니다.\n\n> 일본 오사카 빈티지 마켓의 감성을 그대로 디지털로 옮기는 것이 핵심 목표였습니다.\n\n## 주요 기능\n\n- **상품 카탈로그** — 카테고리, 사이즈, 색상, 가격대별 필터링\n- **검색 & 정렬** — 키워드 검색, 최신순/인기순/가격순 정렬\n- **장바구니 & 위시리스트** — 비회원도 사용 가능, 회원 전환 시 자동 동기화\n- **결제 시스템** — 카드 / 무통장입금 / 간편결제 (PG 연동)\n- **주문 관리** — 주문 조회, 배송 추적, 교환·환불 신청\n- **회원 시스템** — 소셜 로그인 (카카오/네이버), 마이페이지, 적립금\n- **관리자 백오피스** — 상품 등록, 재고 관리, 주문 처리, 통계 대시보드\n- **반응형 + 모바일 최적화** — 모바일 트래픽 70% 대응\n\n## 기술적 포인트\n\n```javascript\n// 장바구니 상태 관리 (비회원/회원 자동 머지)\nconst mergeCart = async (userId, localCart) => {\n  const dbCart = await fetchUserCart(userId);\n  const merged = [...dbCart];\n\n  localCart.forEach(localItem => {\n    const existing = merged.find(i => i.productId === localItem.productId);\n    if (existing) existing.quantity += localItem.quantity;\n    else merged.push(localItem);\n  });\n\n  await saveUserCart(userId, merged);\n  localStorage.removeItem('guestCart');\n  return merged;\n};\n```\n\n```css\n/* 빈티지 마켓 감성 — 시즌별 컬러 테마 */\n:root[data-season=\"osaka-spring\"] {\n  --accent: #f5a623;\n  --bg-warm: #fdf6e3;\n  --vintage-paper: url('/textures/paper-grain.png');\n}\n```\n\n## 개발 과정\n\n| 단계 | 기간 | 내용 |\n|------|------|------|\n| 1주차 | 기획 | IA 설계, 쇼핑몰 플로우 정의, 디자인 톤매너 확정 |\n| 2~3주차 | 개발 (1차) | 상품/카테고리/카트/결제 핵심 플로우 |\n| 4~5주차 | 개발 (2차) | 회원 시스템, 관리자, 통계 |\n| 6주차 | 통합·QA | PG 결제 테스트, 부하 테스트, 배포 |\n| 7~8주차 | 운영 반영 | 클라이언트 피드백, SEO, 마케팅 픽셀 연동 |\n\n## 디자인 컨셉\n\n빈티지 마켓 특유의 따뜻한 종이 질감과 손글씨 폰트를 디지털에서 재현. 일본 잡지 레이아웃에서 영감받은 비대칭 그리드 적용.\n\n## 성과\n\n- **출시 1개월 내** 정식 운영 시작\n- **모바일 전환율 4.2%** (의류 쇼핑몰 평균 2.5% 대비 +60%)\n- **Lighthouse 92점** (Performance)\n- 클라이언트 만족도 5.0 / 5.0\n\n## 링크\n\n- [라이브 사이트 →](https://www.vcat.kr)",
     "techStack": [
       "Next.js 14",
       "React",
@@ -107,6 +140,6 @@
       "/velcrocat/19.webp"
     ],
     "createdAt": "2026-05-11T15:13:00.247Z",
-    "updatedAt": "2026-05-11T15:13:00.247Z"
+    "updatedAt": "2026-05-24T04:19:59.782Z"
   }
 ]
