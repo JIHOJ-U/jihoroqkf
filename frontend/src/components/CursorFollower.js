@@ -14,10 +14,11 @@ function CursorFollower() {
   const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
-    // Skip on touch / coarse pointer devices and reduced-motion users
+    // Skip only on touch / coarse pointer devices.
+    // (We intentionally keep the custom cursor for reduced-motion users — it's a
+    // lightweight transform-only effect and the user wants it visible.)
     const coarse = window.matchMedia('(pointer: coarse)').matches;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (coarse || reduce) {
+    if (coarse) {
       setEnabled(false);
       return;
     }

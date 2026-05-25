@@ -35,6 +35,8 @@ const FRONTEND_STATIC_FOLDERS = [
   '/carplayauto/',
   '/sonara/',
   '/qr-order/',
+  '/bom-friends/',
+  '/gage-note/',
 ];
 
 export const getImageUrl = (thumbnail) => {

@@ -208,7 +208,9 @@ img {
   background: #999;
 }
 
-/* Custom cursor - hide default on desktop only (touch devices keep native cursor) */
+/* Custom cursor - hide default on desktop only (touch devices keep native cursor).
+   CursorFollower renders on all fine-pointer devices (incl. reduced-motion), so the
+   native cursor can be safely hidden here. */
 @media (hover: hover) and (pointer: fine) {
   * {
     cursor: none !important;

@@ -1,5 +1,72 @@
 [
   {
+    "id": "c9d4e2b7-8a31-45f6-9e0c-1b7f3a5d6c84",
+    "title": "🏪 가게노트 (Gage-note) — 소상공인 매장 관리 SaaS",
+    "description": "## 프로젝트 개요\n\n**가게노트(Gage-note)** 는 동네 가게 사장님이 **매출·재고·고객을 엑셀 없이 한 화면에서 관리**하는 소상공인 매장 관리 SaaS입니다. 흩어진 매장 데이터를 하나의 모바일 우선 대시보드로 통합했으며, 기획부터 DB 설계·API·UI·배포까지 **1인 풀스택**으로 구현했습니다.\n\n> **자체 제작 프로젝트** — 풀스택 구독형 SaaS(멀티테넌트) 구축 역량을 보여주기 위한 포트폴리오입니다.\n\n## 한눈에 보기\n\n| 항목 | 내용 |\n|------|------|\n| **프로젝트 유형** | 풀스택 구독형 SaaS (멀티테넌트) |\n| **역할** | 기획 · 백엔드 · 프론트엔드 · 배포 설계 (1인 개발) |\n| **핵심 가치** | 흩어진 매장 데이터(매출·재고·고객)를 하나의 대시보드로 통합 |\n| **데모 계정** | `wnwlgh0719` / `wnwlgh0719` |\n| **차별점** | 모바일 우선 · 심플 UI · 한국 소상공인 시장 특화 |\n\n## 왜 만들었나 (문제 정의)\n\n동네 카페·디저트샵·미용실 같은 1인 매장 사장님들은 이렇게 일합니다.\n\n- 💸 **매출**은 카드사 앱·영수증·배달 앱에 **흩어져** 있고\n- 📦 **재고**는 **머릿속**에 있고\n- 🙋 **단골 고객**은 **카톡 메모장**에 적혀 있습니다.\n\n기존 POS 솔루션은 **하드웨어 종속적이고 비싸고 복잡**합니다. 가게노트는 이 문제를 **\"모바일에서 켜는 심플한 대시보드\"** 하나로 해결합니다.\n\n## 주요 기능\n\n### 📊 대시보드 — \"오늘 장사 어땠지?\"를 3초 만에\n- 오늘 / 이번 달 매출 카드 (**전일·전월 대비 증감률** 자동 계산)\n- 최근 **7일 매출 추이** 라인 차트 (그라데이션 영역)\n- **결제수단 비율** 도넛 차트 (카드·현금·계좌이체)\n- **인기 메뉴 Top 5** (매출 기준 랭킹 + 막대 그래프)\n- **재고 부족 알림** (안전재고 미달 상품 자동 표시)\n- 전체 고객 수 / VIP 고객 수 요약\n\n### 💳 매출 관리\n- 매출 입력 (상품 선택 시 금액 **자동 계산**) / 삭제\n- **월별 매출 추이** 막대 차트 (최근 6개월), **카테고리별 매출** 도넛 차트\n- 결제수단별 필터링\n- 매출 입력 시 **재고 자동 차감 + 고객 누적구매액 자동 갱신**\n\n### 📦 상품 / 재고 관리\n- 상품 등록·수정·삭제 (카테고리, SKU, 판매가, 원가, 안전재고)\n- **입고 / 출고** 처리 및 이력 기록(stock_logs)\n- **안전재고 미달** 시 '부족' 상태 자동 표시, **재고 자산** 자동 집계(원가 기준)\n\n### 👥 고객 관리 (CRM)\n- 고객 등록 (연락처, 생일, 태그, 메모) · 이름·연락처 **실시간 검색** + 등급 필터\n- **VIP 자동 분류** (누적 구매액 50만원 이상 시 자동 승급)\n- 고객 상세: **누적 구매액·방문 횟수·구매 이력** 한눈에\n\n### ⚙️ 설정 / 인증\n- 매장 정보 · **요금제 변경(Free / Basic / Pro)** · **직원·권한 관리(사장·매니저·직원)**\n- JWT 기반 회원가입/로그인, 라우터 가드로 **권한 기반 접근 제어**\n- **멀티테넌트**: 사장님마다 자기 매장 데이터만 격리(`store_id` 단위 분리)\n\n## 기술적 구현 포인트\n\n```javascript\n// 매출 1건이 재고·고객을 연쇄 갱신 (트랜잭션)\nconst recordSale = db.transaction((sale) => {\n  insertSale.run(sale);                          // 매출 기록\n  decrementStock.run(sale.qty, sale.productId);  // 재고 자동 차감\n  bumpCustomerTotal.run(sale.amount, sale.customerId); // 누적구매액 갱신\n  // 누적 50만원 이상이면 VIP 자동 승급\n  promoteVipIfEligible.run(sale.customerId);\n});\n```\n\n- ✅ **풀스택 단독 구현** — 기획 → DB 설계 → API → UI → 배포까지 전 과정\n- ✅ **멀티테넌트 설계** — 모든 쿼리를 `store_id`로 격리해 매장 간 데이터 분리\n- ✅ **실시간 데이터 시각화** — 집계 쿼리(`GROUP BY`, 날짜 함수)로 대시보드/차트 구성\n- ✅ **JWT 인증 + RBAC** — 토큰 인터셉터, 라우터 가드, 권한 기반 접근\n- ✅ **자동화 로직** — 매출 입력 1건이 재고 차감·고객 누적액·VIP 등급을 연쇄 갱신\n- ✅ **운영 수준 보안** — 보안 헤더(helmet), 로그인 무차별 대입 차단(rate-limit), 환경변수 분리\n- ✅ **반응형 / 모바일 우선** — 사이드바·테이블이 모바일에서 자연스럽게 재배치\n- ✅ **구독형 비즈니스 모델** — 요금제 UI로 SaaS 전 라이프사이클 구현\n\n## 아키텍처\n\n```\n┌─────────────┐      HTTPS       ┌──────────────┐      SQL       ┌─────────────┐\n│  Vue 3 SPA  │ ───────────────▶ │  Express API │ ─────────────▶ │   SQLite    │\n│  (Vercel)   │   axios + JWT    │ (Render/Fly) │  better-sqlite3│  (영구 볼륨) │\n└─────────────┘                  └──────────────┘                └─────────────┘\n   Pinia 상태       Authorization      JWT 인증 미들웨어            store_id 단위\n   Router 가드      Bearer 토큰        + 매장 단위 데이터 격리       멀티테넌트\n```\n\n**데이터 모델 (핵심 테이블)**\n`users` · `stores` · `products` · `sales` · `customers` · `stock_logs` · `staff`\n\n## 기술 스택\n\n**Frontend** — Vue 3 (Composition API) · Vite · Pinia · Vue Router · Tailwind CSS · Chart.js(vue-chartjs) · Lucide · Axios\n\n**Backend** — Node.js · Express · better-sqlite3(SQLite) · JWT · bcrypt · helmet · cors · express-rate-limit · compression\n\n**Deploy-ready** — Vercel(프론트) + Render / Fly.io(백엔드) + 영구 볼륨 SQLite · `Dockerfile` · `render.yaml` · `fly.toml` · `vercel.json` 포함\n\n## 향후 로드맵\n\n- 💳 **정기결제(구독) 연동** — 토스페이먼츠 / 포트원 빌링 + 플랜별 사용량 제한\n- 🤖 **자동화 연동** — POS·배달 앱 매출 자동 수집, 영수증 OCR 입력\n- 📈 **AI 매출 예측** — 다음 달 예상 매출 추정\n- 📄 **리포트** — 엑셀 / PDF 내보내기, 주간·월간 자동 발송\n- 🗄 **PostgreSQL 전환** — 사용자 증가 대비 확장성 확보\n",
+    "techStack": [
+      "Vue 3",
+      "Vite",
+      "Pinia",
+      "Vue Router",
+      "Tailwind CSS",
+      "Chart.js",
+      "Node.js",
+      "Express",
+      "SQLite (better-sqlite3)",
+      "JWT",
+      "RESTful API"
+    ],
+    "projectUrl": "",
+    "githubUrl": "",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 3주",
+    "client": "자체 제작 (Self-initiated)",
+    "thumbnail": "/gage-note/1.png",
+    "images": [
+      "/gage-note/1.png",
+      "/gage-note/2.png",
+      "/gage-note/3.png",
+      "/gage-note/4.png",
+      "/gage-note/5.png",
+      "/gage-note/6.png"
+    ],
+    "createdAt": "2026-05-25T08:10:00.000Z",
+    "updatedAt": "2026-05-25T08:10:00.000Z"
+  },
+  {
+    "id": "b0f7a3c1-6d28-4e95-9a3b-2c8e1f4d7a60",
+    "title": "🐾 Bom & Friends — 반려견 케어 스튜디오 (판매)",
+    "description": "## 프로젝트 개요\n\n**Bom & Friends**는 가상의 반려견 케어 스튜디오를 위한 **스크롤 인터랙션 중심의 반응형 랜딩 페이지**입니다. React·Vue 같은 프레임워크 없이 **순수 Vanilla JS + GSAP**만으로 구현해, 프레임워크에 기대지 않는 DOM·이벤트·애니메이션 기본기를 증명하는 작품입니다.\n\n> **자체 제작 프로젝트** — 프리로더부터 커스텀 커서, 패럴럭스, 마그네틱 인터랙션까지 전부 직접 구현했습니다.\n\n## 사용 기술\n\n| 기술 | 용도 | 선택 이유 |\n|------|------|-----------|\n| HTML5 / CSS3 | 마크업·레이아웃 | CSS Grid · `position: sticky` · `clip-path` · `backdrop-filter` 등 모던 CSS |\n| Vanilla JavaScript | 인터랙션 로직 | 프레임워크 없이 DOM·이벤트를 직접 다뤄 기본기 증명 |\n| GSAP + ScrollTrigger | 애니메이션 엔진 | 스크롤 연동 타임라인 · 스태거 · scrub |\n| Lenis | 부드러운 스크롤 | requestAnimationFrame 기반 관성 스크롤, ScrollTrigger와 동기화 |\n| 반응형 디자인 | 모바일 대응 | `clamp()` 유동 타이포 + 미디어쿼리 + 터치 감지 |\n\n## 핵심 기능\n\n### 프리로더\n000 → 100 카운터 + 진행 바 → 패널 슬라이드 오프닝. GSAP 타임라인으로 시퀀싱하고, 완료 후 히어로 인트로를 트리거합니다.\n\n### 커스텀 커서\n점 + 추적 링, 호버 시 확대, 갤러리에선 \"VIEW\" 라벨 표시. `gsap.quickTo()`로 부드럽게 추적해 무거운 리렌더 없이 60fps를 유지합니다.\n\n### 텍스트 리빌\n제목이 단어 단위로 마스크 안에서 슬라이드업. 유료 SplitText 대신 단어 분리 함수를 직접 구현(`overflow:hidden` 마스크 + `yPercent`).\n\n### 패럴럭스\n히어로·소개·갤러리 이미지가 스크롤에 따라 시차 이동. ScrollTrigger의 `scrub`으로 스크롤 위치에 1:1 바인딩.\n\n### 무한 마퀴\n스크롤 속도에 반응해 가감속. `getVelocity()`로 `timeScale`을 조절하고 ticker로 기본 속도에 복귀.\n\n### 마그네틱 버튼\n커서를 따라 끌렸다가 탄성 복귀. 마우스 좌표 기반 offset + `elastic.out` 이징.\n\n### 3D 틸트 · 마이크로 인터랙션\n히어로 사진이 마우스 방향으로 기울어지고, 스크롤 진행 바 · 스태거 등장 · 호버 확대 등 디테일 인터랙션을 더했습니다.\n\n## 평가 포인트 (Engineering)\n\n- **Graceful Degradation** — JS 로드 실패나 `prefers-reduced-motion`(접근성) 시 애니메이션을 끄고 콘텐츠를 정적으로 정상 노출. 프리로더엔 6초 안전 타임아웃.\n- **터치 디바이스 분기** — `pointer: coarse` 감지로 모바일에선 커서·틸트·마그네틱을 비활성화해 불필요한 연산 제거.\n- **성능 고려** — `transform`만 애니메이션해 레이아웃 리플로우를 회피, `will-change` · `quickTo` · `scrub`로 부드러운 렌더링. CSS transition과 GSAP transform 충돌을 인지하고 분리 처리.\n- **자체 완결성** — 라이브러리·이미지를 전부 로컬에 포함 → 오프라인에서도 동작, 의존성 설치 불필요.\n- **접근성 / 시맨틱** — `aria-hidden` · `alt` · 시맨틱 태그 사용.\n\n## 폴더 구조\n\n```\nfrontend/\n├─ index.html      # 마크업 + 스타일 + 인터랙션 (단일 파일)\n├─ images/         # 강아지 사진 9장 (무료 라이선스)\n└─ js/             # gsap · ScrollTrigger · lenis (로컬 번들)\n```\n\n## 기술 스택\nHTML5 · CSS3 · Vanilla JavaScript · GSAP · ScrollTrigger · Lenis · 반응형 웹\n\n## 제작 안내\n이런 **스크롤 인터랙티브 랜딩**은 업종·섹션 수·인터랙션 난이도에 맞춰 맞춤 제작됩니다. 자세한 견적은 문의해 주세요.",
+    "techStack": [
+      "HTML5",
+      "CSS3",
+      "Vanilla JavaScript",
+      "GSAP",
+      "ScrollTrigger",
+      "Lenis",
+      "반응형 웹"
+    ],
+    "projectUrl": "",
+    "githubUrl": "",
+    "demoUrl": "",
+    "category": "웹 개발",
+    "duration": "약 1주",
+    "client": "자체 제작 (Self-initiated)",
+    "thumbnail": "/bom-friends/2.png",
+    "images": [
+      "/bom-friends/2.png",
+      "/bom-friends/3.png",
+      "/bom-friends/4.png",
+      "/bom-friends/5.png",
+      "/bom-friends/6.png",
+      "/bom-friends/7.png",
+      "/bom-friends/1.png"
+    ],
+    "createdAt": "2026-05-25T07:40:00.000Z",
+    "updatedAt": "2026-05-25T07:40:00.000Z"
+  },
+  {
     "id": "ab63efae-57d6-4e6c-b2bd-e0f1d8789a54",
     "title": "QR 테이블 오더 — 실시간 주문·주방(KDS)·매출 대시보드 (판매)",
     "description": "## 프로젝트 개요\n\n**QR 테이블 오더**는 손님의 QR 주문 → 주방 실시간 화면(KDS) → 사장님 매출 대시보드까지, 외식 매장의 **주문 흐름 전체**를 하나로 묶은 실시간 풀스택 웹앱입니다. 손님·주방·사장님 **3개 역할 화면이 WebSocket(Socket.io)으로 즉시 동기화**됩니다.\n\n## 주요 기능 (화면별)\n\n### 손님 주문 (모바일)\n- QR 스캔으로 **테이블 자동 인식**\n- 카테고리 탭 메뉴판(실제 사진) · 장바구니/수량 조절 · 요청사항 메모\n- **내 주문 실시간 추적** (접수 → 조리중 → 완료 진행바)\n- 직원 호출 · 품절 즉시 반영\n\n### 주방 KDS (주방 화면)\n- 신규 접수 / 조리중 2단 보드\n- 새 주문 **소리 + 하이라이트** 알림\n- 원터치 상태 변경 · **경과시간 색상 경고** (8분 / 15분)\n- 직원 호출 팝업 · 대기 / 조리중 / 완료 카운터\n\n### 사장님 대시보드\n- 매출 · 주문 수 · 객단가 · 진행중 **KPI**\n- 시간대별 / 카테고리별 **차트(Chart.js)** · 인기 메뉴 TOP · 실시간 주문 피드\n- 메뉴 **품절 토글** 관리 · 테이블별 **QR 일괄 발급·인쇄**\n\n## 아키텍처\n\n```\n [손님 모바일]    [주방 KDS]    [사장님 대시보드]\n       │              │               │\n       └───────── Socket.io rooms ────┘\n              table:N · kitchen · admin\n                      │\n         Express  (REST: 주문 생성 · 상태 변경 · 메뉴)\n                      │\n            better-sqlite3 (SQLite, 임베디드)\n```\n\n## 주문 1건의 데이터 흐름\n1. 손님이 장바구니 확정 → `POST /api/orders`\n2. 서버가 **금액을 서버에서 재계산·검증**(클라이언트 값 불신), 품절 동시성 체크 후 **DB 트랜잭션**으로 저장\n3. `kitchen` · `admin` 룸에 신규 주문 push, `table:N` 룸엔 내 주문 상태 push\n4. 주방이 상태 변경 → `PATCH` → 해당 `table:N` + `admin`에 실시간 반영\n5. 대시보드 KPI · 차트 · 주문 피드 실시간 갱신\n\n## 기술 어필 포인트\n- **Socket.io 룸 기반 실시간** — `kitchen` / `admin` / `table:N`으로 나눠 필요한 화면에만 정확히 푸시\n- **서버 측 결제 금액 재계산** — 클라이언트 값을 믿지 않고 서버에서 검증해 가격 위·변조 차단\n- **품절 동시성 검증 + DB 트랜잭션**으로 데이터 정합성 보장\n- **REST(변경) + WebSocket(알림)** 의 단방향 흐름 분리\n- 무빌드 **바닐라 JS** + 공용 디자인 시스템 / SVG 아이콘\n- 임베디드 **SQLite로 제로 설정** 구동\n\n## 기술 스택\nNode.js · Express · Socket.io · SQLite(better-sqlite3) · Vanilla JS · Chart.js · QRCode.js\n\n## 향후 확장\n- 토스 / 카카오페이 결제 연동, 영수증·POS 연동\n- 다매장·프랜차이즈(매장별 데이터 분리), 통계 리포트 PDF 내보내기\n- 푸시(FCM) 알림, 주문 대기시간 예측, 다국어 메뉴",
