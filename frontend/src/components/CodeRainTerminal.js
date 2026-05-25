@@ -28,8 +28,24 @@ function CodeRainTerminal() {
   const [typing, setTyping] = useState({ scriptIdx: 0, charIdx: 0, active: false });
   const timeoutRef = useRef(null);
   const containerRef = useRef(null);
+  const wrapRef = useRef(null);
+  const [inView, setInView] = useState(true);
+
+  // Pause the whole typing loop (and its per-char re-renders) when the hero
+  // terminal is scrolled out of view — saves continuous work while reading the page.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
+    if (!inView) return undefined;
     let alive = true;
 
     const tick = () => {
@@ -92,7 +108,7 @@ function CodeRainTerminal() {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typing.scriptIdx, typing.charIdx]);
+  }, [typing.scriptIdx, typing.charIdx, inView]);
 
   // Auto-scroll to bottom of terminal as new lines arrive
   useEffect(() => {
@@ -101,7 +117,7 @@ function CodeRainTerminal() {
   }, [rendered]);
 
   return (
-    <div className="crt-wrap" aria-hidden="true">
+    <div className="crt-wrap" aria-hidden="true" ref={wrapRef}>
       <div className="crt-window">
         <div className="crt-header">
           <span className="crt-dot crt-dot--red" />

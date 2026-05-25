@@ -296,6 +296,14 @@
   opacity: 1;
 }
 
+/* Logo-on-white thumbnails: show the whole logo centered instead of cropping */
+.pf-thumb img.pf-thumb--contain {
+  object-fit: contain;
+  object-position: center;
+  background: #ffffff;
+  padding: 9%;
+}
+
 .pf-card:hover .pf-thumb img {
   transform: scale(1.04);
   opacity: 0.92;

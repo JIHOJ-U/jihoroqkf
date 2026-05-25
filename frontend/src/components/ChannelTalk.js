@@ -14,17 +14,31 @@ function ChannelTalk() {
   const { lang } = useLanguage();
 
   useEffect(() => {
-    ChannelService.loadScript();
-    ChannelService.boot({
-      pluginKey: PLUGIN_KEY,
-      language: lang === 'en' ? 'en' : 'ko',
-    });
+    let booted = false;
+
+    // Defer boot until the browser is idle so the chat SDK (external script +
+    // iframe) doesn't compete with the initial page render / first scroll.
+    const start = () => {
+      ChannelService.loadScript();
+      ChannelService.boot({
+        pluginKey: PLUGIN_KEY,
+        language: lang === 'en' ? 'en' : 'ko',
+      });
+      booted = true;
+    };
+
+    const ric = window.requestIdleCallback || ((cb) => window.setTimeout(cb, 2000));
+    const cic = window.cancelIdleCallback || window.clearTimeout;
+    const handle = ric(start);
 
     return () => {
-      try {
-        ChannelService.shutdown();
-      } catch (e) {
-        /* SDK may not be ready on fast unmount — safe to ignore */
+      cic(handle);
+      if (booted) {
+        try {
+          ChannelService.shutdown();
+        } catch (e) {
+          /* SDK may not be ready on fast unmount — safe to ignore */
+        }
       }
     };
   }, [lang]);

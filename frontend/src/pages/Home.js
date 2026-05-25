@@ -357,7 +357,13 @@ function Home() {
                   <Link to={`/portfolio/${item.id}`} className="work-card">
                     <div className="work-image">
                       {item.thumbnail ? (
-                        <img src={getImageUrl(item.thumbnail)} alt={item.title} />
+                        <img
+                          src={getImageUrl(item.thumbnail)}
+                          alt={item.title}
+                          loading="lazy"
+                          decoding="async"
+                          className={item.thumbnailFit === 'contain' ? 'work-thumb--contain' : ''}
+                        />
                       ) : (
                         <div className="work-placeholder"><HiCode /></div>
                       )}

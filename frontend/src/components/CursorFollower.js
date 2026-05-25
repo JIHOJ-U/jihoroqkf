@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './CursorFollower.css';
 
-const TRAIL_LENGTH = 6;
+const TRAIL_LENGTH = 4;
 const TRAIL_COLORS = ['#6366f1', '#7c3aed', '#8b5cf6', '#a78bfa', '#c4b5fd'];
 const HOVER_SELECTOR = 'a, button, .work-card, .portfolio-card, .service-card, .skill-item, .value-card, input, textarea, select, .type-option, .filter-tab';
 

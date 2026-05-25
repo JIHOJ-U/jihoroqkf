@@ -5,8 +5,10 @@
   right: 0;
   z-index: 1000;
   padding: 24px 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
+  /* Near-opaque bg instead of backdrop-filter blur — a full-width fixed blur
+     repaints on every scroll frame (major scroll jank); at 0.97 opacity the
+     blur was barely visible anyway. */
+  background: rgba(255, 255, 255, 0.97);
   transition: var(--transition);
 }
 
@@ -26,8 +28,7 @@
 
 .navbar.scrolled {
   padding: 16px 0;
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.98);
   border-bottom: 1px solid var(--border-light);
 }
 

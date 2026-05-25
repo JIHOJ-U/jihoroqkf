@@ -35,7 +35,11 @@ function FloatingParticles({ count = 20, colors = ['#6366f1', '#8b5cf6', '#a78bf
 
       container.appendChild(particle);
     }
-  }, [count, colors]);
+    // Depend on the color list *by value* (colors.join) instead of by reference,
+    // so inline `colors={[...]}` props don't rebuild every particle on each
+    // parent re-render (e.g. the 2.5s hero rolling-text tick).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count, colors.join(',')]);
 
   return <div ref={containerRef} className={`floating-particles ${className}`} />;
 }

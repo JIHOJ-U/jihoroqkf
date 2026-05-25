@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -11,7 +11,9 @@ import './Services.css';
 function Services() {
   const { t, lang } = useLanguage();
   const location = useLocation();
-  const services = t.services?.list || [];
+  // Memoize so the array reference is stable across renders — otherwise the
+  // useEffect hooks below would re-run every render (react-hooks/exhaustive-deps).
+  const services = useMemo(() => t.services?.list || [], [t.services]);
   const [activeKey, setActiveKey] = useState(services[0]?.key);
 
   // Scroll to specific service if URL has hash (#landing, #mobile, etc.)

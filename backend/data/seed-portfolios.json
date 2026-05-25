@@ -199,7 +199,8 @@
       "/autowant/8.webp"
     ],
     "createdAt": "2026-05-11T15:28:25.200Z",
-    "updatedAt": "2026-05-24T04:19:59.782Z"
+    "updatedAt": "2026-05-24T04:19:59.782Z",
+    "thumbnailFit": "contain"
   },
   {
     "id": "eda0af51-44e5-40b7-b731-361e2d2a902f",
@@ -239,6 +240,7 @@
       "/velcrocat/19.webp"
     ],
     "createdAt": "2026-05-11T15:13:00.247Z",
-    "updatedAt": "2026-05-24T04:19:59.782Z"
+    "updatedAt": "2026-05-24T04:19:59.782Z",
+    "thumbnailFit": "contain"
   }
 ]

@@ -3,8 +3,8 @@
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  filter: blur(0.5px);
-  mix-blend-mode: screen;
+  /* mix-blend-mode / filter removed: they force per-frame compositing of the
+     whole page behind each trail dot on every mouse move — heavy on weak GPUs. */
   transition: opacity 0.3s ease;
 }
 

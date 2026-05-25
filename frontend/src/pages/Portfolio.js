@@ -59,7 +59,12 @@ function PortfolioCard({ item, index }) {
           </div>
           <div className="pf-thumb">
             {item.thumbnail ? (
-              <img src={getImageUrl(item.thumbnail)} alt={item.title} loading="lazy" />
+              <img
+                src={getImageUrl(item.thumbnail)}
+                alt={item.title}
+                loading="lazy"
+                className={item.thumbnailFit === 'contain' ? 'pf-thumb--contain' : ''}
+              />
             ) : (
               <div className="pf-thumb-placeholder"><HiCode /></div>
             )}

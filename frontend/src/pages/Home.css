@@ -545,6 +545,14 @@
   transition: var(--transition-slow);
 }
 
+/* Logo-on-white thumbnails: show the whole logo centered instead of cropping */
+.work-image img.work-thumb--contain {
+  object-fit: contain;
+  object-position: center;
+  background: #ffffff;
+  padding: 9%;
+}
+
 .work-card:hover .work-image img {
   transform: scale(1.05);
 }
