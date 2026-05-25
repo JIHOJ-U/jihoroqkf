@@ -14,6 +14,7 @@ import ReadingProgress from './components/ReadingProgress';
 import AchievementToast from './components/AchievementToast';
 import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
+import ChannelTalk from './components/ChannelTalk';
 import AvailabilityBadge from './components/AvailabilityBadge';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -97,6 +98,7 @@ function App() {
               <AchievementToast />
               <ExplorerSidebar />
               <QuickActionsDock />
+              <ChannelTalk />
               <AvailabilityBadge variant="bar" />
               <Navbar />
               <main className="main-content">

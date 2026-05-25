@@ -11,6 +11,7 @@ import ProcessSection from '../components/ProcessSection';
 import CapabilitiesSection from '../components/CapabilitiesSection';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
+import TrustSection from '../components/TrustSection';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
@@ -390,6 +391,9 @@ function Home() {
 
       {/* FAQ */}
       <FaqSection />
+
+      {/* Trust / guarantees — reassurance band before final CTA */}
+      <TrustSection />
 
       {/* Marquee 2 */}
       <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" noTranslate />

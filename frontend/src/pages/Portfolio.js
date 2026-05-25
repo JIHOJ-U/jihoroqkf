@@ -20,10 +20,23 @@ const fadeUp = {
 
 const PAGE_SIZE = 9;
 
+function getPreviewDomain(item) {
+  const url = item.projectUrl || item.demoUrl;
+  if (url) {
+    try {
+      return new URL(url).hostname.replace(/^www\./, '');
+    } catch (e) {
+      /* fall through */
+    }
+  }
+  return 'dev.vibe / works';
+}
+
 function PortfolioCard({ item, index }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.35 });
   const color = REVEAL_COLORS[index % REVEAL_COLORS.length];
+  const domain = getPreviewDomain(item);
 
   return (
     <motion.li
@@ -34,26 +47,39 @@ function PortfolioCard({ item, index }) {
       transition={{ duration: 0.5, delay: (index % 3) * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <Link to={`/portfolio/${item.id}`} className="pf-card">
-        <div className="pf-thumb">
-          {item.thumbnail ? (
-            <img src={getImageUrl(item.thumbnail)} alt={item.title} loading="lazy" />
-          ) : (
-            <div className="pf-thumb-placeholder"><HiCode /></div>
-          )}
-          {/* Color block that covers image, then slides up to reveal */}
-          <motion.div
-            className="pf-thumb-curtain"
-            style={{ background: color }}
-            initial={{ y: '0%' }}
-            animate={inView ? { y: '-101%' } : { y: '0%' }}
-            transition={{
-              duration: 0.9,
-              delay: 0.15 + (index % 3) * 0.1,
-              ease: [0.76, 0, 0.24, 1],
-            }}
-          />
+        {/* Browser-chrome mockup frame */}
+        <div className="pf-mockup">
+          <div className="pf-mockup-bar">
+            <span className="pf-mockup-dots" aria-hidden="true"><i /><i /><i /></span>
+            <span className="pf-mockup-url">
+              <span className="pf-mockup-lock" aria-hidden="true">●</span>
+              {domain}
+            </span>
+            <span className="pf-mockup-spacer" aria-hidden="true" />
+          </div>
+          <div className="pf-thumb">
+            {item.thumbnail ? (
+              <img src={getImageUrl(item.thumbnail)} alt={item.title} loading="lazy" />
+            ) : (
+              <div className="pf-thumb-placeholder"><HiCode /></div>
+            )}
+            {item.category && <span className="pf-badge">{item.category}</span>}
+            {/* Color block that covers image, then slides up to reveal */}
+            <motion.div
+              className="pf-thumb-curtain"
+              style={{ background: color }}
+              initial={{ y: '0%' }}
+              animate={inView ? { y: '-101%' } : { y: '0%' }}
+              transition={{
+                duration: 0.9,
+                delay: 0.15 + (index % 3) * 0.1,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+            />
+          </div>
         </div>
         <h3 className="pf-card-title">{item.title}</h3>
+        {item.client && <p className="pf-card-client">{item.client}</p>}
         <ul className="pf-card-tags">
           {(item.techStack && item.techStack.length > 0
             ? item.techStack.slice(0, 3)
