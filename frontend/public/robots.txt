@@ -5,4 +5,4 @@ Disallow: /admin
 Disallow: /portfolio/new
 Disallow: /portfolio/edit
 
-Sitemap: https://xn--ob0b910a0pihjc79s61d.kr/sitemap.xml
+Sitemap: https://홈페이지공방.kr/sitemap.xml
