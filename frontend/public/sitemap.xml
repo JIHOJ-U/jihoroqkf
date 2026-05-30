@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main pages -->
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/portfolio</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/references</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://xn--ob0b910a0pihjc79s61d.kr/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Reference detail pages -->
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/motor-core-factory</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/precision-chem-lab</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/smart-factory-iot</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/aesthetic-clinic-portal</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/leanview-dental</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/oriental-medicine</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/fire-station-portal</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/smart-city</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/youth-policy</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/english-academy</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/coding-school</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/bakery-chain</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/wine-bar-membership</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/signature-realty</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/architecture-studio</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/hair-salon-booking</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/fashion-select</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/ai-meeting-notes</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/project-collab-tool</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/env-ngo-platform</loc><priority>0.6</priority></url>
+  <url><loc>https://xn--ob0b910a0pihjc79s61d.kr/references/social-enterprise-impact</loc><priority>0.6</priority></url>
+</urlset>
