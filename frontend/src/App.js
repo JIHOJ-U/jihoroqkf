@@ -16,6 +16,7 @@ import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
 import ChannelTalk from './components/ChannelTalk';
 import AvailabilityBadge from './components/AvailabilityBadge';
+import Analytics from './components/Analytics';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -87,6 +88,7 @@ function App() {
         <AchievementProvider>
           <Router>
             <IntroLoader />
+            <Analytics />
             {/* SmoothScroll (Lenis) disabled — native scroll feels snappier with many animations */}
             <ScrollToTop />
             <ReadingProgress />
