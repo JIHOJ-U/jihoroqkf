@@ -244,6 +244,43 @@ body::after {
   mix-blend-mode: screen;
 }
 
+/* === Card mouse-spotlight === */
+/* Mark a card with `data-spotlight` and attach the useSpotlight onMouseMove
+   handler — the radial light follows the cursor inside the card. Color
+   inherits a CSS var so a card can override its own spotlight tone. */
+[data-spotlight] {
+  --mx: 50%;
+  --my: 50%;
+  --spot-color: 99, 102, 241;
+  position: relative;
+}
+
+[data-spotlight]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--mx) var(--my),
+    rgba(var(--spot-color), 0.14),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+
+[data-spotlight]:hover::after {
+  opacity: 1;
+}
+
+/* Make sure card content sits above the spotlight overlay */
+[data-spotlight] > * {
+  position: relative;
+  z-index: 2;
+}
+
 a {
   text-decoration: none;
   color: inherit;

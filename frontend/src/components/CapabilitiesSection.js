@@ -8,6 +8,7 @@ import {
 import { useLanguage } from '../contexts/LanguageContext';
 import CountUp from './CountUp';
 import TypeOnView from './TypeOnView';
+import useSpotlight from '../hooks/useSpotlight';
 import './CapabilitiesSection.css';
 
 const ICONS = {
@@ -25,6 +26,7 @@ const ICONS = {
 function CapabilitiesSection() {
   const { t, lang } = useLanguage();
   const { label, title, desc, items } = t.capabilities;
+  const onSpot = useSpotlight();
 
   const stats = lang === 'ko'
     ? [
@@ -73,6 +75,8 @@ function CapabilitiesSection() {
               key={item.key}
               className="caps-card"
               data-cap={item.key}
+              data-spotlight=""
+              onMouseMove={onSpot}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}

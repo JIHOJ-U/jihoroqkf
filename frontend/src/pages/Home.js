@@ -14,6 +14,7 @@ import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
 import MetricsStrip from '../components/MetricsStrip';
 import AvailabilityBadge from '../components/AvailabilityBadge';
+import useSpotlight from '../hooks/useSpotlight';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -40,6 +41,7 @@ function Home() {
   const rollingWords = t.hero.rolling;
   const [portfolios, setPortfolios] = useState([]);
   const [rollingIndex, setRollingIndex] = useState(0);
+  const onSpot = useSpotlight();
 
   useEffect(() => {
     getPortfolios().then(res => setPortfolios(res.data.slice(0, 6))).catch(() => {});
@@ -358,7 +360,12 @@ function Home() {
             <div className="works-grid">
               {portfolios.map((item, i) => (
                 <motion.div key={item.id} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i % 2}>
-                  <Link to={`/portfolio/${item.id}`} className="work-card">
+                  <Link
+                    to={`/portfolio/${item.id}`}
+                    className="work-card"
+                    data-spotlight=""
+                    onMouseMove={onSpot}
+                  >
                     <div className="work-image">
                       {item.thumbnail ? (
                         <img

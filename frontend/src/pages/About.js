@@ -10,6 +10,7 @@ import ProcessPipeline from '../components/ProcessPipeline';
 import DevTerminal from '../components/DevTerminal';
 import GithubPanel from '../components/GithubPanel';
 import BlogPanel from '../components/BlogPanel';
+import BuildLog from '../components/BuildLog';
 import { useAchievement, ACHIEVEMENTS } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import './About.css';
@@ -313,6 +314,9 @@ function About() {
           <BlogPanel />
         </div>
       </section>
+
+      {/* Build Log — recent changes feed (CLI-styled) */}
+      <BuildLog />
 
       {/* Achievements */}
       <section className="achievements-section">

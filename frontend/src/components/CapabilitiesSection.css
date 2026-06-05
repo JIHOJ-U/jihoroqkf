@@ -110,7 +110,8 @@
   overflow: hidden;
 }
 
-/* Per-card semantic accents */
+/* Per-card semantic accents — spotlight uses the same color */
+.caps-card                      { --spot-color: var(--cap-rgb); }
 .caps-card[data-cap="auth"]     { --cap-rgb: 16, 185, 129;  --cap-hex: #10b981; --cap-hex-2: #059669; }
 .caps-card[data-cap="payment"]  { --cap-rgb: 245, 158, 11;  --cap-hex: #f59e0b; --cap-hex-2: #d97706; }
 .caps-card[data-cap="realtime"] { --cap-rgb: 6, 182, 212;   --cap-hex: #06b6d4; --cap-hex-2: #0891b2; }

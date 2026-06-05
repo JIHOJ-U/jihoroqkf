@@ -5,6 +5,7 @@ import { HiCode, HiPlus, HiSearch, HiArrowRight } from 'react-icons/hi';
 import { getPortfolios, getImageUrl } from '../api';
 import { useLanguage } from '../contexts/LanguageContext';
 import useTypewriterPlaceholder from '../hooks/useTypewriterPlaceholder';
+import useSpotlight from '../hooks/useSpotlight';
 import './Portfolio.css';
 
 const REVEAL_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4', '#10b981'];
@@ -37,6 +38,7 @@ function PortfolioCard({ item, index }) {
   const inView = useInView(ref, { once: true, amount: 0.35 });
   const color = REVEAL_COLORS[index % REVEAL_COLORS.length];
   const domain = getPreviewDomain(item);
+  const onSpot = useSpotlight();
 
   return (
     <motion.li
@@ -46,7 +48,12 @@ function PortfolioCard({ item, index }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: (index % 3) * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      <Link to={`/portfolio/${item.id}`} className="pf-card">
+      <Link
+        to={`/portfolio/${item.id}`}
+        className="pf-card"
+        data-spotlight=""
+        onMouseMove={onSpot}
+      >
         {/* Browser-chrome mockup frame */}
         <div className="pf-mockup">
           <div className="pf-mockup-bar">

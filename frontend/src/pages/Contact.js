@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import { HiMail, HiPhone, HiLocationMarker, HiPaperAirplane, HiCheckCircle, HiExclamationCircle } from 'react-icons/hi';
+import {
+  HiMail, HiPhone, HiLocationMarker, HiPaperAirplane,
+  HiCheckCircle, HiExclamationCircle, HiArrowLeft, HiArrowRight,
+} from 'react-icons/hi';
 import { submitInquiry } from '../api';
 import QuoteCalculator from '../components/QuoteCalculator';
 import CopyButton from '../components/CopyButton';
@@ -27,6 +30,8 @@ const COPY = {
     labels: { name: '이름 *', email: '이메일 *', phone: '연락처', company: '회사/단체', type: '프로젝트 유형', budget: '예산 범위', timeline: '희망 일정', description: '프로젝트 설명 *' },
     ph: { name: '홍길동 / John', email: 'name@naver.com', phone: '010-0000-0000', company: '회사명 (선택)', select: '선택해주세요', description: '프로젝트에 대해 자유롭게 설명해주세요. (목적, 주요 기능, 참고 사이트 등)' },
     submit: '문의 보내기', submitting: '접수 중...',
+    steps: { s1: '프로젝트', s2: '예산 · 일정', s3: '연락처' },
+    next: '다음', back: '이전',
     err: {
       email: '올바른 이메일 형식이 아닙니다. (예: name@naver.com)',
       nameReq: '이름을 입력해주세요.', nameInvalid: '한글/영문만 입력 가능합니다.',
@@ -50,6 +55,8 @@ const COPY = {
     labels: { name: 'Name *', email: 'Email *', phone: 'Phone', company: 'Company / Org', type: 'Project type', budget: 'Budget range', timeline: 'Timeline', description: 'Project description *' },
     ph: { name: 'John / 홍길동', email: 'name@email.com', phone: '010-0000-0000', company: 'Company name (optional)', select: 'Please select', description: 'Describe your project freely (goal, key features, reference sites, etc.)' },
     submit: 'Send inquiry', submitting: 'Sending...',
+    steps: { s1: 'Project', s2: 'Budget & Timeline', s3: 'Contact' },
+    next: 'Next', back: 'Back',
     err: {
       email: 'Invalid email format. (e.g. name@email.com)',
       nameReq: 'Please enter your name.', nameInvalid: 'Letters only (Korean / English).',
@@ -86,6 +93,8 @@ function Contact() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [step, setStep] = useState(1);
+  const TOTAL_STEPS = 3;
   const formRef = useRef(null);
   const location = useLocation();
 
@@ -151,6 +160,34 @@ function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Per-step validation — only block "next" on fields visible in that step.
+  const validateStep = (s) => {
+    const newErrors = {};
+    if (s === 1) {
+      if (!form.description.trim()) newErrors.description = c.err.desc;
+    } else if (s === 3) {
+      if (!form.name.trim()) newErrors.name = c.err.nameReq;
+      else if (!NAME_REGEX.test(form.name)) newErrors.name = c.err.nameInvalid;
+      if (!form.email.trim()) newErrors.email = c.err.emailReq;
+      else if (!EMAIL_REGEX.test(form.email)) newErrors.email = c.err.email;
+      if (form.phone && form.phone.replace(/\D/g, '').length < 10) {
+        newErrors.phone = c.err.phone;
+      }
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const goNext = () => {
+    if (!validateStep(step)) return;
+    setStep((s) => Math.min(s + 1, TOTAL_STEPS));
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  const goBack = () => {
+    setErrors({});
+    setStep((s) => Math.max(s - 1, 1));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -206,98 +243,148 @@ function Contact() {
         <div className="container">
           <div className="contact-grid">
             <motion.form className="contact-form" onSubmit={handleSubmit} variants={fadeUp} initial="hidden" animate="visible" custom={2} noValidate>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>{c.labels.name}</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder={c.ph.name}
-                    className={errors.name ? 'has-error' : ''}
-                  />
-                  {errors.name && <span className="form-error"><HiExclamationCircle /> {errors.name}</span>}
-                </div>
-                <div className="form-group">
-                  <label>{c.labels.email}</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder={c.ph.email}
-                    className={errors.email ? 'has-error' : ''}
-                  />
-                  {errors.email && <span className="form-error"><HiExclamationCircle /> {errors.email}</span>}
-                </div>
+              {/* Step progress indicator */}
+              <div className="cf-steps" role="progressbar" aria-valuemin={1} aria-valuemax={TOTAL_STEPS} aria-valuenow={step}>
+                {[
+                  { n: 1, label: c.steps.s1 },
+                  { n: 2, label: c.steps.s2 },
+                  { n: 3, label: c.steps.s3 },
+                ].map((s, i, arr) => (
+                  <React.Fragment key={s.n}>
+                    <div className={`cf-step ${step === s.n ? 'is-active' : ''} ${step > s.n ? 'is-done' : ''}`}>
+                      <span className="cf-step__dot">{step > s.n ? <HiCheckCircle /> : s.n}</span>
+                      <span className="cf-step__label">{s.label}</span>
+                    </div>
+                    {i < arr.length - 1 && <span className={`cf-step__bar ${step > s.n ? 'is-done' : ''}`} />}
+                  </React.Fragment>
+                ))}
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>{c.labels.phone}</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder={c.ph.phone}
-                    maxLength={13}
-                    className={errors.phone ? 'has-error' : ''}
-                  />
-                  {errors.phone && <span className="form-error"><HiExclamationCircle /> {errors.phone}</span>}
-                </div>
-                <div className="form-group">
-                  <label>{c.labels.company}</label>
-                  <input type="text" name="company" value={form.company} onChange={handleChange} placeholder={c.ph.company} />
-                </div>
-              </div>
+              {/* Step 1 — Project */}
+              {step === 1 && (
+                <div className="cf-step-body">
+                  <div className="form-group">
+                    <label>{c.labels.type}</label>
+                    <div className="type-group">
+                      {c.projectTypes.map((type) => (
+                        <label key={type} className={`type-option ${form.projectType === type ? 'active' : ''}`}>
+                          <input type="radio" name="projectType" value={type} checked={form.projectType === type} onChange={handleChange} />
+                          {type}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
 
-              <div className="form-group">
-                <label>{c.labels.type}</label>
-                <div className="type-group">
-                  {c.projectTypes.map(type => (
-                    <label key={type} className={`type-option ${form.projectType === type ? 'active' : ''}`}>
-                      <input type="radio" name="projectType" value={type} checked={form.projectType === type} onChange={handleChange} />
-                      {type}
-                    </label>
-                  ))}
+                  <div className="form-group">
+                    <label>{c.labels.description}</label>
+                    <textarea
+                      name="description"
+                      value={form.description}
+                      onChange={handleChange}
+                      placeholder={c.ph.description}
+                      rows={8}
+                      className={errors.description ? 'has-error' : ''}
+                    />
+                    {errors.description && <span className="form-error"><HiExclamationCircle /> {errors.description}</span>}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>{c.labels.budget}</label>
-                  <select name="budget" value={form.budget} onChange={handleChange}>
-                    <option value="">{c.ph.select}</option>
-                    {c.budgets.map(b => <option key={b} value={b}>{b}</option>)}
-                  </select>
+              {/* Step 2 — Budget & Timeline */}
+              {step === 2 && (
+                <div className="cf-step-body">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>{c.labels.budget}</label>
+                      <select name="budget" value={form.budget} onChange={handleChange}>
+                        <option value="">{c.ph.select}</option>
+                        {c.budgets.map((b) => <option key={b} value={b}>{b}</option>)}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>{c.labels.timeline}</label>
+                      <select name="timeline" value={form.timeline} onChange={handleChange}>
+                        <option value="">{c.ph.select}</option>
+                        {c.timelines.map((t) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>{c.labels.company}</label>
+                    <input type="text" name="company" value={form.company} onChange={handleChange} placeholder={c.ph.company} />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>{c.labels.timeline}</label>
-                  <select name="timeline" value={form.timeline} onChange={handleChange}>
-                    <option value="">{c.ph.select}</option>
-                    {c.timelines.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
+              )}
+
+              {/* Step 3 — Contact */}
+              {step === 3 && (
+                <div className="cf-step-body">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>{c.labels.name}</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        placeholder={c.ph.name}
+                        className={errors.name ? 'has-error' : ''}
+                      />
+                      {errors.name && <span className="form-error"><HiExclamationCircle /> {errors.name}</span>}
+                    </div>
+                    <div className="form-group">
+                      <label>{c.labels.email}</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder={c.ph.email}
+                        className={errors.email ? 'has-error' : ''}
+                      />
+                      {errors.email && <span className="form-error"><HiExclamationCircle /> {errors.email}</span>}
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>{c.labels.phone}</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder={c.ph.phone}
+                      maxLength={13}
+                      className={errors.phone ? 'has-error' : ''}
+                    />
+                    {errors.phone && <span className="form-error"><HiExclamationCircle /> {errors.phone}</span>}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="form-group">
-                <label>{c.labels.description}</label>
-                <textarea
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  placeholder={c.ph.description}
-                  rows={6}
-                  className={errors.description ? 'has-error' : ''}
-                />
-                {errors.description && <span className="form-error"><HiExclamationCircle /> {errors.description}</span>}
-              </div>
+              {/* Step nav */}
+              <div className="cf-nav">
+                <button
+                  type="button"
+                  className="btn btn-outline-dark"
+                  onClick={goBack}
+                  disabled={step === 1}
+                  style={{ visibility: step === 1 ? 'hidden' : 'visible' }}
+                >
+                  <HiArrowLeft /> {c.back}
+                </button>
 
-              <button type="submit" className="btn btn-dark btn-lg btn-full" disabled={submitting}>
-                <HiPaperAirplane /> {submitting ? c.submitting : c.submit}
-              </button>
+                {step < TOTAL_STEPS ? (
+                  <button type="button" className="btn btn-dark btn-lg" onClick={goNext}>
+                    {c.next} <HiArrowRight />
+                  </button>
+                ) : (
+                  <button type="submit" className="btn btn-dark btn-lg" disabled={submitting}>
+                    <HiPaperAirplane /> {submitting ? c.submitting : c.submit}
+                  </button>
+                )}
+              </div>
             </motion.form>
 
             <motion.div className="contact-info" variants={fadeUp} initial="hidden" animate="visible" custom={3}>
