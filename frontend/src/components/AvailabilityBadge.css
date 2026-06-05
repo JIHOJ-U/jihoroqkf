@@ -76,13 +76,23 @@
   font-size: 0.82rem;
   text-decoration: none;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
-  transition: background 0.25s ease;
+  transition:
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease,
+    background 0.25s ease;
   animation: avb-bar-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) 1.2s backwards;
 }
 
 @keyframes avb-bar-in {
   0%   { opacity: 0; transform: translateY(-100%); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Hide on scroll-down — slides back above the viewport */
+.avb-bar--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .avb-bar:hover {
