@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { HiMail, HiPhone, HiArrowSmRight } from 'react-icons/hi';
 import { FaGithub, FaBlog } from 'react-icons/fa';
 import { useLanguage } from '../contexts/LanguageContext';
+import LighthouseBadge from './LighthouseBadge';
 import './Footer.css';
 
 function Footer() {
@@ -27,6 +28,8 @@ function Footer() {
               <a href="https://github.com/JIHOJ-U/JIHOJ-U" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub /></a>
               <a href="https://blog.naver.com/longnight0719" target="_blank" rel="noopener noreferrer" aria-label="Blog"><FaBlog /></a>
             </div>
+
+            <LighthouseBadge />
           </div>
 
           <div className="footer-links">

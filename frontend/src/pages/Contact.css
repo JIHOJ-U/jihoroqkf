@@ -381,3 +381,23 @@ textarea.has-error:focus {
     display: none;
   }
 }
+
+/* Submit error inline panel (replaces alert) */
+.cf-submit-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.07);
+  color: #b91c1c;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cf-submit-error svg {
+  font-size: 1rem;
+  flex-shrink: 0;
+}

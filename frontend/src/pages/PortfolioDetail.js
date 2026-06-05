@@ -3,16 +3,43 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiArrowLeft, HiExternalLink, HiPencil, HiTrash, HiCode, HiCalendar, HiUser } from 'react-icons/hi';
 import { FaGithub } from 'react-icons/fa';
-import { getPortfolio, deletePortfolio, getImageUrl } from '../api';
+import { getPortfolio, getPortfolios, deletePortfolio, getImageUrl } from '../api';
 import { useAchievement } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import MarkdownContent from '../components/MarkdownContent';
 import './PortfolioDetail.css';
 
 const COPY = {
-  ko: { confirmDelete: '정말 삭제하시겠습니까?', deleteFail: '삭제에 실패했습니다.', edit: '수정', remove: '삭제', desc: '프로젝트 설명' },
-  en: { confirmDelete: 'Are you sure you want to delete this?', deleteFail: 'Failed to delete.', edit: 'Edit', remove: 'Delete', desc: 'Project Description' },
+  ko: {
+    confirmDelete: '정말 삭제하시겠습니까?',
+    deleteFail: '삭제에 실패했습니다.',
+    edit: '수정', remove: '삭제', desc: '프로젝트 설명',
+    relatedTitle: '비슷한 프로젝트',
+    relatedDesc: '같은 카테고리·기술의 다른 작업물',
+    viewAll: '전체 보기',
+  },
+  en: {
+    confirmDelete: 'Are you sure you want to delete this?',
+    deleteFail: 'Failed to delete.',
+    edit: 'Edit', remove: 'Delete', desc: 'Project Description',
+    relatedTitle: 'Related projects',
+    relatedDesc: 'Other work in the same category or tech stack',
+    viewAll: 'View all',
+  },
 };
+
+// Score how related two portfolios are. Same category = 5, each shared
+// tech-stack item = 2. Highest scores surface first.
+function scoreRelated(current, candidate) {
+  if (candidate.id === current.id) return -1;
+  let score = 0;
+  if (candidate.category && candidate.category === current.category) score += 5;
+  const a = new Set((current.techStack || []).map((t) => t.toLowerCase()));
+  (candidate.techStack || []).forEach((t) => {
+    if (a.has(t.toLowerCase())) score += 2;
+  });
+  return score;
+}
 
 function PortfolioDetail() {
   const { id } = useParams();
@@ -20,6 +47,7 @@ function PortfolioDetail() {
   const { lang } = useLanguage();
   const c = COPY[lang] || COPY.ko;
   const [portfolio, setPortfolio] = useState(null);
+  const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const { unlock } = useAchievement();
 
@@ -29,6 +57,22 @@ function PortfolioDetail() {
       .catch(() => navigate('/portfolio'))
       .finally(() => setLoading(false));
   }, [id, navigate, unlock]);
+
+  // Pull all portfolios once we know which one we're on, then rank by similarity.
+  useEffect(() => {
+    if (!portfolio) return;
+    getPortfolios()
+      .then((res) => {
+        const ranked = (res.data || [])
+          .map((p) => ({ p, s: scoreRelated(portfolio, p) }))
+          .filter((x) => x.s > 0)
+          .sort((a, b) => b.s - a.s)
+          .slice(0, 3)
+          .map((x) => x.p);
+        setRelated(ranked);
+      })
+      .catch(() => setRelated([]));
+  }, [portfolio]);
 
   const handleDelete = async () => {
     if (window.confirm(c.confirmDelete)) {
@@ -167,6 +211,50 @@ function PortfolioDetail() {
               </div>
             </div>
           </div>
+
+          {related.length > 0 && (
+            <motion.section
+              className="detail-related"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="detail-related-head">
+                <div>
+                  <span className="detail-related-label">// RELATED</span>
+                  <h2 className="detail-related-title">{c.relatedTitle}</h2>
+                  <p className="detail-related-desc">{c.relatedDesc}</p>
+                </div>
+                <Link to="/portfolio" className="detail-related-all">{c.viewAll} →</Link>
+              </div>
+
+              <ul className="detail-related-grid">
+                {related.map((p) => (
+                  <li key={p.id} className="detail-related-item">
+                    <Link to={`/portfolio/${p.id}`} className="detail-related-card">
+                      <div className="detail-related-thumb">
+                        {p.thumbnail ? (
+                          <img
+                            src={getImageUrl(p.thumbnail)}
+                            alt={p.title}
+                            loading="lazy"
+                            decoding="async"
+                            className={p.thumbnailFit === 'contain' ? 'detail-related-thumb--contain' : ''}
+                          />
+                        ) : (
+                          <div className="detail-related-thumb-empty"><HiCode /></div>
+                        )}
+                        {p.category && <span className="detail-related-badge">{p.category}</span>}
+                      </div>
+                      <h3 className="detail-related-name">{p.title}</h3>
+                      {p.client && <p className="detail-related-client">{p.client}</p>}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.section>
+          )}
         </motion.div>
       </div>
     </div>

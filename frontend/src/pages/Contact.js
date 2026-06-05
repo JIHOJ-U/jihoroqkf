@@ -93,6 +93,7 @@ function Contact() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [step, setStep] = useState(1);
   const TOTAL_STEPS = 3;
   const formRef = useRef(null);
@@ -191,12 +192,13 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    setSubmitError('');
     setSubmitting(true);
     try {
       await submitInquiry(form);
       setSubmitted(true);
     } catch (err) {
-      alert(c.err.submitFail);
+      setSubmitError(c.err.submitFail);
     } finally {
       setSubmitting(false);
     }
@@ -360,6 +362,12 @@ function Contact() {
                     />
                     {errors.phone && <span className="form-error"><HiExclamationCircle /> {errors.phone}</span>}
                   </div>
+                </div>
+              )}
+
+              {submitError && (
+                <div className="cf-submit-error" role="alert">
+                  <HiExclamationCircle /> {submitError}
                 </div>
               )}
 

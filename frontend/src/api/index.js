@@ -4,6 +4,10 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
+  // Without a timeout the form just sits on "submitting..." forever when the
+  // backend hangs (e.g. SMTP wedged). 20s is comfortably above any normal
+  // request but short enough that the user gets a real error instead.
+  timeout: 20000,
 });
 
 // Portfolio API
