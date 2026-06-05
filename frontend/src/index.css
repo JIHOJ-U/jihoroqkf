@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800;900&display=swap');
 
 *, *::before, *::after {
   margin: 0;
@@ -90,6 +90,25 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --max-width: 1280px;
+
+  /* Typography — Inter for body, Manrope for big headings (display) */
+  --font-body: 'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --font-display: 'Manrope', 'Inter', 'Pretendard', -apple-system, sans-serif;
+}
+
+/* Promote major section titles to the display font for stronger hierarchy.
+   Body text stays Inter — only the LARGE headlines get the display treatment. */
+.section-title,
+.caps-title,
+.hero-full__title,
+.intro-title,
+.about-title,
+.pf-title,
+.trust-title,
+.banner-text h2,
+.cta-box h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
 }
 
 :root[data-theme="dark"] {
@@ -198,13 +217,31 @@ html {
 }
 
 body {
-  font-family: 'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  font-family: var(--font-body);
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* Subtle grain — adds depth/texture so flat sections don't feel sterile.
+   Fixed overlay, pointer-events: none, well below loaders & cursor. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+:root[data-theme="dark"] body::after {
+  opacity: 0.06;
+  mix-blend-mode: screen;
 }
 
 a {

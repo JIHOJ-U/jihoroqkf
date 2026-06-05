@@ -72,6 +72,7 @@ function CapabilitiesSection() {
             <motion.li
               key={item.key}
               className="caps-card"
+              data-cap={item.key}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}

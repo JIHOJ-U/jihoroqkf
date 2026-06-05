@@ -90,8 +90,14 @@
   .caps-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
 }
 
-/* === Card === */
+/* === Card ===
+   Each card gets a semantic accent via [data-cap="..."] below.
+   Defaults below = primary (indigo); overrides change --cap-rgb and --cap-hex. */
 .caps-card {
+  --cap-rgb: 99, 102, 241;
+  --cap-hex: #6366f1;
+  --cap-hex-2: #8b5cf6;
+
   position: relative;
   padding: 32px 28px 28px;
   background: var(--bg-primary);
@@ -104,11 +110,21 @@
   overflow: hidden;
 }
 
+/* Per-card semantic accents */
+.caps-card[data-cap="auth"]     { --cap-rgb: 16, 185, 129;  --cap-hex: #10b981; --cap-hex-2: #059669; }
+.caps-card[data-cap="payment"]  { --cap-rgb: 245, 158, 11;  --cap-hex: #f59e0b; --cap-hex-2: #d97706; }
+.caps-card[data-cap="realtime"] { --cap-rgb: 6, 182, 212;   --cap-hex: #06b6d4; --cap-hex-2: #0891b2; }
+.caps-card[data-cap="ai"]       { --cap-rgb: 236, 72, 153;  --cap-hex: #ec4899; --cap-hex-2: #db2777; }
+.caps-card[data-cap="chart"]    { --cap-rgb: 6, 182, 212;   --cap-hex: #06b6d4; --cap-hex-2: #0891b2; }
+.caps-card[data-cap="push"]     { --cap-rgb: 245, 158, 11;  --cap-hex: #f59e0b; --cap-hex-2: #d97706; }
+.caps-card[data-cap="seo"]      { --cap-rgb: 16, 185, 129;  --cap-hex: #10b981; --cap-hex-2: #059669; }
+/* file, search → keep default indigo */
+
 .caps-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(236, 72, 153, 0.04));
+  background: linear-gradient(135deg, rgba(var(--cap-rgb), 0.07), rgba(var(--cap-rgb), 0.02));
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -117,8 +133,8 @@
 
 .caps-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(99, 102, 241, 0.45);
-  box-shadow: 0 16px 38px rgba(99, 102, 241, 0.1);
+  border-color: rgba(var(--cap-rgb), 0.45);
+  box-shadow: 0 16px 38px rgba(var(--cap-rgb), 0.12);
 }
 
 .caps-card:hover::before {
@@ -126,7 +142,7 @@
 }
 
 :root[data-theme="dark"] .caps-card:hover {
-  box-shadow: 0 16px 38px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 16px 38px rgba(var(--cap-rgb), 0.22);
 }
 
 /* Icon */
@@ -137,8 +153,8 @@
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
-  color: #6366f1;
+  background: linear-gradient(135deg, rgba(var(--cap-rgb), 0.14), rgba(var(--cap-rgb), 0.06));
+  color: var(--cap-hex);
   font-size: 1.6rem;
   margin-bottom: 22px;
   position: relative;
@@ -149,7 +165,7 @@
 
 .caps-card:hover .caps-card-icon {
   transform: scale(1.08) rotate(-6deg);
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--cap-hex), var(--cap-hex-2));
   color: white;
 }
 
@@ -197,8 +213,8 @@
 }
 
 .caps-card:hover .caps-card-tag {
-  background: rgba(99, 102, 241, 0.1);
-  color: #6366f1;
+  background: rgba(var(--cap-rgb), 0.1);
+  color: var(--cap-hex);
 }
 
 /* Stats strip below the grid */
