@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HiArrowLeft, HiExternalLink, HiPencil, HiTrash, HiCode, HiCalendar, HiUser } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight, HiExternalLink, HiPencil, HiTrash, HiCode, HiCalendar, HiUser, HiSparkles } from 'react-icons/hi';
 import { FaGithub } from 'react-icons/fa';
 import { getPortfolio, getPortfolios, deletePortfolio, getImageUrl } from '../api';
 import { useAchievement } from '../contexts/AchievementContext';
@@ -17,6 +17,10 @@ const COPY = {
     relatedTitle: '비슷한 프로젝트',
     relatedDesc: '같은 카테고리·기술의 다른 작업물',
     viewAll: '전체 보기',
+    ctaTag: 'LET\'S BUILD',
+    ctaTitle: '이런 거 만들고 싶으세요?',
+    ctaDesc: '비슷한 톤·기술로 본인 프로젝트도 만들 수 있어요. 무료 상담으로 범위·견적부터 같이 정리해드릴게요.',
+    ctaBtn: '비슷한 거 만들기',
   },
   en: {
     confirmDelete: 'Are you sure you want to delete this?',
@@ -25,6 +29,10 @@ const COPY = {
     relatedTitle: 'Related projects',
     relatedDesc: 'Other work in the same category or tech stack',
     viewAll: 'View all',
+    ctaTag: 'LET\'S BUILD',
+    ctaTitle: 'Want something like this?',
+    ctaDesc: 'We can build the same tone/stack for you. Start with a free consultation — scope and budget first.',
+    ctaBtn: 'Start a similar build',
   },
 };
 
@@ -255,6 +263,41 @@ function PortfolioDetail() {
               </ul>
             </motion.section>
           )}
+
+          {/* "Want one like this?" CTA — prefills the contact form with this
+              project's category + a starting description so the inquiry already
+              has context when the user lands on /contact. */}
+          <motion.section
+            className="detail-cta"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="detail-cta-glow" aria-hidden="true" />
+            <div className="detail-cta-inner">
+              <span className="detail-cta-tag" translate="no">
+                <HiSparkles /> {c.ctaTag}
+              </span>
+              <h3 className="detail-cta-title">{c.ctaTitle}</h3>
+              <p className="detail-cta-desc">{c.ctaDesc}</p>
+              <Link
+                to="/contact"
+                state={{
+                  prefill: {
+                    projectType: portfolio.category,
+                    description:
+                      lang === 'ko'
+                        ? `"${portfolio.title}" 같은 프로젝트 의뢰드리고 싶어요.\n\n참고 톤·기술: ${(portfolio.techStack || []).slice(0, 4).join(', ')}`
+                        : `I'd like a project similar to "${portfolio.title}".\n\nReference tone/stack: ${(portfolio.techStack || []).slice(0, 4).join(', ')}`,
+                  },
+                }}
+                className="detail-cta-btn"
+              >
+                {c.ctaBtn} <HiArrowRight />
+              </Link>
+            </div>
+          </motion.section>
         </motion.div>
       </div>
     </div>

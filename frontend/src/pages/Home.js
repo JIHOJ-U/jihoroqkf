@@ -13,6 +13,7 @@ import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
 import MetricsStrip from '../components/MetricsStrip';
+import FeaturedCarousel from '../components/FeaturedCarousel';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import useSpotlight from '../hooks/useSpotlight';
 import RevealImage from '../components/RevealImage';
@@ -340,8 +341,8 @@ function Home() {
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
 
-      {/* Testimonials — temporarily hidden, re-enable when ready */}
-      {/* <TestimonialsMarquee /> */}
+      {/* Testimonials */}
+      <TestimonialsMarquee />
 
       {/* Works */}
       <section className="works-section">
@@ -355,6 +356,10 @@ function Home() {
               {t.works.viewAll} <HiArrowRight className="view-all-icon" />
             </Link>
           </motion.div>
+
+          {portfolios.length > 0 && (
+            <FeaturedCarousel items={portfolios.slice(0, 3)} />
+          )}
 
           {portfolios.length > 0 ? (
             <div className="works-grid">

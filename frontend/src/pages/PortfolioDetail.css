@@ -571,3 +571,95 @@
   color: var(--text-muted);
   margin: 0;
 }
+
+/* === "Want one like this?" CTA at the bottom === */
+.detail-cta {
+  position: relative;
+  margin-top: 80px;
+  padding: 60px 48px;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at top left, rgba(99, 102, 241, 0.08), transparent 55%),
+    linear-gradient(160deg, #0d1117 0%, #161b26 100%);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  overflow: hidden;
+  text-align: center;
+}
+
+.detail-cta-glow {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse 800px 300px at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 800px 300px at center, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+.detail-cta-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.detail-cta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #fcd34d;
+  padding: 5px 12px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.08);
+  margin-bottom: 18px;
+}
+
+.detail-cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 12px;
+}
+
+.detail-cta-desc {
+  max-width: 540px;
+  margin: 0 auto 28px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(224, 231, 255, 0.7);
+}
+
+.detail-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 14px 32px -10px rgba(99, 102, 241, 0.6);
+}
+
+.detail-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.8);
+}
+
+@media (max-width: 640px) {
+  .detail-cta {
+    padding: 44px 22px;
+    margin-top: 56px;
+  }
+}

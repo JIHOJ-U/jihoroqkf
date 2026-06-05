@@ -1,0 +1,230 @@
+.fc-wrap {
+  margin-bottom: 40px;
+}
+
+.fc-stage {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 26px 50px -22px rgba(15, 23, 42, 0.25),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.fc-slide {
+  position: relative;
+  aspect-ratio: 21 / 9;
+  min-height: 340px;
+}
+
+.fc-slide-link {
+  position: absolute;
+  inset: 0;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.fc-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 5s ease-out;
+}
+
+.fc-slide-link:hover .fc-image {
+  transform: scale(1.04);
+}
+
+.fc-image--contain {
+  object-fit: contain;
+  background: #fff;
+  padding: 5%;
+}
+
+.fc-image--empty {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-hover));
+}
+
+.fc-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(13, 17, 23, 0.85) 0%,
+    rgba(13, 17, 23, 0.55) 45%,
+    rgba(13, 17, 23, 0.15) 80%,
+    rgba(13, 17, 23, 0)   100%
+  );
+}
+
+.fc-content {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 36px 44px;
+  max-width: 60%;
+  color: #ffffff;
+}
+
+.fc-tag {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #fcd34d;
+  padding: 4px 10px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.fc-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 6px;
+  color: #ffffff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc-client {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 16px;
+}
+
+.fc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.fc-tech {
+  font-family: 'Courier New', monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 4px 10px;
+  color: rgba(224, 231, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.fc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding-bottom: 2px;
+  transition: border-color 0.25s ease, gap 0.25s ease;
+}
+
+.fc-slide-link:hover .fc-cta {
+  border-color: #ffffff;
+  gap: 10px;
+}
+
+/* Nav arrows */
+.fc-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(15, 17, 23, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background 0.25s ease, transform 0.25s ease;
+  z-index: 2;
+}
+
+.fc-nav:hover {
+  background: rgba(15, 17, 23, 0.85);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.fc-nav--prev { left: 18px; }
+.fc-nav--next { right: 18px; }
+
+/* Dots */
+.fc-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.fc-dot {
+  width: 30px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+
+.fc-dot.is-active {
+  background: var(--color-primary);
+  width: 48px;
+}
+
+@media (max-width: 768px) {
+  .fc-slide {
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+  }
+
+  .fc-content {
+    padding: 22px 22px 26px;
+    max-width: 100%;
+  }
+
+  .fc-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(13, 17, 23, 0) 0%,
+      rgba(13, 17, 23, 0.2) 40%,
+      rgba(13, 17, 23, 0.85) 100%
+    );
+  }
+
+  .fc-nav {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .fc-nav--prev { left: 10px; }
+  .fc-nav--next { right: 10px; }
+
+  .fc-tags { gap: 4px; }
+  .fc-tech { font-size: 0.6rem; padding: 3px 7px; }
+}
