@@ -62,6 +62,22 @@ function Footer() {
           </div>
         </div>
 
+        <div className="footer-signature" aria-hidden="true">
+          <span className="fsig-c">//</span>{' '}
+          <span className="fsig-fn">crafted_with</span>
+          <span className="fsig-paren">(</span>
+          <span className="fsig-str">"React"</span>
+          <span className="fsig-c">,</span>{' '}
+          <span className="fsig-str">"Node"</span>
+          <span className="fsig-c">,</span>{' '}
+          <span className="fsig-str">"GSAP"</span>
+          <span className="fsig-paren">)</span>
+          <span className="fsig-c">;</span>{' '}
+          <span className="fsig-kw">return</span>{' '}
+          <span className="fsig-str">"💜"</span>
+          <span className="fsig-c">;</span>
+        </div>
+
         <div className="footer-bottom">
           <p>&copy; 2026 <span translate="no">Dev.Vibe</span> All rights reserved.</p>
           <div className="footer-bottom-links">

@@ -119,6 +119,32 @@
   color: #6366f1 !important;
 }
 
+/* Syntax-highlighted signature line above the copyright row */
+.footer-signature {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.2px;
+  padding: 16px 0 14px;
+  border-top: 1px dashed var(--border);
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.fsig-c    { color: var(--slate-400); }
+.fsig-fn   { color: var(--color-primary); font-weight: 700; }
+.fsig-paren{ color: var(--color-interactive); }
+.fsig-str  { color: var(--color-trust); }
+.fsig-kw   { color: var(--color-highlight); font-weight: 700; }
+
+:root[data-theme="dark"] .fsig-c { color: var(--slate-500); }
+
+@media (max-width: 768px) {
+  .footer-signature {
+    font-size: 0.7rem;
+    padding: 14px 0 10px;
+  }
+}
+
 .footer-bottom {
   border-top: 1px solid var(--border);
   padding: 24px 0;

@@ -499,7 +499,8 @@
   display: block;
   font-family: 'Courier New', monospace;
   font-size: 0.7rem;
-  color: #c4b5fd;
+  /* Metrics = data → cyan (semantic: tech) */
+  color: #67e8f9;
   font-weight: 700;
 }
 

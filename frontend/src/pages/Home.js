@@ -12,6 +12,7 @@ import CapabilitiesSection from '../components/CapabilitiesSection';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
+import MetricsStrip from '../components/MetricsStrip';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
@@ -333,6 +334,9 @@ function Home() {
 
       {/* Capabilities — what I can build (plain language for non-devs) */}
       <CapabilitiesSection />
+
+      {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
+      <MetricsStrip />
 
       {/* Testimonials — temporarily hidden, re-enable when ready */}
       {/* <TestimonialsMarquee /> */}

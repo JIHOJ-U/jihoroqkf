@@ -1,0 +1,99 @@
+.mstrip {
+  position: relative;
+  padding: 64px 0;
+  background: linear-gradient(180deg, #0d1117 0%, #161b26 100%);
+  overflow: hidden;
+}
+
+.mstrip-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse 1200px 360px at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 1200px 360px at center, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+.mstrip-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.mstrip-label {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--slate-400);
+  flex-shrink: 0;
+}
+
+.mstrip-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  flex: 1;
+}
+
+.mstrip-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mstrip-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.mstrip-label-text {
+  font-size: 0.78rem;
+  color: var(--slate-400);
+  letter-spacing: 0.2px;
+}
+
+/* Per-item semantic accent — number gets a colored underline glow */
+.mstrip-item--tech        .mstrip-value { text-shadow: 0 0 24px rgba(6, 182, 212, 0.35); }
+.mstrip-item--tech        { border-left-color: rgba(6, 182, 212, 0.35); }
+.mstrip-item--highlight   .mstrip-value { text-shadow: 0 0 24px rgba(245, 158, 11, 0.35); }
+.mstrip-item--highlight   { border-left-color: rgba(245, 158, 11, 0.35); }
+.mstrip-item--trust       .mstrip-value { text-shadow: 0 0 24px rgba(16, 185, 129, 0.35); }
+.mstrip-item--trust       { border-left-color: rgba(16, 185, 129, 0.35); }
+.mstrip-item--interactive .mstrip-value { text-shadow: 0 0 24px rgba(236, 72, 153, 0.35); }
+.mstrip-item--interactive { border-left-color: rgba(236, 72, 153, 0.35); }
+
+@media (max-width: 1024px) {
+  .mstrip-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  .mstrip-label {
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .mstrip {
+    padding: 48px 0;
+  }
+
+  .mstrip-items {
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 16px;
+  }
+}
