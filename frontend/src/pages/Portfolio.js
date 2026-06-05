@@ -188,6 +188,22 @@ function Portfolio() {
   const shown = filtered.slice(0, visible);
   const hasMore = filtered.length > visible;
 
+  // Build a deduped tech-tag pool from all portfolios for autocomplete.
+  const allTags = useMemo(() => {
+    const set = new Set();
+    portfolios.forEach((p) => (p.techStack || []).forEach((t) => set.add(t)));
+    return Array.from(set);
+  }, [portfolios]);
+
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const suggestions = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return [];
+    return allTags
+      .filter((t) => t.toLowerCase().includes(q) && t.toLowerCase() !== q)
+      .slice(0, 6);
+  }, [search, allTags]);
+
   const T = {
     label: lang === 'ko' ? 'PORTFOLIO' : 'PORTFOLIO',
     desc: lang === 'ko'
@@ -234,9 +250,33 @@ function Portfolio() {
             className="pf-search-input"
             placeholder={lang === 'ko' ? typedPlaceholder : T.placeholder}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); setSuggestionsOpen(true); }}
+            onFocus={() => setSuggestionsOpen(true)}
+            onBlur={() => setTimeout(() => setSuggestionsOpen(false), 120)}
+            autoComplete="off"
           />
           <HiSearch className="pf-search-icon" />
+
+          {suggestionsOpen && suggestions.length > 0 && (
+            <ul className="pf-suggestions" role="listbox">
+              {suggestions.map((tag) => (
+                <li key={tag}>
+                  <button
+                    type="button"
+                    className="pf-suggestion"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setSearch(tag);
+                      setSuggestionsOpen(false);
+                    }}
+                  >
+                    <HiSearch className="pf-suggestion-icon" />
+                    <span>{tag}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </motion.div>
 
         {/* Category tabs */}

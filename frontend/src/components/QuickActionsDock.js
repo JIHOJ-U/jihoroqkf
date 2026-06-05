@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { HiOutlineCalculator, HiOutlineChatAlt2, HiOutlineArrowUp } from 'react-icons/hi';
 import * as ChannelService from '@channel.io/channel-web-sdk-loader';
 import { useLanguage } from '../contexts/LanguageContext';
+import { trackCta, trackChatOpen } from '../utils/analytics';
 import './QuickActionsDock.css';
 
 function QuickActionsDock() {
@@ -28,6 +29,7 @@ function QuickActionsDock() {
   // Open the Channel Talk live-chat messenger. If the SDK hasn't finished its
   // deferred boot yet, fall back to the contact page.
   const openChat = () => {
+    trackChatOpen('quick_dock');
     try {
       ChannelService.showMessenger();
     } catch (e) {
@@ -37,7 +39,12 @@ function QuickActionsDock() {
 
   return (
     <div className={`qdock ${mounted ? 'qdock--in' : ''}`} aria-label="Quick actions">
-      <Link to="/contact" className="qdock-btn" style={{ '--i': 0 }}>
+      <Link
+        to="/contact"
+        className="qdock-btn"
+        style={{ '--i': 0 }}
+        onClick={() => trackCta('quote', { source: 'quick_dock' })}
+      >
         <span className="qdock-icon"><HiOutlineCalculator /></span>
         <span className="qdock-label">{labels.quote}</span>
       </Link>

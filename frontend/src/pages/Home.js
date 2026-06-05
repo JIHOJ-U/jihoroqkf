@@ -13,8 +13,8 @@ import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
 import MetricsStrip from '../components/MetricsStrip';
-import FeaturedCarousel from '../components/FeaturedCarousel';
 import AvailabilityBadge from '../components/AvailabilityBadge';
+import BlurImage from '../components/BlurImage';
 import useSpotlight from '../hooks/useSpotlight';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
@@ -341,8 +341,8 @@ function Home() {
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
 
-      {/* Testimonials */}
-      <TestimonialsMarquee />
+      {/* Testimonials — keep hidden until we have real client quotes */}
+      {/* <TestimonialsMarquee /> */}
 
       {/* Works */}
       <section className="works-section">
@@ -357,10 +357,6 @@ function Home() {
             </Link>
           </motion.div>
 
-          {portfolios.length > 0 && (
-            <FeaturedCarousel items={portfolios.slice(0, 3)} />
-          )}
-
           {portfolios.length > 0 ? (
             <div className="works-grid">
               {portfolios.map((item, i) => (
@@ -373,12 +369,10 @@ function Home() {
                   >
                     <div className="work-image">
                       {item.thumbnail ? (
-                        <img
+                        <BlurImage
                           src={getImageUrl(item.thumbnail)}
                           alt={item.title}
-                          loading="lazy"
-                          decoding="async"
-                          className={item.thumbnailFit === 'contain' ? 'work-thumb--contain' : ''}
+                          imgClassName={item.thumbnailFit === 'contain' ? 'work-thumb--contain' : ''}
                         />
                       ) : (
                         <div className="work-placeholder"><HiCode /></div>

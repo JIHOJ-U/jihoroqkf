@@ -7,6 +7,7 @@ import { getPortfolio, getPortfolios, deletePortfolio, getImageUrl } from '../ap
 import { useAchievement } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import MarkdownContent from '../components/MarkdownContent';
+import { trackCta, trackPortfolioOpen } from '../utils/analytics';
 import './PortfolioDetail.css';
 
 const COPY = {
@@ -61,7 +62,11 @@ function PortfolioDetail() {
 
   useEffect(() => {
     getPortfolio(id)
-      .then(res => { setPortfolio(res.data); unlock('PORTFOLIO_VIEWED'); })
+      .then(res => {
+        setPortfolio(res.data);
+        unlock('PORTFOLIO_VIEWED');
+        trackPortfolioOpen(res.data.id, res.data.title);
+      })
       .catch(() => navigate('/portfolio'))
       .finally(() => setLoading(false));
   }, [id, navigate, unlock]);
@@ -293,6 +298,7 @@ function PortfolioDetail() {
                   },
                 }}
                 className="detail-cta-btn"
+                onClick={() => trackCta('similar_build', { portfolio_id: id, portfolio_title: portfolio.title })}
               >
                 {c.ctaBtn} <HiArrowRight />
               </Link>

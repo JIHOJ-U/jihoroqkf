@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi';
 import { useLanguage } from '../contexts/LanguageContext';
+import { trackCta } from '../utils/analytics';
 import './AvailabilityBadge.css';
 
 function getKstClock() {
@@ -42,6 +43,7 @@ function AvailabilityBadge({ variant = 'chip' }) {
         to="/contact"
         className={`avb-bar ${hidden ? 'avb-bar--hidden' : ''}`}
         aria-label={label}
+        onClick={() => trackCta('availability_bar', { source: 'top_bar' })}
       >
         <span className="avb-dot" />
         <span className="avb-bar-text">

@@ -10,6 +10,7 @@ import QuoteCalculator from '../components/QuoteCalculator';
 import CopyButton from '../components/CopyButton';
 import TerminalSuccess from '../components/TerminalSuccess';
 import { useLanguage } from '../contexts/LanguageContext';
+import { trackInquirySubmit } from '../utils/analytics';
 import './Contact.css';
 
 const fadeUp = {
@@ -196,6 +197,11 @@ function Contact() {
     setSubmitting(true);
     try {
       await submitInquiry(form);
+      trackInquirySubmit({
+        project_type: form.projectType,
+        budget: form.budget || 'unspecified',
+        timeline: form.timeline || 'unspecified',
+      });
       setSubmitted(true);
     } catch (err) {
       setSubmitError(c.err.submitFail);

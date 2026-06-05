@@ -48,6 +48,8 @@ const About = withMinDelay(() => import('./pages/About'));
 const Admin = withMinDelay(() => import('./pages/Admin'));
 const Privacy = withMinDelay(() => import('./pages/Privacy'));
 const Terminal = withMinDelay(() => import('./pages/Terminal'));
+const Blog = withMinDelay(() => import('./pages/Blog'));
+const BlogPost = withMinDelay(() => import('./pages/BlogPost'));
 const NotFound = withMinDelay(() => import('./pages/NotFound'));
 
 function AnimatedRoutes() {
@@ -69,6 +71,8 @@ function AnimatedRoutes() {
           <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
           <Route path="/terminal" element={<PageTransition><Terminal /></PageTransition>} />
+          <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+          <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </AnimatePresence>

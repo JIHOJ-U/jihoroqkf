@@ -474,3 +474,69 @@
   .pf-more-wrap { margin-top: 56px; }
   .pf-more-btn { padding: 16px 28px; font-size: 0.9rem; }
 }
+
+/* === Search autocomplete dropdown === */
+.pf-search-wrap {
+  position: relative;
+}
+
+.pf-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow:
+    0 20px 40px -16px rgba(15, 23, 42, 0.18),
+    0 4px 10px rgba(15, 23, 42, 0.05);
+  animation: pf-sg-in 0.18s ease-out;
+}
+
+@keyframes pf-sg-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pf-suggestions li {
+  list-style: none;
+}
+
+.pf-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pf-suggestion:hover,
+.pf-suggestion:focus-visible {
+  background: var(--bg-secondary);
+  color: var(--color-primary);
+  outline: none;
+}
+
+.pf-suggestion-icon {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.pf-suggestion:hover .pf-suggestion-icon {
+  color: var(--color-primary);
+}
