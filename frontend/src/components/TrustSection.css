@@ -34,7 +34,8 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 2.5px;
-  color: #a78bfa;
+  /* Trust section accent = emerald (semantic: trust/security/promise) */
+  color: #34d399;
   margin-bottom: 14px;
 }
 
@@ -71,8 +72,8 @@
 
 .trust-item:hover {
   transform: translateY(-5px);
-  border-color: rgba(139, 92, 246, 0.5);
-  box-shadow: 0 22px 44px -18px rgba(139, 92, 246, 0.42);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 22px 44px -18px rgba(16, 185, 129, 0.4);
 }
 
 .trust-item__icon {
@@ -83,16 +84,17 @@
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
-  color: #c4b5fd;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
   margin-bottom: 16px;
-  transition: color 0.3s ease, background 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
 }
 
 .trust-item:hover .trust-item__icon {
   color: #ffffff;
-  background: rgba(139, 92, 246, 0.22);
+  background: rgba(16, 185, 129, 0.22);
+  border-color: rgba(16, 185, 129, 0.4);
 }
 
 .trust-item__title {

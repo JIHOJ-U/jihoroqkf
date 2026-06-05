@@ -193,10 +193,11 @@
 
 .value-chip__dial-fill {
   fill: none;
-  stroke: #8b5cf6;
+  /* Calibration dial = data/precision → cyan (semantic: tech/metric) */
+  stroke: var(--color-tech);
   stroke-width: 3;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.6));
+  filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.55));
   transition: stroke-dashoffset 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -217,7 +218,7 @@
 
 .value-chip__meter-value {
   font-size: 0.85rem;
-  color: #c4b5fd;
+  color: #67e8f9; /* cyan-200 — matches the dial */
   font-weight: 700;
   margin-top: 2px;
 }

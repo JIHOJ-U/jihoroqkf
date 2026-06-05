@@ -37,6 +37,49 @@
   --accent-hover: #4f46e5;
   --white: #ffffff;
   --black: #000000;
+
+  /* === Semantic color system ===
+     Each color carries a meaning so sections can vary while staying coherent.
+     Don't introduce new ad-hoc hex values for these roles — use the token. */
+  /* Primary — brand, links, default CTA (same value as --accent) */
+  --color-primary: #6366f1;
+  --color-primary-strong: #4f46e5;
+  --color-primary-soft: rgba(99, 102, 241, 0.10);
+  --color-primary-line: rgba(99, 102, 241, 0.25);
+
+  /* Tech / data / metrics — cyan (used in calibration, charts, technical detail) */
+  --color-tech: #06b6d4;
+  --color-tech-strong: #0891b2;
+  --color-tech-soft: rgba(6, 182, 212, 0.10);
+  --color-tech-line: rgba(6, 182, 212, 0.30);
+
+  /* Trust / live / success / security — emerald */
+  --color-trust: #10b981;
+  --color-trust-strong: #059669;
+  --color-trust-soft: rgba(16, 185, 129, 0.10);
+  --color-trust-line: rgba(16, 185, 129, 0.30);
+
+  /* Highlight / progress / featured / NEW — amber */
+  --color-highlight: #f59e0b;
+  --color-highlight-strong: #d97706;
+  --color-highlight-soft: rgba(245, 158, 11, 0.10);
+  --color-highlight-line: rgba(245, 158, 11, 0.30);
+
+  /* Interactive / hover emphasis / playful — pink */
+  --color-interactive: #ec4899;
+  --color-interactive-soft: rgba(236, 72, 153, 0.10);
+
+  /* Slate neutral scale (richer than plain gray, cooler) */
+  --slate-50:  #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;

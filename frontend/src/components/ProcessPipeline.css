@@ -28,10 +28,10 @@
 }
 
 .pipeline__trace-active {
-  stroke: url(#pipeFlow);
-  stroke: #8b5cf6;
+  /* Progress trace = "moving forward" → amber (semantic: highlight/progress) */
+  stroke: var(--color-highlight);
   stroke-width: 2;
-  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.55));
+  filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.55));
   transition: x2 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -43,9 +43,9 @@
 }
 
 .pipeline__node-outer.is-on {
-  fill: rgba(139, 92, 246, 0.25);
-  stroke: #a78bfa;
-  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.6));
+  fill: rgba(245, 158, 11, 0.20);
+  stroke: var(--color-highlight);
+  filter: drop-shadow(0 0 7px rgba(245, 158, 11, 0.55));
 }
 
 .pipeline__node-inner {
@@ -58,8 +58,8 @@
 }
 
 .pipeline__packet {
-  fill: #f0abfc;
-  filter: drop-shadow(0 0 6px #c4b5fd);
+  fill: #fcd34d; /* amber-300 — visible against the trace */
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
 }
 
 /* ===========================
@@ -93,7 +93,7 @@
 }
 
 .pipe-card.is-active .pipe-card__connector {
-  background: linear-gradient(180deg, #a78bfa, rgba(99, 102, 241, 0.2));
+  background: linear-gradient(180deg, var(--color-highlight), rgba(245, 158, 11, 0.15));
 }
 
 .pipe-card__inner {
@@ -110,9 +110,9 @@
 }
 
 .pipe-card.is-active .pipe-card__inner {
-  border-color: rgba(139, 92, 246, 0.45);
+  border-color: rgba(245, 158, 11, 0.4);
   box-shadow:
-    0 18px 40px -15px rgba(139, 92, 246, 0.35),
+    0 18px 40px -15px rgba(245, 158, 11, 0.3),
     0 0 0 1px rgba(139, 92, 246, 0.15);
 }
 
