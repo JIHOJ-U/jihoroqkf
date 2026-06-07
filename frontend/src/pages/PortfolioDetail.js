@@ -37,6 +37,33 @@ const COPY = {
   },
 };
 
+// Scan markdown for h2/h3 lines and return a flat TOC array.
+function buildToc(markdown) {
+  if (!markdown) return [];
+  const lines = markdown.split('\n');
+  const toc = [];
+  const seen = new Set();
+  for (const raw of lines) {
+    const m = /^(##|###)\s+(.+?)\s*$/.exec(raw);
+    if (!m) continue;
+    const level = m[1].length;
+    const text = m[2].trim();
+    // Mirror MarkdownContent's slug algorithm (basic)
+    let slug = text
+      .toLowerCase()
+      .replace(/[`*_~]/g, '')
+      .replace(/[^\w가-힣]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    if (!slug) slug = 'section';
+    let unique = slug;
+    let i = 2;
+    while (seen.has(unique)) unique = `${slug}-${i++}`;
+    seen.add(unique);
+    toc.push({ level, text, slug: unique });
+  }
+  return toc;
+}
+
 // Score how related two portfolios are. Same category = 5, each shared
 // tech-stack item = 2. Highest scores surface first.
 function scoreRelated(current, candidate) {
@@ -172,6 +199,26 @@ function PortfolioDetail() {
             </div>
 
             <div className="detail-sidebar">
+              {(() => {
+                const toc = buildToc(portfolio.description);
+                if (toc.length < 3) return null;
+                return (
+                  <div className="sidebar-block sidebar-toc">
+                    <h3>ON THIS PAGE</h3>
+                    <ul>
+                      {toc.map((t) => (
+                        <li
+                          key={t.slug}
+                          className={`sidebar-toc__item sidebar-toc__item--lvl-${t.level}`}
+                        >
+                          <a href={`#${t.slug}`}>{t.text}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
+
               <div className="sidebar-block">
                 <h3>TECH STACK</h3>
                 <div className="detail-tags">

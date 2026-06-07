@@ -11,6 +11,7 @@ import DevTerminal from '../components/DevTerminal';
 import GithubPanel from '../components/GithubPanel';
 import BlogPanel from '../components/BlogPanel';
 import BuildLog from '../components/BuildLog';
+import NotesTeaser from '../components/NotesTeaser';
 import { useAchievement, ACHIEVEMENTS } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import './About.css';
@@ -317,6 +318,9 @@ function About() {
 
       {/* Build Log — recent changes feed (CLI-styled) */}
       <BuildLog />
+
+      {/* Notes teaser — surface 3 latest blog posts here */}
+      <NotesTeaser limit={3} />
 
       {/* Achievements */}
       <section className="achievements-section">

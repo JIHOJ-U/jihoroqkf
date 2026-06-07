@@ -2,6 +2,7 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
+import AdminNavbar from './components/AdminNavbar';
 import Footer from './components/Footer';
 import CursorFollower from './components/CursorFollower';
 import IntroLoader from './components/IntroLoader';
@@ -52,6 +53,41 @@ const Blog = withMinDelay(() => import('./pages/Blog'));
 const BlogPost = withMinDelay(() => import('./pages/BlogPost'));
 const NotFound = withMinDelay(() => import('./pages/NotFound'));
 
+/* The /admin route gets a different chrome: dark utility navbar and the
+   public floating UI (CTA bars, channel chat, etc.) hidden so the area feels
+   like a tool, not a marketing surface. */
+function isAdminRoute(pathname) {
+  return pathname.startsWith('/admin');
+}
+
+function AppChrome({ children }) {
+  const location = useLocation();
+  const isAdmin = isAdminRoute(location.pathname);
+
+  return (
+    <>
+      {!isAdmin && (
+        <>
+          <CursorFollower />
+          <CommandPalette />
+          <KonamiCode />
+          <CmdKHint />
+          <AchievementToast />
+          <ExplorerSidebar />
+          <QuickActionsDock />
+          <ChannelTalk />
+          <AvailabilityBadge variant="bar" />
+        </>
+      )}
+      {isAdmin ? <AdminNavbar /> : <Navbar />}
+      <main className={`main-content ${isAdmin ? 'main-content--admin' : ''}`}>
+        {children}
+      </main>
+      {!isAdmin && <Footer />}
+    </>
+  );
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
   return (
@@ -97,20 +133,9 @@ function App() {
             <ScrollToTop />
             <ReadingProgress />
             <div className="App">
-              <CursorFollower />
-              <CommandPalette />
-              <KonamiCode />
-              <CmdKHint />
-              <AchievementToast />
-              <ExplorerSidebar />
-              <QuickActionsDock />
-              <ChannelTalk />
-              <AvailabilityBadge variant="bar" />
-              <Navbar />
-              <main className="main-content">
+              <AppChrome>
                 <AnimatedRoutes />
-              </main>
-              <Footer />
+              </AppChrome>
             </div>
           </Router>
         </AchievementProvider>

@@ -120,9 +120,6 @@ function Home() {
       {/* Curtain wrapper — content slides UP over the sticky hero */}
       <div className="home-curtain">
 
-      {/* Marquee */}
-      <Marquee />
-
       {/* Intro Section with image */}
       <section className="intro-section">
         <div className="container-wide">
@@ -200,24 +197,6 @@ function Home() {
 
       {/* Device Showcase */}
       <DeviceShowcase />
-
-      {/* Featured Image Banner */}
-      <section className="banner-section">
-        <motion.div className="banner-inner" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1600&q=80" alt="hardware macro" />
-          <div className="banner-overlay">
-            <FloatingParticles count={10} colors={['#ffffff', '#c4b5fd', '#a78bfa']} />
-            <div className="banner-text">
-              <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-                {t.banner.title}
-              </motion.h2>
-              <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}>
-                {t.banner.desc}
-              </motion.p>
-            </div>
-          </div>
-        </motion.div>
-      </section>
 
       {/* Why Full-Stack */}
       <section className="why-section">

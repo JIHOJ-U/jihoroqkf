@@ -166,9 +166,36 @@ html, body, .App {
 :root[data-theme="dark"] .work-card,
 :root[data-theme="dark"] .gh-repo,
 :root[data-theme="dark"] .qc-option,
-:root[data-theme="dark"] .qc-feature {
+:root[data-theme="dark"] .qc-feature,
+:root[data-theme="dark"] .caps-card,
+:root[data-theme="dark"] .notes-teaser-link,
+:root[data-theme="dark"] .lh-badge,
+:root[data-theme="dark"] .pf-mockup,
+:root[data-theme="dark"] .detail-related-thumb {
   background: var(--bg-card);
   color: var(--text-primary);
+}
+
+/* Dark theme — keep the Capabilities color-on-white image legible: in
+   dark mode the page bg is dark, so the white-padded "contain" thumbnails
+   for logo-on-white images still need a true-white panel inside. */
+:root[data-theme="dark"] .work-image img.work-thumb--contain,
+:root[data-theme="dark"] .pf-thumb img.pf-thumb--contain,
+:root[data-theme="dark"] .detail-related-thumb img.detail-related-thumb--contain,
+:root[data-theme="dark"] .fc-image--contain {
+  background: #ffffff;
+}
+
+/* Dark mode — soften the Lighthouse ring track so the colored fill stays
+   readable on the dark card. */
+:root[data-theme="dark"] .lh-score__track {
+  stroke: var(--bg-hover);
+}
+
+/* Dark mode — admin route uses its own dark chrome already, but make
+   sure the body bg under it matches. */
+:root[data-theme="dark"] .main-content--admin {
+  background: var(--bg-primary);
 }
 
 :root[data-theme="dark"] .compare-cell--builder,

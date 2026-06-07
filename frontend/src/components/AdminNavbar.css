@@ -1,0 +1,142 @@
+.adm-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 0 24px;
+  height: 56px;
+  background: linear-gradient(90deg, #0d1117 0%, #161b26 100%);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.25);
+  font-family: var(--font-body);
+}
+
+.adm-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.adm-nav__brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-trust);
+  box-shadow: 0 0 6px var(--color-trust);
+  animation: adm-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes adm-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+.adm-nav__brand-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+}
+
+.adm-nav__brand-tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 2px 6px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--color-highlight);
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.adm-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.adm-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.adm-nav__link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.adm-nav__link.is-active {
+  color: #ffffff;
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.adm-nav__icon {
+  display: inline-flex;
+  font-size: 1rem;
+}
+
+.adm-nav__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-nav__link--ghost {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.adm-nav__link--ghost:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .adm-nav {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  .adm-nav__brand {
+    padding-right: 12px;
+  }
+
+  .adm-nav__links {
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .adm-nav__link {
+    padding: 6px 10px;
+    font-size: 0.76rem;
+  }
+}

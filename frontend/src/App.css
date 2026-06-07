@@ -89,3 +89,14 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Admin route — push content below the dark utility navbar */
+.main-content--admin {
+  padding-top: 56px;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+:root[data-theme="dark"] .main-content--admin {
+  background: #0d1117;
+}
