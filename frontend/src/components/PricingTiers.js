@@ -1,26 +1,34 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { HiCheck, HiArrowRight } from 'react-icons/hi';
+import { HiCheck } from 'react-icons/hi';
 import { useLanguage } from '../contexts/LanguageContext';
-import useSpotlight from '../hooks/useSpotlight';
 import './PricingTiers.css';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i = 0) => ({
+  hidden: { opacity: 0, y: 24 },
+  visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
+    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 
 function PricingTiers() {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const onSpot = useSpotlight();
 
-  const { label, title, desc, tiers, popular, smallNote } = t.pricing;
+  const {
+    label,
+    title,
+    desc,
+    comparisonHeader,
+    tiers,
+    features,
+    quantitative,
+    ctaText,
+    smallNote,
+  } = t.pricing;
 
   const handleCta = (tier) => {
     navigate('/contact', { state: { prefill: tier.prefill } });
@@ -28,10 +36,10 @@ function PricingTiers() {
 
   return (
     <section className="pricing-section">
-      <div className="container-wide">
+      <div className="container">
         <motion.div
-          className="pricing-head"
-          initial={{ opacity: 0, y: 24 }}
+          className="pricing-header"
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6 }}
@@ -41,55 +49,98 @@ function PricingTiers() {
           {desc && <p className="pricing-desc">{desc}</p>}
         </motion.div>
 
-        <div className="pricing-grid">
-          {tiers.map((tier, i) => {
-            const isPopular = tier.popular === true;
-            return (
-              <motion.div
-                key={tier.key}
-                className={`pricing-card${isPopular ? ' pricing-card--popular' : ''}`}
-                data-spotlight=""
-                onMouseMove={onSpot}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                custom={i}
+        <motion.div
+          className="pricing-matrix"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+        >
+          {/* Row 1 — Tier headers */}
+          <div className="pricing-row pricing-row--header">
+            <div className="pricing-cell pricing-cell--label pricing-cell--header" aria-hidden="true" />
+            {tiers.map((tier) => (
+              <div
+                key={`head-${tier.key}`}
+                className="pricing-cell pricing-cell--header"
+                data-tier={tier.name}
               >
-                {isPopular && (
-                  <span className="pricing-card__badge">{popular}</span>
-                )}
+                <span className="pricing-cell__tier-name">{tier.name}</span>
+                <span className="pricing-cell__tier-price">{tier.price}</span>
+              </div>
+            ))}
+          </div>
 
-                <div className="pricing-card__head">
-                  <span className="pricing-card__name">{tier.name}</span>
-                  <span className="pricing-card__tagline">{tier.tagline}</span>
+          {/* Row 2 — Package description */}
+          <div className="pricing-row pricing-row--desc">
+            <div className="pricing-cell pricing-cell--label">{comparisonHeader}</div>
+            {tiers.map((tier) => (
+              <div
+                key={`desc-${tier.key}`}
+                className="pricing-cell pricing-cell--desc"
+                data-tier={tier.name}
+                data-label={comparisonHeader}
+              >
+                <span className="pricing-cell__desc-title">{tier.descTitle}</span>
+                <span className="pricing-cell__desc-body">{tier.descBody}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Rows 3-8 — Binary features */}
+          {features.map((feat) => (
+            <div key={`feat-${feat.key}`} className="pricing-row pricing-row--feature">
+              <div className="pricing-cell pricing-cell--label">{feat.label}</div>
+              {feat.values.map((val, i) => (
+                <div
+                  key={`feat-${feat.key}-${i}`}
+                  className={`pricing-cell ${val ? 'pricing-cell--check' : 'pricing-cell--dash'}`}
+                  data-tier={tiers[i].name}
+                  data-label={feat.label}
+                >
+                  {val ? (
+                    <HiCheck aria-label="Yes" />
+                  ) : (
+                    <span aria-label="Not included">—</span>
+                  )}
                 </div>
+              ))}
+            </div>
+          ))}
 
-                <div className="pricing-card__price">{tier.price}</div>
+          {/* Rows 9-11 — Quantitative */}
+          {quantitative.map((q) => (
+            <div key={`q-${q.key}`} className="pricing-row pricing-row--quant">
+              <div className="pricing-cell pricing-cell--label">{q.label}</div>
+              {q.values.map((val, i) => (
+                <div
+                  key={`q-${q.key}-${i}`}
+                  className="pricing-cell pricing-cell--value"
+                  data-tier={tiers[i].name}
+                  data-label={q.label}
+                >
+                  {val}
+                </div>
+              ))}
+            </div>
+          ))}
 
-                <div className="pricing-card__divider" />
-
-                <ul className="pricing-card__features">
-                  {tier.features.map((feat, fi) => (
-                    <li key={fi} className="pricing-card__feature">
-                      <HiCheck className="pricing-card__check" aria-hidden="true" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-
+          {/* Row 12 — CTAs */}
+          <div className="pricing-row pricing-row--cta">
+            <div className="pricing-cell pricing-cell--label" aria-hidden="true" />
+            {tiers.map((tier) => (
+              <div key={`cta-${tier.key}`} className="pricing-cell pricing-cell--cta" data-tier={tier.name}>
                 <button
                   type="button"
-                  className={`pricing-card__cta${isPopular ? ' pricing-card__cta--primary' : ' pricing-card__cta--outline'}`}
+                  className="pricing-cta-btn"
                   onClick={() => handleCta(tier)}
                 >
-                  <span>{tier.cta}</span>
-                  <HiArrowRight aria-hidden="true" />
+                  {ctaText}
                 </button>
-              </motion.div>
-            );
-          })}
-        </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
         {smallNote && <p className="pricing-note">{smallNote}</p>}
       </div>

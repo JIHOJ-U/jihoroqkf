@@ -1,280 +1,348 @@
 /* ============================================================
-   PricingTiers — three-tier pricing block
-   Surface tokens + spotlight glow + gradient border for popular
+   PricingTiers — Kmong-style comparison matrix
+   ------------------------------------------------------------
+   Responsive strategy:
+     Desktop (>=881px) — 4-column CSS grid (label | std | dlx | prm)
+     Mobile  (<=880px) — vertical stack: each tier becomes its
+       own block; per-row "label" appears as a small caption
+       above each cell via data-label attribute. The leftmost
+       label column is hidden on mobile (display: none) and
+       individual cells reveal their row label inline.
    ============================================================ */
 
 .pricing-section {
-  padding: 120px 0 96px;
-  background: var(--bg-secondary);
+  padding: 80px 0;
+  background: var(--bg-primary);
+}
+
+.pricing-section .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* ---------- Header ---------- */
-.pricing-head {
-  max-width: 720px;
-  margin: 0 auto 56px;
+.pricing-header {
   text-align: center;
+  margin-bottom: 48px;
 }
 
 .pricing-desc {
-  margin-top: 18px;
+  margin-top: 16px;
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
-/* ---------- Grid ---------- */
-.pricing-grid {
+/* ---------- Matrix outer card ---------- */
+.pricing-matrix {
+  position: relative;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 17, 23, 0.04);
+}
+
+.pricing-matrix::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #a78bfa, #6366f1, #ec4899);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* ---------- Row ---------- */
+.pricing-row {
   display: grid;
-  grid-template-columns: 1fr 1.08fr 1fr;
-  gap: 24px;
+  grid-template-columns: 200px 1fr 1fr 1fr;
+  border-bottom: 1px solid var(--border-light);
   align-items: stretch;
 }
 
-@media (max-width: 1024px) {
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    max-width: 480px;
-    margin: 0 auto;
-  }
+.pricing-row:last-child {
+  border-bottom: 0;
 }
 
-/* ---------- Card shell ---------- */
-.pricing-card {
-  position: relative;
+/* ---------- Cell base ---------- */
+.pricing-cell {
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 36px 28px 32px;
-  transition:
-    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-  --spot-color: 16, 185, 129;
+  justify-content: center;
+  padding: 20px 12px;
 }
 
-.pricing-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(16, 185, 129, 0.45);
-  box-shadow: 0 16px 38px rgba(16, 185, 129, 0.12);
-}
-
-/* ---------- Popular card: gradient border + slight emphasis ---------- */
-.pricing-card--popular {
-  z-index: 1;
-  transform: scale(1.02);
-  border-color: transparent;
-}
-
-.pricing-card--popular:hover {
-  transform: translateY(-4px) scale(1.02);
-}
-
-.pricing-card--popular::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  padding: 2px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-tech));
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ---------- Popular badge ---------- */
-.pricing-card__badge {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 6px 14px;
-  background: var(--color-primary);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  border-radius: 999px;
-  white-space: nowrap;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.28);
-  z-index: 3;
-}
-
-/* ---------- Card head: name + tagline ---------- */
-.pricing-card__head {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.pricing-card__name {
-  font-family: var(--font-display, inherit);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--text-primary);
-}
-
-.pricing-card__tagline {
+/* Left label column */
+.pricing-cell--label {
+  color: var(--color-primary, #6366f1);
   font-size: 14px;
+  font-weight: 500;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* Row 1 — header (tier name + price) */
+.pricing-cell--header {
+  padding-top: 28px;
+  padding-bottom: 28px;
+  align-items: center;
+  text-align: center;
+}
+
+.pricing-cell__tier-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.pricing-cell__tier-price {
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Row 2 — description */
+.pricing-cell--desc {
+  justify-content: flex-start;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: left;
+}
+
+.pricing-cell__desc-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
   line-height: 1.4;
 }
 
-/* ---------- Price ---------- */
-.pricing-card__price {
-  margin-top: 20px;
-  font-size: clamp(36px, 4.8vw, 56px);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  color: var(--text-primary);
-}
-
-/* ---------- Divider ---------- */
-.pricing-card__divider {
-  height: 1px;
-  background: var(--border-light);
-  margin: 24px 0;
-}
-
-/* ---------- Features list ---------- */
-.pricing-card__features {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex-grow: 1;
-}
-
-.pricing-card__feature {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 14.5px;
-  line-height: 1.5;
+.pricing-cell__desc-body {
+  font-size: 13px;
   color: var(--text-secondary);
+  line-height: 1.55;
 }
 
-.pricing-card__check {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-  color: var(--color-primary, #10b981);
-}
-
-/* ---------- CTA button ---------- */
-.pricing-card__cta {
-  margin-top: 28px;
-  width: 100%;
-  height: 48px;
-  display: inline-flex;
+/* Binary feature cells */
+.pricing-cell--check {
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border-radius: 12px;
-  font-size: 15px;
+  color: var(--color-primary, #6366f1);
+  font-size: 20px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.pricing-cell--check svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pricing-cell--dash {
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+/* Quantitative value cells */
+.pricing-cell--value {
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary, #6366f1);
   font-weight: 600;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  transition: var(--transition);
-  background: transparent;
+  font-size: 14px;
+  text-align: center;
 }
 
-.pricing-card__cta svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
+/* CTA cells + button */
+.pricing-cell--cta {
+  align-items: stretch;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-.pricing-card__cta:hover svg {
-  transform: translateX(3px);
-}
-
-.pricing-card__cta--outline {
-  background: transparent;
+.pricing-cta-btn {
+  width: 100%;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--bg-secondary, #f1f5f9);
   color: var(--text-primary);
-  border: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s ease);
+  font-family: inherit;
 }
 
-.pricing-card__cta--outline:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.pricing-card__cta--primary {
-  background: var(--color-primary);
+.pricing-cta-btn:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: #ffffff;
-  border: 1px solid var(--color-primary);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
 }
 
-.pricing-card__cta--primary:hover {
-  background: var(--color-primary-strong);
-  border-color: var(--color-primary-strong);
+.pricing-cta-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #6366f1);
+  outline-offset: 2px;
 }
 
 /* ---------- Note ---------- */
 .pricing-note {
-  margin-top: 32px;
+  margin-top: 28px;
   text-align: center;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-/* ---------- Dark mode polish ---------- */
-:root[data-theme='dark'] .pricing-card:hover {
-  box-shadow: 0 16px 38px rgba(16, 185, 129, 0.22);
+/* ---------- Dark mode ---------- */
+:root[data-theme='dark'] .pricing-matrix {
+  background: var(--bg-card);
+  border-color: var(--border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-:root[data-theme='dark'] .pricing-card--popular::before {
-  opacity: 0.9;
+:root[data-theme='dark'] .pricing-cta-btn {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+:root[data-theme='dark'] .pricing-cta-btn:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+}
+
+/* ---------- Responsive: <=880px stack tiers vertically ---------- */
+@media (max-width: 880px) {
+  .pricing-section {
+    padding: 64px 0;
+  }
+
+  .pricing-header {
+    margin-bottom: 36px;
+  }
+
+  .pricing-matrix {
+    padding: 20px;
+    /* Collapse to a single tier-column stack — each row becomes
+       label + 3 stacked tier cells via responsive overrides below. */
+  }
+
+  /* Reshape each row: hide the leftmost label column (its content
+     is reproduced inline above each value cell via data-label). */
+  .pricing-row {
+    grid-template-columns: 1fr;
+    padding: 8px 0;
+  }
+
+  .pricing-row > .pricing-cell--label {
+    display: none;
+  }
+
+  /* For non-header rows on mobile, show the row's label above the
+     value as a small caption using data-label. */
+  .pricing-row--feature .pricing-cell::before,
+  .pricing-row--quant .pricing-cell::before,
+  .pricing-row--desc .pricing-cell::before,
+  .pricing-row--cta .pricing-cell::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  /* Show a small tier-name divider before each tier group. We do
+     that by putting the tier name inline before the description row
+     (row 2) cells. */
+  .pricing-row--header {
+    display: none;
+  }
+
+  .pricing-cell--desc::after {
+    /* visual divider between tiers on mobile */
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--border-light);
+    margin-top: 14px;
+  }
+
+  .pricing-row--desc .pricing-cell--desc {
+    padding: 18px 4px 4px;
+    position: relative;
+  }
+
+  /* On mobile, prepend the TIER name + price block before each
+     description cell so visitors can identify the column. */
+  .pricing-row--desc .pricing-cell--desc::before {
+    content: attr(data-tier) ' · ' attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-primary, #6366f1);
+    margin-bottom: 10px;
+  }
+
+  /* Feature/quant rows: row label as a small caption left, value right */
+  .pricing-row--feature .pricing-cell,
+  .pricing-row--quant .pricing-cell {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 4px;
+    text-align: left;
+  }
+
+  .pricing-row--feature .pricing-cell::before,
+  .pricing-row--quant .pricing-cell::before {
+    margin-bottom: 0;
+    flex: 1;
+  }
+
+  /* CTA on mobile — full-width inside its cell, with tier label */
+  .pricing-row--cta .pricing-cell--cta {
+    padding: 14px 0;
+  }
+
+  .pricing-row--cta .pricing-cell--cta::before {
+    content: attr(data-tier);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-primary, #6366f1);
+    margin-bottom: 8px;
+  }
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .pricing-card,
-  .pricing-card:hover,
-  .pricing-card--popular,
-  .pricing-card--popular:hover,
-  .pricing-card__cta,
-  .pricing-card__cta svg {
+  .pricing-cta-btn,
+  .pricing-cta-btn:hover {
     transform: none !important;
     transition: none !important;
-  }
-
-  .pricing-card[data-spotlight]::after {
-    display: none;
-  }
-}
-
-/* ---------- Small screens ---------- */
-@media (max-width: 640px) {
-  .pricing-section {
-    padding: 80px 0 64px;
-  }
-
-  .pricing-head {
-    margin-bottom: 40px;
-  }
-
-  .pricing-card {
-    padding: 32px 22px 28px;
-  }
-
-  .pricing-card--popular {
-    transform: none;
-  }
-
-  .pricing-card--popular:hover {
-    transform: translateY(-4px);
   }
 }
