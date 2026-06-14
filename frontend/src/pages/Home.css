@@ -74,7 +74,7 @@
 
 /* ===== Editor Card (the ONE hero focal point) ===== */
 .hero-card {
-  width: clamp(320px, 60vw, 720px);
+  width: clamp(320px, 72vw, 880px);
   background: rgba(15, 17, 23, 0.92);
   border: 1px solid rgba(99, 102, 241, 0.28);
   border-radius: 14px;
@@ -88,7 +88,25 @@
     'SFMono-Regular', ui-monospace, 'JetBrains Mono', 'Fira Code',
     Menlo, Consolas, 'Courier New', monospace;
   pointer-events: auto;
+  /* VS Code-style 2-column grid: 180px sidebar + flexible editor area.
+     The title bar spans both columns, then the editor column stacks
+     tabs / body / status bar inside the right cell. */
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "bar     bar"
+    "sidebar tabs"
+    "sidebar body"
+    "sidebar status";
 }
+
+.hero-card__bar,
+.hero-card__header { grid-area: bar; }
+.hero-card__sidebar { grid-area: sidebar; }
+.hero-card__tabs { grid-area: tabs; }
+.hero-card__body { grid-area: body; }
+.hero-card__statusbar { grid-area: status; }
 
 /* Light theme: card stays dark by design (mirrors IntroLoader; dark-on-light
    has even higher contrast than dark-on-dark, so this is a deliberate a11y choice). */
@@ -230,6 +248,248 @@ html[data-theme="light"] .hero-card {
 
 @keyframes heroCaretBlink {
   50% { opacity: 0; }
+}
+
+/* ===== Sidebar — VS Code-style file explorer (desktop only) ===== */
+.hero-card__sidebar {
+  width: 180px;
+  padding: 14px 12px;
+  background: rgba(0, 0, 0, 0.20);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.hero-card__sidebar-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.hero-card__sidebar-project {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+  letter-spacing: 0.04em;
+  padding: 2px 0;
+}
+
+.hero-card__sidebar-chev {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.hero-card__sidebar-folder {
+  margin-top: 8px;
+}
+
+.hero-card__sidebar-folder-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.62);
+  padding: 3px 6px;
+}
+
+.hero-card__sidebar-icon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.hero-card__sidebar-file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 22px;
+  font-size: 12px;
+  color: #c7cad1;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.hero-card__sidebar-file:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero-card__sidebar-file:focus-visible {
+  outline: 1px solid rgba(99, 102, 241, 0.6);
+  outline-offset: -1px;
+}
+
+.hero-card__sidebar-file--active {
+  background: rgba(99, 102, 241, 0.18);
+  border-left-color: #6366f1;
+  color: #fff;
+}
+
+.hero-card__sidebar-file--static {
+  cursor: default;
+  color: rgba(199, 202, 209, 0.55);
+}
+
+.hero-card__sidebar-file--static:hover {
+  background: transparent;
+}
+
+/* ===== Tab bar — switchable file tabs ===== */
+.hero-card__tabs {
+  display: flex;
+  align-items: stretch;
+  background: rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.hero-card__tabs::-webkit-scrollbar { display: none; }
+
+.hero-card__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: 0;
+  border-top: 2px solid transparent;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.hero-card__tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-card__tab--active {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e8eaf0;
+  border-top-color: #6366f1;
+  /* Fuse with code body — the negative margin masks the row's border-bottom. */
+  margin-bottom: -1px;
+  padding-bottom: 9px;
+}
+
+.hero-card__tab-icon {
+  color: #93c5fd;
+  font-size: 11px;
+}
+
+/* ===== Status bar — VS Code style ===== */
+.hero-card__statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 14px;
+  min-height: 28px;
+  background: linear-gradient(90deg, #2c3aa5 0%, #3b3a8a 100%);
+  color: #fff;
+  font-size: 11.5px;
+  font-family: inherit;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero-card__status-left,
+.hero-card__status-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hero-card__status-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+.hero-card__status-glyph {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.hero-card__status-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.22);
+  display: inline-block;
+}
+
+.hero-card__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hero-card__status-dot--err {
+  background: #ef4444;
+}
+
+.hero-card__status-dot--live {
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  animation: heroStatusPulse 2s ease-in-out infinite;
+}
+
+.hero-card__status-item--sync {
+  animation: heroStatusSpin 6s linear infinite;
+  display: inline-block;
+}
+
+@keyframes heroStatusPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55); }
+  50%      { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0); }
+}
+
+@keyframes heroStatusSpin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-card__palette-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.hero-card__palette-hint:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-1px);
+}
+
+.hero-card__palette-hint:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-card__status-dot--live,
+  .hero-card__status-item--sync {
+    animation: none;
+  }
 }
 
 /* ===== CTA row beneath the card ===== */
@@ -1310,6 +1570,22 @@ html[data-theme="light"] .hero-card {
 
 }
 
+/* Below 900px: drop the sidebar — single column stack */
+@media (max-width: 900px) {
+  .hero-card {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "bar"
+      "tabs"
+      "body"
+      "status";
+  }
+
+  .hero-card__sidebar {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-full {
     min-height: auto;
@@ -1327,6 +1603,22 @@ html[data-theme="light"] .hero-card {
     font-size: 13px;
     line-height: 1.65;
     padding: 14px 0;
+  }
+
+  .hero-card__tab {
+    padding: 7px 12px;
+    font-size: 11.5px;
+  }
+
+  .hero-card__statusbar {
+    font-size: 10.5px;
+    padding: 4px 10px;
+    gap: 8px;
+  }
+
+  .hero-card__status-left,
+  .hero-card__status-right {
+    gap: 8px;
   }
 
   .hero-card__code {
@@ -1445,6 +1737,17 @@ html[data-theme="light"] .hero-card {
    — keep just the 3 traffic-light dots. */
 @media (max-width: 540px) {
   .hero-card__title {
+    display: none;
+  }
+
+  .hero-card__statusbar {
+    font-size: 10.5px;
+  }
+
+  /* Hide the encoding column at very narrow widths so the status bar
+     doesn't wrap / overflow horizontally. */
+  .hero-card__status-item--enc,
+  .hero-card__status-divider--enc {
     display: none;
   }
 }

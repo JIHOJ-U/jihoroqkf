@@ -38,9 +38,17 @@ const scaleIn = {
 function Home() {
   const { t, lang } = useLanguage();
   const [portfolios, setPortfolios] = useState([]);
+  const [activeTabKey, setActiveTabKey] = useState('profile');
   const onSpot = useSpotlight();
   const prefersReducedMotion = useReducedMotion();
   const heroCard = t.hero.heroCard;
+  const activeFile = heroCard.files.find((f) => f.key === activeTabKey) || heroCard.files[0];
+
+  // Open the CommandPalette by dispatching the same shortcut it listens for.
+  // CommandPalette handler: (e.metaKey || e.ctrlKey) && e.key === 'k' → toggles open.
+  const openPalette = () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
+  };
 
   useEffect(() => {
     getPortfolios().then(res => setPortfolios(res.data.slice(0, 6))).catch(() => {});
@@ -148,20 +156,86 @@ function Home() {
               <span className="hero-card__dot hero-card__dot--green" />
             </div>
             <figcaption id="hero-card-title" className="hero-card__title">
-              {heroCard.headerBar}
+              {activeFile.name} — {heroCard.headerBar}
             </figcaption>
+          </div>
+
+          <aside className="hero-card__sidebar" aria-hidden="true">
+            <div className="hero-card__sidebar-label">{heroCard.sidebar.explorerLabel}</div>
+            <div className="hero-card__sidebar-project">
+              <span className="hero-card__sidebar-chev">▾</span>
+              <span>{heroCard.sidebar.projectLabel}</span>
+            </div>
+            {heroCard.sidebar.folders.map((folder) => (
+              <div key={folder.name} className="hero-card__sidebar-folder">
+                <div className="hero-card__sidebar-folder-name">
+                  <span className="hero-card__sidebar-icon">📁</span>
+                  <span>{folder.name}/</span>
+                </div>
+                {folder.files.map((fileName) => {
+                  const matchedFile = heroCard.files.find((f) => f.name === fileName);
+                  const clickable = folder.name === 'src' && matchedFile;
+                  const isActive = clickable && matchedFile.key === activeTabKey;
+                  return (
+                    <div
+                      key={fileName}
+                      className={
+                        'hero-card__sidebar-file' +
+                        (isActive ? ' hero-card__sidebar-file--active' : '') +
+                        (clickable ? '' : ' hero-card__sidebar-file--static')
+                      }
+                      onClick={clickable ? () => setActiveTabKey(matchedFile.key) : undefined}
+                      role={clickable ? 'button' : undefined}
+                      tabIndex={clickable ? 0 : undefined}
+                      onKeyDown={
+                        clickable
+                          ? (e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setActiveTabKey(matchedFile.key);
+                              }
+                            }
+                          : undefined
+                      }
+                    >
+                      <span className="hero-card__sidebar-icon">📄</span>
+                      <span>{fileName}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </aside>
+
+          <div className="hero-card__tabs" role="tablist" aria-label="Editor file tabs">
+            {heroCard.files.map((file) => {
+              const isActive = file.key === activeTabKey;
+              return (
+                <button
+                  key={file.key}
+                  role="tab"
+                  type="button"
+                  aria-selected={isActive}
+                  className={'hero-card__tab' + (isActive ? ' hero-card__tab--active' : '')}
+                  onClick={() => setActiveTabKey(file.key)}
+                >
+                  <span className="hero-card__tab-icon" aria-hidden="true">▤</span>
+                  <span>{file.name}</span>
+                </button>
+              );
+            })}
           </div>
 
           <div className="hero-card__body" aria-hidden="true">
             <div className="hero-card__gutter">
-              {heroCard.lines.map((_, idx) => (
+              {activeFile.lines.map((_, idx) => (
                 <div key={idx} className="hero-card__line-num">{idx + 1}</div>
               ))}
             </div>
             <div className="hero-card__code">
-              {heroCard.lines.map((line, idx) => (
+              {activeFile.lines.map((line, idx) => (
                 <motion.span
-                  key={idx}
+                  key={`${activeFile.key}-${idx}`}
                   className={`hero-card__line hero-card__line--${line.kind}`}
                   custom={idx}
                   variants={lineVariants}
@@ -169,13 +243,61 @@ function Home() {
                   animate="visible"
                 >
                   {line.kind === 'spacer' || !line.code
-                    ? ' '
+                    ? ' '
                     : renderTokens(line.code)}
-                  {idx === heroCard.lines.length - 1 && (
+                  {idx === activeFile.lines.length - 1 && (
                     <span className="hero-card__caret" aria-hidden="true" />
                   )}
                 </motion.span>
               ))}
+            </div>
+          </div>
+
+          <div className="hero-card__statusbar" aria-hidden="true">
+            <div className="hero-card__status-left">
+              <span className="hero-card__status-item hero-card__status-item--branch">
+                <span className="hero-card__status-glyph">⎇</span>
+                {heroCard.statusBar.branch}
+              </span>
+              <span className="hero-card__status-divider" />
+              <span className="hero-card__status-item">
+                <span className="hero-card__status-dot hero-card__status-dot--err" />
+                {heroCard.statusBar.errors}
+              </span>
+              <span className="hero-card__status-item">
+                <span className="hero-card__status-glyph">⚠</span>
+                {heroCard.statusBar.warnings}
+              </span>
+              <span className="hero-card__status-divider" />
+              <span className="hero-card__status-item hero-card__status-item--sync">↻</span>
+            </div>
+            <div className="hero-card__status-right">
+              <span className="hero-card__status-item">
+                Ln {activeFile.lines.length}, Col 3
+              </span>
+              <span className="hero-card__status-divider" />
+              <button
+                type="button"
+                className="hero-card__palette-hint"
+                onClick={openPalette}
+                title={heroCard.statusBar.paletteTooltip}
+                aria-label={heroCard.statusBar.paletteTooltip}
+              >
+                {heroCard.statusBar.paletteHint}
+              </button>
+              <span className="hero-card__status-divider" />
+              <span className="hero-card__status-item hero-card__status-item--lang">
+                {activeFile.lang}
+              </span>
+              <span className="hero-card__status-divider hero-card__status-divider--enc" />
+              <span className="hero-card__status-item hero-card__status-item--enc">
+                {heroCard.statusBar.encoding}
+              </span>
+              <span className="hero-card__status-divider" />
+              <span className="hero-card__status-item hero-card__status-item--live">
+                <span className="hero-card__status-dot hero-card__status-dot--live" />
+                {heroCard.statusBar.liveLabel}
+              </span>
             </div>
           </div>
         </motion.figure>
