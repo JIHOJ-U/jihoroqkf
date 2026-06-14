@@ -18,6 +18,8 @@ import BlurImage from '../components/BlurImage';
 import useSpotlight from '../hooks/useSpotlight';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
+import PricingTiers from '../components/PricingTiers';
+import TrustStrip from '../components/TrustStrip';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Home.css';
 
@@ -119,6 +121,12 @@ function Home() {
 
       {/* Curtain wrapper — content slides UP over the sticky hero */}
       <div className="home-curtain">
+
+      {/* Pricing tiers — Lite / Standard / Premium */}
+      <PricingTiers />
+
+      {/* Trust strip — quiet ledger of numbers */}
+      <TrustStrip />
 
       {/* Intro Section with image */}
       <section className="intro-section">
