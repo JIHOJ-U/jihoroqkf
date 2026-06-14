@@ -11,6 +11,19 @@ function Analytics() {
   const location = useLocation();
 
   useEffect(() => {
+    // Per-route canonical — SPAs serve the same index.html for every path,
+    // so a static canonical tells Google every sub-page is a duplicate of /.
+    // Point canonical at the current path so each route gets indexed on its own.
+    let canonical = document.getElementById('canonical-link')
+      || document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      canonical.id = 'canonical-link';
+      document.head.appendChild(canonical);
+    }
+    canonical.href = window.location.origin + location.pathname;
+
     const fullPath = location.pathname + location.search + location.hash;
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'page_view', {
