@@ -100,7 +100,6 @@
    Body text stays Inter — only the LARGE headlines get the display treatment. */
 .section-title,
 .caps-title,
-.hero-full__title,
 .intro-title,
 .about-title,
 .pf-title,
@@ -234,7 +233,6 @@ html, body, .App {
 
 /* Skip transition for elements that animate frequently */
 :root[data-theme="dark"] .scroll-circle__svg,
-:root[data-theme="dark"] .hero-roller__track,
 :root[data-theme="dark"] .marquee__track {
   transition: none;
 }

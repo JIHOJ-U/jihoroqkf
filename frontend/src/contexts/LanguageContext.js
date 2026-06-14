@@ -7,15 +7,25 @@ export const translations = {
   ko: {
     nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
     hero: {
-      title: 'DEVIBE',
-      tagline: '그냥 해봐!',
-      rolling: [
-        '홈페이지 제작·운영 파트너',
-        '아이디어를 현실로',
-        '비즈니스를 디지털로',
-        '프리랜서 풀스택 개발자',
-      ],
-      scroll: 'SCROLL DOWN - SCROLL DOWN - SCROLL DOWN - ',
+      heroCard: {
+        headerBar: 'profile.ts — devvibe — main',
+        lines: [
+          { kind: 'comment',     code: '// 그냥 해봐! — Just go for it.',                          accent: 'comment' },
+          { kind: 'spacer',      code: '',                                                          accent: 'comment' },
+          { kind: 'keyword',     code: 'export const profile = {',                                  accent: 'keyword' },
+          { kind: 'declaration', code: '  name: "DEVIBE",',                                         accent: 'string'  },
+          { kind: 'declaration', code: '  role: "프리랜서 풀스택 개발자",',                         accent: 'string'  },
+          { kind: 'array',       code: '  builds: ["홈페이지", "쇼핑몰", "관리자 시스템", "랜딩"],', accent: 'string'  },
+          { kind: 'declaration', code: '  stack: ["React", "Node", "TypeScript", "PostgreSQL"],',   accent: 'string'  },
+          { kind: 'declaration', code: '  status: "available",  // 이번 달 1건 접수 가능',          accent: 'string'  },
+          { kind: 'declaration', code: '  reply: "24h on weekdays",',                               accent: 'string'  },
+          { kind: 'declaration', code: '  contact: "/contact",',                                    accent: 'string'  },
+          { kind: 'keyword',     code: '};',                                                        accent: 'keyword' },
+        ],
+        primaryCta: '상담 시작하기 →',
+        secondaryCta: '포트폴리오 보기',
+        ariaLabel: '개발자 프로필 코드 카드',
+      },
     },
     intro: {
       label: 'WHO WE ARE',
@@ -285,15 +295,25 @@ export const translations = {
   en: {
     nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
     hero: {
-      title: 'DEVIBE',
-      tagline: 'Just Go For It',
-      rolling: [
-        'Turn Ideas Into Reality',
-        'Bring Business Online',
-        'Full-Stack Dev Partner',
-        'Grow With You',
-      ],
-      scroll: 'SCROLL DOWN - SCROLL DOWN - SCROLL DOWN - ',
+      heroCard: {
+        headerBar: 'profile.ts — devvibe — main',
+        lines: [
+          { kind: 'comment',     code: '// Just go for it.',                                            accent: 'comment' },
+          { kind: 'spacer',      code: '',                                                              accent: 'comment' },
+          { kind: 'keyword',     code: 'export const profile = {',                                      accent: 'keyword' },
+          { kind: 'declaration', code: '  name: "DEVIBE",',                                             accent: 'string'  },
+          { kind: 'declaration', code: '  role: "Full-Stack Dev Partner",',                             accent: 'string'  },
+          { kind: 'array',       code: '  builds: ["websites", "shops", "admin tools", "landing"],',    accent: 'string'  },
+          { kind: 'declaration', code: '  stack: ["React", "Node", "TypeScript", "PostgreSQL"],',       accent: 'string'  },
+          { kind: 'declaration', code: '  status: "available",  // 1 slot this month',                  accent: 'string'  },
+          { kind: 'declaration', code: '  reply: "24h on weekdays",',                                   accent: 'string'  },
+          { kind: 'declaration', code: '  contact: "/contact",',                                        accent: 'string'  },
+          { kind: 'keyword',     code: '};',                                                            accent: 'keyword' },
+        ],
+        primaryCta: 'Start a project →',
+        secondaryCta: 'View portfolio',
+        ariaLabel: 'Developer profile code card',
+      },
     },
     intro: {
       label: 'WHO WE ARE',

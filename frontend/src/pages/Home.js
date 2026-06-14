@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { HiArrowRight, HiCode } from 'react-icons/hi';
 import { getPortfolios, getImageUrl } from '../api';
 import Marquee from '../components/Marquee';
-import FloatingParticles from '../components/FloatingParticles';
-import CodeRainTerminal from '../components/CodeRainTerminal';
 import DeviceShowcase from '../components/DeviceShowcase';
 import ProcessSection from '../components/ProcessSection';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
@@ -39,78 +37,179 @@ const scaleIn = {
 
 function Home() {
   const { t, lang } = useLanguage();
-  const rollingWords = t.hero.rolling;
   const [portfolios, setPortfolios] = useState([]);
-  const [rollingIndex, setRollingIndex] = useState(0);
   const onSpot = useSpotlight();
+  const prefersReducedMotion = useReducedMotion();
+  const heroCard = t.hero.heroCard;
 
   useEffect(() => {
     getPortfolios().then(res => setPortfolios(res.data.slice(0, 6))).catch(() => {});
   }, []);
 
-  useEffect(() => {
-    setRollingIndex(0);
-  }, [lang]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRollingIndex(prev => (prev + 1) % rollingWords.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [rollingWords.length]);
-
   const techLogos = ['React', 'Node.js', 'TypeScript', 'Next.js', 'Python', 'Flutter'];
+
+  // Lightweight syntax highlighter for the editor card lines.
+  // Splits each line into (head, trailing //comment) then tokenizes the head into
+  // strings ("..."), TS keywords, identifiers used as property keys, and punctuation.
+  const KEYWORDS = new Set(['export', 'const', 'let', 'var', 'function', 'return', 'import', 'from', 'as', 'true', 'false', 'null']);
+  const renderTokens = (code) => {
+    if (!code) return null;
+    const commentIdx = code.indexOf('//');
+    const head = commentIdx >= 0 ? code.slice(0, commentIdx) : code;
+    const tail = commentIdx >= 0 ? code.slice(commentIdx) : '';
+    const out = [];
+    let buf = '';
+    const flushPunct = (key) => {
+      if (buf) { out.push(<span key={`p${key}`} className="tok-punct">{buf}</span>); buf = ''; }
+    };
+    let i = 0;
+    while (i < head.length) {
+      const ch = head[i];
+      if (ch === '"') {
+        flushPunct(i);
+        const end = head.indexOf('"', i + 1);
+        const stop = end === -1 ? head.length : end + 1;
+        out.push(<span key={`s${i}`} className="tok-string">{head.slice(i, stop)}</span>);
+        i = stop;
+        continue;
+      }
+      if (/[A-Za-z_$]/.test(ch)) {
+        flushPunct(i);
+        let j = i + 1;
+        while (j < head.length && /[A-Za-z0-9_$]/.test(head[j])) j++;
+        const word = head.slice(i, j);
+        if (KEYWORDS.has(word)) {
+          out.push(<span key={`k${i}`} className="tok-keyword">{word}</span>);
+        } else if (head[j] === ':') {
+          out.push(<span key={`prop${i}`} className="tok-prop">{word}</span>);
+        } else {
+          out.push(<span key={`id${i}`} className="tok-punct">{word}</span>);
+        }
+        i = j;
+        continue;
+      }
+      buf += ch;
+      i++;
+    }
+    flushPunct('end');
+    if (tail) out.push(<span key="cmt" className="tok-comment">{tail}</span>);
+    return out;
+  };
+
+  const lineVariants = {
+    hidden: { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
+    visible: (idx) => ({
+      opacity: 1,
+      clipPath: 'inset(0 0 0 0)',
+      transition: { duration: 0.32, delay: idx * 0.09, ease: [0.25, 0.46, 0.45, 0.94] },
+    }),
+  };
+
+  const cardFade = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  };
 
   return (
     <div className="home">
-      {/* Hero - Full Screen */}
-      <section className="hero-full">
+      {/* Hero - IDE editor card */}
+      <section
+        className="hero-full"
+        aria-label={heroCard.ariaLabel}
+      >
         <div className="hero-full__bg" />
-        <CodeRainTerminal />
 
-        <div className="hero-full__content">
-          <motion.div className="hero-full__text" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}>
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ marginBottom: 24 }}
-            >
-              <AvailabilityBadge variant="chip" />
-            </motion.div>
-            <h1 className="hero-full__title">
-              <span translate="no">Dev.Vibe</span>
-              <div className="hero-roller">
-                <div className="hero-roller__track" style={{ transform: `translateY(-${rollingIndex * 100}%)` }}>
-                  {rollingWords.map((word, i) => (
-                    <span key={i} className="hero-roller__word">{word}</span>
-                  ))}
-                </div>
-              </div>
-              {t.hero.tagline}
-            </h1>
-          </motion.div>
+        {/* Visually-hidden semantic H1 for SEO / screen readers */}
+        <h1 className="sr-only">
+          {lang === 'ko'
+            ? 'DEVIBE — 프리랜서 풀스택 개발자, 이번 달 1건 접수 가능'
+            : 'DEVIBE — Full-Stack Dev Partner, 1 slot this month'}
+        </h1>
 
-          {/* Circular scroll indicator */}
-          <div className="scroll-circle">
-            <svg className="scroll-circle__svg" viewBox="0 0 100 100">
-              <defs>
-                <path id="circlePath" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
-              </defs>
-              <text className="scroll-circle__text">
-                <textPath href="#circlePath">
-                  SCROLL DOWN - SCROLL DOWN - SCROLL DOWN -&nbsp;
-                </textPath>
-              </text>
-            </svg>
-            <div className="scroll-circle__arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 5v14M5 12l7 7 7-7" />
-              </svg>
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+        >
+          <AvailabilityBadge variant="chip" />
+        </motion.div>
+
+        <motion.figure
+          className="hero-card"
+          aria-labelledby="hero-card-title"
+          variants={cardFade}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="hero-card__bar hero-card__header">
+            <div className="hero-card__dots" aria-hidden="true">
+              <span className="hero-card__dot hero-card__dot--red" />
+              <span className="hero-card__dot hero-card__dot--yellow" />
+              <span className="hero-card__dot hero-card__dot--green" />
             </div>
+            <figcaption id="hero-card-title" className="hero-card__title">
+              {heroCard.headerBar}
+            </figcaption>
           </div>
 
-          {/* CTA Button removed */}
+          <div className="hero-card__body" aria-hidden="true">
+            <div className="hero-card__gutter">
+              {heroCard.lines.map((_, idx) => (
+                <div key={idx} className="hero-card__line-num">{idx + 1}</div>
+              ))}
+            </div>
+            <div className="hero-card__code">
+              {heroCard.lines.map((line, idx) => (
+                <motion.span
+                  key={idx}
+                  className={`hero-card__line hero-card__line--${line.kind}`}
+                  custom={idx}
+                  variants={lineVariants}
+                  initial={prefersReducedMotion ? 'visible' : 'hidden'}
+                  animate="visible"
+                >
+                  {line.kind === 'spacer' || !line.code
+                    ? ' '
+                    : renderTokens(line.code)}
+                  {idx === heroCard.lines.length - 1 && (
+                    <span className="hero-card__caret" aria-hidden="true" />
+                  )}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+        </motion.figure>
+
+        <div className="hero-card__cta hero-ctas">
+          <Link
+            to="/contact"
+            className="hero-cta hero-cta--primary"
+            aria-label={lang === 'ko' ? '상담 시작하기 - 문의 페이지로 이동' : 'Start a project - go to contact page'}
+          >
+            {heroCard.primaryCta}
+          </Link>
+          <Link to="/portfolio" className="hero-cta hero-cta--secondary">
+            {heroCard.secondaryCta}
+          </Link>
+        </div>
+
+        {/* Circular scroll indicator */}
+        <div className="scroll-circle">
+          <svg className="scroll-circle__svg" viewBox="0 0 100 100">
+            <defs>
+              <path id="circlePath" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+            </defs>
+            <text className="scroll-circle__text">
+              <textPath href="#circlePath">
+                SCROLL DOWN - SCROLL DOWN - SCROLL DOWN -&nbsp;
+              </textPath>
+            </text>
+          </svg>
+          <div className="scroll-circle__arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+          </div>
         </div>
       </section>
 

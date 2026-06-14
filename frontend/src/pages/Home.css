@@ -1,18 +1,29 @@
-/* ===== Hero Full Screen — sticky for curtain reveal ===== */
+/* ===== Hero Full Screen — IDE editor card focal point ===== */
 .home {
   position: relative;
 }
 
+/* Natural-flow vertical stack: [AvailabilityBadge → editor card → CTAs],
+   with .scroll-circle absolutely positioned at section bottom. */
 .hero-full {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  position: relative;
+  min-height: 92vh;
+  height: auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 28px;
+  padding: 96px 24px 120px;
   overflow: hidden;
   margin-top: -72px;
   z-index: 0;
+}
+
+.hero-full > * {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
 }
 
 /* Everything after the hero scrolls UP over it (curtain reveal) */
@@ -43,66 +54,240 @@
   z-index: 0;
 }
 
-.hero-full__content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 48px;
-  pointer-events: none;
+/* AvailabilityBadge sits as a single status pill above the card. */
+.hero-full .avb-chip {
+  margin-bottom: 4px;
 }
 
-.hero-full__content a,
-.hero-full__content button,
-.scroll-circle {
+/* Visually-hidden semantic H1 (kept for SEO/AT — the editor card is decorative). */
+.hero-full .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Editor Card (the ONE hero focal point) ===== */
+.hero-card {
+  width: clamp(320px, 60vw, 720px);
+  background: rgba(15, 17, 23, 0.92);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  border-radius: 14px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  font-family:
+    'SFMono-Regular', ui-monospace, 'JetBrains Mono', 'Fira Code',
+    Menlo, Consolas, 'Courier New', monospace;
   pointer-events: auto;
 }
 
-.hero-full__text {
-  text-align: left;
-  max-width: 900px;
+/* Light theme: card stays dark by design (mirrors IntroLoader; dark-on-light
+   has even higher contrast than dark-on-dark, so this is a deliberate a11y choice). */
+html[data-theme="light"] .hero-card {
+  box-shadow: 0 20px 48px rgba(15, 17, 23, 0.18);
 }
 
-.hero-full__title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--white);
-  letter-spacing: -0.07em;
-  line-height: 1.2;
-}
-
-/* Rolling Text */
-.hero-roller {
-  height: 1.2em;
-  line-height: 1.2em;
+/* macOS-style title bar with traffic-light dots + centered filename. */
+.hero-card__bar,
+.hero-card__header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
-  overflow: hidden;
-  display: flex;
-  font-weight: 700;
-  color: #273BEA;
+  min-height: 38px;
 }
 
-.hero-roller__track {
+.hero-card__dots {
   display: flex;
-  flex-direction: column;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 8px;
 }
 
-.hero-roller__word {
-  display: block;
-  height: 1.2em;
-  line-height: 1.2em;
+.hero-card__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hero-card__dot--r,
+.hero-card__dot--red {
+  background: #ff5f57;
+}
+
+.hero-card__dot--y,
+.hero-card__dot--yellow {
+  background: #febc2e;
+}
+
+.hero-card__dot--g,
+.hero-card__dot--green {
+  background: #28c840;
+}
+
+.hero-card__title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-family:
+    'SFMono-Regular', ui-monospace, 'JetBrains Mono', 'Fira Code',
+    Menlo, Consolas, 'Courier New', monospace;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
-/* Circular Scroll Indicator */
+/* Code body: 2-column grid (line-number gutter + code). */
+.hero-card__body {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 18px 0;
+  color: #e8eaf0;
+  font-family:
+    'SFMono-Regular', ui-monospace, 'JetBrains Mono', 'Fira Code',
+    Menlo, Consolas, 'Courier New', monospace;
+}
+
+.hero-card__gutter {
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 0 12px 0 0;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.28);
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Each gutter cell matches the corresponding code line's height so numbers
+   stay perfectly aligned with the code rows in the sibling grid column. */
+.hero-card__line-num {
+  display: block;
+  min-height: 1.7em;
+  line-height: 1.7;
+}
+
+.hero-card__code {
+  padding: 0 20px;
+  color: #e8eaf0;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.hero-card__line {
+  display: block;
+  min-height: 1.7em;
+}
+
+/* Syntax-highlight tokens used by renderTokens() inside the hero card. */
+.tok-comment {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.tok-keyword {
+  color: #c084fc;
+}
+
+.tok-string {
+  color: #34d399;
+}
+
+.tok-number {
+  color: #fde047;
+}
+
+.tok-punct {
+  color: #e2e8f0;
+}
+
+.tok-prop {
+  color: #93c5fd;
+}
+
+/* Blinking caret pinned to the last `};` line after the typewriter completes. */
+.hero-card__caret {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background: #c084fc;
+  margin-left: 4px;
+  vertical-align: -2px;
+  animation: heroCaretBlink 1s steps(2) infinite;
+}
+
+@keyframes heroCaretBlink {
+  50% { opacity: 0; }
+}
+
+/* ===== CTA row beneath the card ===== */
+.hero-ctas,
+.hero-card__cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.hero-cta,
+.hero-card__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.hero-cta--primary,
+.hero-card__cta-btn--primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+}
+
+.hero-cta--primary:hover,
+.hero-card__cta-btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
+}
+
+.hero-cta--secondary,
+.hero-card__cta-btn--secondary {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.hero-cta--secondary:hover,
+.hero-card__cta-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ===== Circular Scroll Indicator (kept; lifted slightly to clear CTA row) ===== */
 .scroll-circle {
   position: absolute;
-  bottom: 40px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   width: 100px;
@@ -110,6 +295,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
+  pointer-events: auto;
 }
 
 .scroll-circle__svg {
@@ -149,6 +336,30 @@
 @keyframes arrow-bounce {
   0%, 100% { transform: translateY(0); opacity: 1; }
   50% { transform: translateY(5px); opacity: 0.6; }
+}
+
+/* ===== Reduced motion: kill hero animations + complex transitions ===== */
+@media (prefers-reduced-motion: reduce) {
+  .hero-card__caret {
+    animation: none;
+    opacity: 1;
+  }
+
+  .hero-cta,
+  .hero-card__cta-btn,
+  .hero-cta--primary:hover,
+  .hero-card__cta-btn--primary:hover {
+    transition: none;
+    transform: none;
+  }
+
+  .scroll-circle__svg {
+    animation: none;
+  }
+
+  .scroll-circle__arrow {
+    animation: none;
+  }
 }
 
 /* ===== Container ===== */
@@ -1101,21 +1312,35 @@
 
 @media (max-width: 768px) {
   .hero-full {
-    height: 88vh;
-    min-height: 540px;
+    min-height: auto;
+    gap: 20px;
+    padding: 80px 16px 96px;
   }
 
-  .hero-full__content {
-    padding: 0 20px;
+  .hero-card {
+    width: calc(100vw - 32px);
+    max-width: 560px;
   }
 
-  .hero-full__title {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
-    letter-spacing: -0.04em;
+  .hero-card__body {
+    grid-template-columns: 44px 1fr;
+    font-size: 13px;
+    line-height: 1.65;
+    padding: 14px 0;
   }
 
-  .hero-roller {
-    font-size: 0.9em;
+  .hero-card__code {
+    padding: 0 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-line {
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+  }
+
+  .hero-full .avb-chip {
+    margin-bottom: 0;
   }
 
   .container,
@@ -1216,18 +1441,33 @@
   }
 }
 
+/* Below 540px, drop the centered filename so the title bar doesn't crowd
+   — keep just the 3 traffic-light dots. */
+@media (max-width: 540px) {
+  .hero-card__title {
+    display: none;
+  }
+}
+
+/* Below 480px, stack CTAs vertically (primary on top, full-width). */
+@media (max-width: 480px) {
+  .hero-ctas,
+  .hero-card__cta {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .hero-cta,
+  .hero-card__cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 580px) {
   .hero-full {
     margin-top: 0;
-  }
-
-  .hero-full__title {
-    font-size: clamp(1.6rem, 9vw, 2.2rem);
-  }
-
-  .hero-roller {
-    height: 1.3em;
-    line-height: 1.3em;
   }
 
   .work-tag-box {
