@@ -233,21 +233,21 @@ export const translations = {
         {
           key: 'standard',
           name: 'STANDARD',
-          price: '200,000원',
+          price: '300,000원',
           descTitle: 'Web Page 반응형 웹사이트',
-          descBody: '1~10페이지 랜딩페이지 제작, 반응형 웹, 문의 폼 포함 (홈페이지 배포 X)',
+          descBody: '1~3페이지 랜딩페이지 제작, 반응형 웹, 문의 폼 포함 (홈페이지 배포 X)',
           prefill: {
             projectType: '웹 개발',
             budget: '100만원 이하',
-            description: 'Web Page 반응형 웹사이트(랜딩페이지 1~10P) 제작 문의드립니다.',
+            description: 'Web Page 반응형 웹사이트(랜딩페이지 1~3P) 제작 문의드립니다.',
           },
         },
         {
           key: 'deluxe',
           name: 'DELUXE',
-          price: '500,000원',
+          price: '1,500,000원',
           descTitle: 'Multi Page 기업 웹사이트',
-          descBody: '다중 페이지 홈페이지, 반응형 웹, 문의/상담 기능 (홈페이지 배포 X)',
+          descBody: '다중 페이지 홈페이지, 반응형 웹, 문의/상담 기능, 도메인·SSL 배포 포함',
           prefill: {
             projectType: '웹 개발',
             budget: '100~300만원',
@@ -257,12 +257,12 @@ export const translations = {
         {
           key: 'premium',
           name: 'PREMIUM',
-          price: '2,000,000원',
+          price: '5,000,000원',
           descTitle: '풀스택 웹 플랫폼 + 관리자',
-          descBody: '관리자 대시보드 포함 풀스택 플랫폼, DB 연동, 서비스 배포',
+          descBody: '관리자 대시보드, 로그인·회원, DB 연동, 실서버 배포까지 풀스택 일괄',
           prefill: {
             projectType: '웹 개발',
-            budget: '1000만원 이상',
+            budget: '500~1000만원',
             description: '풀스택 웹 플랫폼 + 관리자 대시보드 제작 문의드립니다.',
           },
         },
@@ -276,7 +276,7 @@ export const translations = {
         { key: 'comments',     label: '코드 구조 주석',    values: [false, true, true] },
       ],
       quantitative: [
-        { key: 'pages',     label: '페이지 수', values: ['1페이지', '5페이지', '12페이지'] },
+        { key: 'pages',     label: '페이지 수', values: ['1~3페이지', '5~10페이지', '12+페이지'] },
         { key: 'workdays',  label: '작업일',   values: ['10일', '21일', '45일'] },
         { key: 'revisions', label: '수정 횟수', values: ['3회', '5회', '제한없음'] },
       ],
@@ -511,21 +511,21 @@ export const translations = {
         {
           key: 'standard',
           name: 'STANDARD',
-          price: '200,000원',
+          price: '300,000원',
           descTitle: 'Single-page Responsive Site',
-          descBody: '1–10 page landing site, responsive, contact form (hosting not included)',
+          descBody: '1–3 page landing site, responsive, contact form (hosting not included)',
           prefill: {
             projectType: 'Web Development',
             budget: 'Under $1k',
-            description: 'Inquiring about a single-page responsive landing site (1–10 pages).',
+            description: 'Inquiring about a single-page responsive landing site (1–3 pages).',
           },
         },
         {
           key: 'deluxe',
           name: 'DELUXE',
-          price: '500,000원',
+          price: '1,500,000원',
           descTitle: 'Multi-page Business Site',
-          descBody: 'Multi-page site, responsive, inquiry & chat features (hosting not included)',
+          descBody: 'Multi-page site, responsive, inquiry & chat, domain + SSL deployment included',
           prefill: {
             projectType: 'Web Development',
             budget: '$1k–$3k',
@@ -535,12 +535,12 @@ export const translations = {
         {
           key: 'premium',
           name: 'PREMIUM',
-          price: '2,000,000원',
+          price: '5,000,000원',
           descTitle: 'Full-stack Platform + Admin',
-          descBody: 'Full-stack platform with admin dashboard, DB integration, production deploy',
+          descBody: 'Admin dashboard, login/membership, DB integration, production deploy — full-stack end-to-end',
           prefill: {
             projectType: 'Web Development',
-            budget: 'Over $10k',
+            budget: '$3k–$5k',
             description: 'Inquiring about a full-stack web platform with an admin dashboard.',
           },
         },
@@ -554,7 +554,7 @@ export const translations = {
         { key: 'comments',     label: 'Annotated Code',             values: [false, true, true] },
       ],
       quantitative: [
-        { key: 'pages',     label: 'Pages',     values: ['1 page', '5 pages', '12 pages'] },
+        { key: 'pages',     label: 'Pages',     values: ['1–3 pages', '5–10 pages', '12+ pages'] },
         { key: 'workdays',  label: 'Timeline',  values: ['10 days', '21 days', '45 days'] },
         { key: 'revisions', label: 'Revisions', values: ['3 rounds', '5 rounds', 'Unlimited'] },
       ],
