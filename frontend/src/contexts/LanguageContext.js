@@ -281,14 +281,6 @@ export const translations = {
         { key: 'revisions', label: '수정 횟수', values: ['3회', '5회', '제한없음'] },
       ],
     },
-    trustStrip: {
-      metrics: [
-        { end: 50, suffix: '+', label: '프로젝트 완수' },
-        { end: 95, suffix: '+', label: 'Lighthouse 점수' },
-        { end: 99, suffix: '%', label: '클라이언트 만족도' },
-        { end: 24, suffix: 'h', label: '평균 응답 시간' },
-      ],
-    },
   },
   en: {
     nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
@@ -565,14 +557,6 @@ export const translations = {
         { key: 'pages',     label: 'Pages',     values: ['1 page', '5 pages', '12 pages'] },
         { key: 'workdays',  label: 'Timeline',  values: ['10 days', '21 days', '45 days'] },
         { key: 'revisions', label: 'Revisions', values: ['3 rounds', '5 rounds', 'Unlimited'] },
-      ],
-    },
-    trustStrip: {
-      metrics: [
-        { end: 50, suffix: '+', label: 'Projects shipped' },
-        { end: 95, suffix: '+', label: 'Lighthouse score' },
-        { end: 99, suffix: '%', label: 'Client satisfaction' },
-        { end: 24, suffix: 'h', label: 'Avg. response time' },
       ],
     },
   },
