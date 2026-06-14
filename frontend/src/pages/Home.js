@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HiArrowRight, HiCode, HiDeviceMobile, HiServer, HiColorSwatch } from 'react-icons/hi';
+import { HiArrowRight, HiCode } from 'react-icons/hi';
 import { getPortfolios, getImageUrl } from '../api';
 import Marquee from '../components/Marquee';
 import FloatingParticles from '../components/FloatingParticles';
 import CodeRainTerminal from '../components/CodeRainTerminal';
 import DeviceShowcase from '../components/DeviceShowcase';
 import ProcessSection from '../components/ProcessSection';
-import CapabilitiesSection from '../components/CapabilitiesSection';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
@@ -59,9 +58,6 @@ function Home() {
     }, 2500);
     return () => clearInterval(interval);
   }, [rollingWords.length]);
-
-  const serviceIcons = [<HiCode />, <HiDeviceMobile />, <HiServer />, <HiColorSwatch />];
-  const services = t.services.list.map((s, i) => ({ ...s, icon: serviceIcons[i] }));
 
   const techLogos = ['React', 'Node.js', 'TypeScript', 'Next.js', 'Python', 'Flutter'];
 
@@ -167,34 +163,6 @@ function Home() {
                 <div className="intro-img-deco" />
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services */}
-      <section className="services-section">
-        <div className="services-accent">
-          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&q=80" alt="" aria-hidden="true" />
-        </div>
-        <div className="container-wide">
-          <motion.div className="section-header" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <span className="section-label">{t.services.label}</span>
-            <h2 className="section-title">{t.services.title}</h2>
-          </motion.div>
-          <div className="services-grid">
-            {services.map((service, i) => (
-              <motion.div key={service.key || i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
-                <Link to={`/services#svc-${service.key}`} className="service-card">
-                  <div className="service-icon-wrap">
-                    <div className="service-icon">{service.icon}</div>
-                  </div>
-                  <h3 className="service-title-en">{service.title}</h3>
-                  {service.titleKo && <span className="service-title-ko">{service.titleKo}</span>}
-                  <p>{service.desc}</p>
-                  <div className="service-shine" />
-                </Link>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
@@ -317,9 +285,6 @@ function Home() {
 
       {/* Process — how we work */}
       <ProcessSection />
-
-      {/* Capabilities — what I can build (plain language for non-devs) */}
-      <CapabilitiesSection />
 
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
