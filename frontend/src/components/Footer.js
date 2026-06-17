@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HiMail, HiPhone, HiArrowSmRight } from 'react-icons/hi';
 import { FaGithub, FaBlog } from 'react-icons/fa';
@@ -6,13 +6,81 @@ import { useLanguage } from '../contexts/LanguageContext';
 import LighthouseBadge from './LighthouseBadge';
 import './Footer.css';
 
+// VS Code-style status bar lives at the very top of the footer. Mirrors the
+// hero IDE editor card so the whole site reads as "wrapped in an IDE chrome."
+function getKstClock() {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const kst = new Date(utc + 9 * 60 * 60000);
+  return `${String(kst.getHours()).padStart(2, '0')}:${String(kst.getMinutes()).padStart(2, '0')}`;
+}
+
+function FooterStatusBar({ lang }) {
+  const [time, setTime] = useState(getKstClock());
+  useEffect(() => {
+    const id = setInterval(() => setTime(getKstClock()), 30000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="footer-statusbar" aria-hidden="true">
+      <div className="fsb-side">
+        <span className="fsb-item">
+          <span className="fsb-branch-dot" />
+          main → origin/main
+        </span>
+        <span className="fsb-sep">·</span>
+        <span className="fsb-item fsb-item--ok">synced</span>
+        <span className="fsb-sep">·</span>
+        <span className="fsb-item fsb-item--ok">
+          <span className="fsb-tick">✓</span> build passing
+        </span>
+      </div>
+      <div className="fsb-side fsb-side--right">
+        <span className="fsb-item fsb-item--mono">KST {time}</span>
+        <span className="fsb-sep">·</span>
+        <span className="fsb-item">
+          <kbd className="fsb-kbd">⌘</kbd>
+          <kbd className="fsb-kbd">K</kbd>
+          <span className="fsb-kbd-label">{lang === 'ko' ? '검색' : 'to search'}</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// Shields.io-style two-tone badges. Static values that match the rest of the
+// site's claims (Lighthouse 96, etc.). Tones map to semantic color tokens.
+const SHIELDS = [
+  { label: 'build',       value: 'passing', tone: 'success' },
+  { label: 'lighthouse',  value: '96/100',  tone: 'success' },
+  { label: 'uptime',      value: '99.98%',  tone: 'success' },
+  { label: 'bundle',      value: '142kb',   tone: 'info' },
+  { label: 'last deploy', value: 'today',   tone: 'highlight' },
+];
+
+function FooterShields() {
+  return (
+    <div className="footer-shields" aria-hidden="true">
+      {SHIELDS.map((b) => (
+        <span key={b.label} className={`shield shield--${b.tone}`}>
+          <span className="shield__label">{b.label}</span>
+          <span className="shield__value">{b.value}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function Footer() {
   const { t, lang } = useLanguage();
   const services = t.services.list;
 
   return (
     <footer className="footer">
+      <FooterStatusBar lang={lang} />
       <div className="footer-inner">
+        <FooterShields />
         <div className="footer-top">
           <div className="footer-brand">
             <Link to="/" className="footer-logo" translate="no">
