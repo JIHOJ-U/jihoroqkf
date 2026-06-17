@@ -1,0 +1,356 @@
+.vp-tester {
+  position: relative;
+  padding: 110px 0 120px;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.vp-tester::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.045) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 25%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vp-tester .container-wide {
+  position: relative;
+  z-index: 1;
+}
+
+/* === Header === */
+.vp-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 36px;
+}
+
+.vp-label {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--color-primary);
+  margin-bottom: 14px;
+}
+
+.vp-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.vp-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* === Controls bar === */
+.vp-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.vp-tabs {
+  display: inline-flex;
+  gap: 4px;
+  font-family: 'Courier New', 'Consolas', monospace;
+}
+
+.vp-tab {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.vp-tab:hover {
+  color: var(--text-primary);
+}
+
+.vp-tab.is-active {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-line);
+}
+
+.vp-presets {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vp-preset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.vp-preset:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.vp-preset.is-active {
+  color: #fff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.vp-preset-icon {
+  display: inline-flex;
+  font-size: 1rem;
+}
+
+.vp-preset-num {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  opacity: 0.7;
+  letter-spacing: 0.2px;
+}
+
+.vp-preset.is-active .vp-preset-num {
+  opacity: 0.85;
+}
+
+/* Readout */
+.vp-readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.vp-readout-num {
+  font-size: 1rem;
+  color: var(--color-tech);
+}
+
+.vp-readout-unit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.vp-readout-sep {
+  color: var(--text-muted);
+}
+
+.vp-readout-bp {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.vp-readout--mobile  .vp-readout-bp { color: var(--color-interactive); }
+.vp-readout--tablet  .vp-readout-bp { color: var(--color-highlight);  }
+.vp-readout--laptop  .vp-readout-bp { color: var(--color-tech);       }
+.vp-readout--desktop .vp-readout-bp { color: var(--color-trust);      }
+
+/* === Stage (iframe + handle) === */
+.vp-stage {
+  position: relative;
+  width: 100%;
+  background:
+    radial-gradient(ellipse at top, rgba(99, 102, 241, 0.04), transparent 70%),
+    var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 0 22px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.vp-stage.is-dragging {
+  cursor: ew-resize;
+}
+
+/* Ruler ticks at common breakpoints, anchored to stage left edge */
+.vp-ruler {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 18px;
+  pointer-events: none;
+}
+
+.vp-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: 'Courier New', monospace;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.vp-tick::after {
+  content: '';
+  display: block;
+  margin: 2px auto 0;
+  width: 1px;
+  height: 8px;
+  background: var(--border);
+}
+
+/* iframe — width is JS-driven; height fixed */
+.vp-iframe {
+  display: block;
+  margin: 28px 0 0;
+  height: 520px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-primary);
+  box-shadow:
+    0 18px 38px -16px rgba(15, 23, 42, 0.22),
+    0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+.vp-stage.is-dragging .vp-iframe {
+  /* While dragging, the iframe must not eat pointer events. The inline
+     style already sets pointer-events: none — this is just a fallback. */
+  pointer-events: none;
+}
+
+/* === Drag handle === */
+.vp-handle {
+  position: absolute;
+  top: 56px; /* below ruler */
+  bottom: 22px;
+  width: 14px;
+  padding: 0;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 4px;
+  cursor: ew-resize;
+  touch-action: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px -6px rgba(99, 102, 241, 0.6);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.vp-handle:hover,
+.vp-stage.is-dragging .vp-handle {
+  background: var(--color-primary-strong);
+  box-shadow: 0 10px 24px -4px rgba(99, 102, 241, 0.75);
+  transform: scaleX(1.15);
+}
+
+.vp-handle-grip {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.vp-handle-grip i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* === Dark theme tweaks === */
+:root[data-theme="dark"] .vp-tester {
+  background: var(--bg-primary);
+}
+
+:root[data-theme="dark"] .vp-stage {
+  background:
+    radial-gradient(ellipse at top, rgba(99, 102, 241, 0.10), transparent 70%),
+    var(--bg-secondary);
+}
+
+:root[data-theme="dark"] .vp-iframe {
+  box-shadow:
+    0 18px 38px -10px rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .vp-tester {
+    padding: 70px 0 80px;
+  }
+
+  .vp-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .vp-tabs,
+  .vp-presets {
+    justify-content: center;
+  }
+
+  .vp-readout {
+    align-self: center;
+  }
+
+  .vp-iframe {
+    height: 460px;
+    margin-top: 24px;
+  }
+
+  .vp-handle {
+    top: 50px;
+    bottom: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vp-preset-label {
+    display: none;
+  }
+
+  .vp-preset {
+    padding: 6px 9px;
+  }
+
+  .vp-iframe {
+    height: 420px;
+  }
+}

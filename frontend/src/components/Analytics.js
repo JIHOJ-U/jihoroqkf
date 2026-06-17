@@ -12,6 +12,11 @@ function Analytics() {
   const location = useLocation();
 
   useEffect(() => {
+    // Skip everything when running inside an iframe (e.g. the Home viewport
+    // tester loads our own pages — we don't want double page_views, scroll-
+    // depth events, or canonical/meta writes happening from inside the embed.
+    if (typeof window !== 'undefined' && window.top !== window.self) return;
+
     // Per-route canonical — SPAs serve the same index.html for every path,
     // so a static canonical tells Google every sub-page is a duplicate of /.
     // Point canonical at the current path so each route gets indexed on its own.

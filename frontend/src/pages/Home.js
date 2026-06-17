@@ -10,6 +10,7 @@ import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
 import MetricsStrip from '../components/MetricsStrip';
+import ViewportTester from '../components/ViewportTester';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import BlurImage from '../components/BlurImage';
 import useSpotlight from '../hooks/useSpotlight';
@@ -506,6 +507,9 @@ function Home() {
 
       {/* Process — how we work */}
       <ProcessSection />
+
+      {/* Live responsive tester — drag to resize the site in an iframe */}
+      <ViewportTester />
 
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
