@@ -143,6 +143,20 @@ function PortfolioDetail() {
             <HiArrowLeft /> Back to Works
           </Link>
 
+          {portfolio.thumbnail && (
+            <div className="detail-hero">
+              <img
+                src={getImageUrl(portfolio.thumbnail)}
+                alt={portfolio.title}
+                className={`detail-hero__img ${portfolio.thumbnailFit === 'contain' ? 'detail-hero__img--contain' : ''}`}
+                /* shared name so the Portfolio card thumbnail morphs into here
+                   via the View Transitions API (Chromium 111+ / Safari 18+). */
+                style={{ viewTransitionName: 'pf-hero' }}
+              />
+              <div className="detail-hero__gradient" aria-hidden="true" />
+            </div>
+          )}
+
           <div className="detail-header">
             <div className="detail-meta">
               <span className="detail-category">{portfolio.category}</span>

@@ -6,6 +6,7 @@ import { getPortfolios, getImageUrl } from '../api';
 import Marquee from '../components/Marquee';
 import DeviceShowcase from '../components/DeviceShowcase';
 import ProcessSection from '../components/ProcessSection';
+import PCBScene3D from '../components/PCBScene3D';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
@@ -13,6 +14,7 @@ import MetricsStrip from '../components/MetricsStrip';
 import ViewportTester from '../components/ViewportTester';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import BlurImage from '../components/BlurImage';
+import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
 import useSpotlight from '../hooks/useSpotlight';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
@@ -41,6 +43,18 @@ function Home() {
   const [portfolios, setPortfolios] = useState([]);
   const [activeTabKey, setActiveTabKey] = useState('profile');
   const onSpot = useSpotlight();
+  const transitionNavigate = useViewTransitionNavigate();
+  const handleWorkClick = (e, id) => {
+    if (
+      typeof document === 'undefined' ||
+      typeof document.startViewTransition !== 'function'
+    ) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    const img = e.currentTarget.querySelector('.work-image img');
+    tagForViewTransition(img, 'pf-hero');
+    transitionNavigate(`/portfolio/${id}`);
+  };
   const prefersReducedMotion = useReducedMotion();
   const heroCard = t.hero.heroCard;
   const activeFile = heroCard.files.find((f) => f.key === activeTabKey) || heroCard.files[0];
@@ -392,6 +406,9 @@ function Home() {
       {/* Device Showcase */}
       <DeviceShowcase />
 
+      {/* 3D PCB scene — chip aesthetic peak, dark scroll-driven moment */}
+      <PCBScene3D />
+
       {/* Why Full-Stack */}
       <section className="why-section">
         <div className="why-bg-decor" aria-hidden="true">
@@ -539,6 +556,7 @@ function Home() {
                     className="work-card"
                     data-spotlight=""
                     onMouseMove={onSpot}
+                    onClick={(e) => handleWorkClick(e, item.id)}
                   >
                     <div className="work-image">
                       {item.thumbnail ? (

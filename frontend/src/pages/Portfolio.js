@@ -6,6 +6,7 @@ import { getPortfolios, getImageUrl } from '../api';
 import { useLanguage } from '../contexts/LanguageContext';
 import useTypewriterPlaceholder from '../hooks/useTypewriterPlaceholder';
 import useSpotlight from '../hooks/useSpotlight';
+import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
 import './Portfolio.css';
 
 const REVEAL_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4', '#10b981'];
@@ -39,6 +40,24 @@ function PortfolioCard({ item, index }) {
   const color = REVEAL_COLORS[index % REVEAL_COLORS.length];
   const domain = getPreviewDomain(item);
   const onSpot = useSpotlight();
+  const transitionNavigate = useViewTransitionNavigate();
+
+  const handleClick = (e) => {
+    // Only intercept when the View Transitions API is available — otherwise
+    // let react-router-dom's <Link/> handle the navigation normally.
+    if (
+      typeof document === 'undefined' ||
+      typeof document.startViewTransition !== 'function'
+    ) {
+      return;
+    }
+    // Don't fight modifier-clicks (open in new tab, etc.) or non-primary buttons.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    const img = e.currentTarget.querySelector('.pf-thumb img');
+    tagForViewTransition(img, 'pf-hero');
+    transitionNavigate(`/portfolio/${item.id}`);
+  };
 
   return (
     <motion.li
@@ -53,6 +72,7 @@ function PortfolioCard({ item, index }) {
         className="pf-card"
         data-spotlight=""
         onMouseMove={onSpot}
+        onClick={handleClick}
       >
         {/* Browser-chrome mockup frame */}
         <div className="pf-mockup">
