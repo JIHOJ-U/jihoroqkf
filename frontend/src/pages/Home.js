@@ -15,6 +15,7 @@ import ViewportTester from '../components/ViewportTester';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import BlurImage from '../components/BlurImage';
 import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
+import useMediaQuery from '../hooks/useMediaQuery';
 import useSpotlight from '../hooks/useSpotlight';
 import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
@@ -43,6 +44,10 @@ function Home() {
   const [portfolios, setPortfolios] = useState([]);
   const [activeTabKey, setActiveTabKey] = useState('profile');
   const onSpot = useSpotlight();
+  // Above-tablet only. Below this width the heavy / desktop-only sections
+  // (3D PCB scene, viewport tester, trust badges) skip rendering entirely
+  // so mobile doesn't pay their JS / WebGL / iframe cost.
+  const isDesktop = useMediaQuery('(min-width: 769px)');
   const transitionNavigate = useViewTransitionNavigate();
   const handleWorkClick = (e, id) => {
     if (
@@ -406,8 +411,8 @@ function Home() {
       {/* Device Showcase */}
       <DeviceShowcase />
 
-      {/* 3D PCB scene — chip aesthetic peak, dark scroll-driven moment */}
-      <PCBScene3D />
+      {/* 3D PCB scene — desktop only (heavy WebGL, detail invisible at <769px) */}
+      {isDesktop && <PCBScene3D />}
 
       {/* Why Full-Stack */}
       <section className="why-section">
@@ -525,8 +530,8 @@ function Home() {
       {/* Process — how we work */}
       <ProcessSection />
 
-      {/* Live responsive tester — drag to resize the site in an iframe */}
-      <ViewportTester />
+      {/* Live responsive tester — desktop only (the whole point is mouse drag) */}
+      {isDesktop && <ViewportTester />}
 
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
@@ -599,8 +604,8 @@ function Home() {
       {/* FAQ */}
       <FaqSection />
 
-      {/* Trust / guarantees — reassurance band before final CTA */}
-      <TrustSection />
+      {/* Trust / guarantees — desktop only; mobile trims the heavy dark band */}
+      {isDesktop && <TrustSection />}
 
       {/* Marquee 2 */}
       <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" noTranslate />

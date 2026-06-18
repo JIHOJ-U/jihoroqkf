@@ -146,3 +146,12 @@
     opacity: 0.4;
   }
 }
+
+/* Desktop only — see Home.js gate. The 3D board's chip detail is invisible
+   at phone widths and the WebGL cost isn't worth it. CSS fallback for any
+   future surface that doesn't gate it. */
+@media (max-width: 768px) {
+  .pcb-section {
+    display: none;
+  }
+}

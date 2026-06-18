@@ -130,3 +130,11 @@
     margin-bottom: 40px;
   }
 }
+
+/* Desktop only on Home — the dark 5-card guarantee band is heavy on mobile
+   and the conversion signal lives in the FAQ + CTA underneath. */
+@media (max-width: 768px) {
+  .trust-section {
+    display: none;
+  }
+}

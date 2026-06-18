@@ -354,3 +354,13 @@
     height: 420px;
   }
 }
+
+/* Desktop only — Home conditionally renders <ViewportTester/> above 768px,
+   but this is a belt-and-suspenders CSS hide in case the component lands
+   on a future page that doesn't gate it. The drag-to-resize playground
+   makes no sense on a touch device. */
+@media (max-width: 768px) {
+  .vp-tester {
+    display: none;
+  }
+}
