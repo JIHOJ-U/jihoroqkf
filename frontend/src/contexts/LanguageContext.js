@@ -254,7 +254,6 @@ export const translations = {
       suffix: '을 문의하세요',
       words: ['반응형 웹', '풀스택 개발', '하이브리드 앱', '쇼핑몰', '플랫폼', '랜딩 페이지', '관리자 대시보드'],
       primary: '1:1 문의하기',
-      secondary: '견적 받기',
     },
     availability: {
       label: '이번 달 1건 신규 의뢰 접수 가능',
@@ -600,7 +599,6 @@ export const translations = {
       suffix: 'now',
       words: ['Responsive Web', 'Full-Stack Build', 'Hybrid App', 'E-commerce', 'Platform', 'Landing Page', 'Admin Dashboard'],
       primary: 'Start 1:1 Chat',
-      secondary: 'Get a Quote',
     },
     availability: {
       label: 'Available — 1 new project this month',

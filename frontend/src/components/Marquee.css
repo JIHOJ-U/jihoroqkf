@@ -3,7 +3,9 @@
   white-space: nowrap;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 16px 0;
+  /* Horizontal gutter matches container-wide so the strip doesn't kiss the
+     viewport edge when sibling sections have their own inset. */
+  padding: 16px 20px;
   /* Skip paint/layout when scrolled off-screen — saves CPU on long pages */
   content-visibility: auto;
   contain-intrinsic-size: auto 56px;
@@ -43,7 +45,7 @@
 
 @media (max-width: 768px) {
   .marquee {
-    padding: 12px 0;
+    padding: 12px 16px;
   }
 
   .marquee__text {
@@ -54,6 +56,14 @@
 
   .marquee--slow .marquee__track {
     animation-duration: 24s;
+  }
+}
+
+/* Respect reduced motion — the infinite scroll is decorative; freeze it
+   instead of letting it run forever for vestibular-sensitive visitors. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
   }
 }
 

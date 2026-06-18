@@ -191,6 +191,11 @@
   .iqcta-headline {
     gap: 10px 14px;
   }
+  /* Phones can't fit the 22rem editorial glyph; shrink only here so the
+     desktop scale stays untouched. */
+  .iqcta-curtain-text {
+    font-size: clamp(3rem, 18vw, 10rem);
+  }
   .iqcta-actions {
     width: 100%;
     flex-direction: column;
@@ -198,5 +203,21 @@
   .iqcta-btn {
     justify-content: space-between;
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .iqcta {
+    padding: 72px 16px 88px;
+  }
+  /* Tighten the only remaining CTA so it doesn't dominate the phone viewport
+     after the headline already takes most of the fold. */
+  .iqcta-btn {
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+  .iqcta-btn-icon {
+    width: 28px;
+    height: 28px;
   }
 }

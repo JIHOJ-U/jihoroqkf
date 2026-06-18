@@ -358,8 +358,9 @@ function Home() {
       {/* Curtain wrapper — content slides UP over the sticky hero */}
       <div className="home-curtain">
 
-      {/* Pricing tiers — Standard / Deluxe / Premium */}
-      <PricingTiers />
+      {/* Pricing tiers — desktop only (the 4-col matrix collapses to a long
+          stack on mobile that fights the conversion flow with InquiryCTA below) */}
+      {isDesktop && <PricingTiers />}
 
       {/* Intro Section with image */}
       <section className="intro-section">
@@ -408,8 +409,9 @@ function Home() {
         </div>
       </section>
 
-      {/* Device Showcase */}
-      <DeviceShowcase />
+      {/* Device Showcase — desktop only (600px stage + laptop/phone floats are
+          decorative; mobile already lives on a real device) */}
+      {isDesktop && <DeviceShowcase />}
 
       {/* 3D PCB scene — desktop only (heavy WebGL, detail invisible at <769px) */}
       {isDesktop && <PCBScene3D />}
@@ -607,8 +609,11 @@ function Home() {
       {/* Trust / guarantees — desktop only; mobile trims the heavy dark band */}
       {isDesktop && <TrustSection />}
 
-      {/* Marquee 2 */}
-      <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" noTranslate />
+      {/* Marquee 2 — desktop only (the infinite scroll is editorial accent;
+          on mobile it adds horizontal motion right above the final CTA) */}
+      {isDesktop && (
+        <Marquee text="Dev.Vibe  -  LET'S WORK TOGETHER  -  PROJECT INQUIRY  -  FREE CONSULTATION  -  Dev.Vibe  -  LET'S WORK TOGETHER" speed="slow" noTranslate />
+      )}
 
       </div>{/* end .home-curtain */}
 

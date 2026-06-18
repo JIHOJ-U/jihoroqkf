@@ -166,10 +166,10 @@
   .proc-section {
     padding: 90px 0 100px;
   }
+  /* Hide the 18rem editorial watermark entirely on mobile — at phone widths
+     it can't be read, but the paint cost on a heavy gradient text is real. */
   .proc-bg-mark {
-    top: 20px;
-    font-size: 18rem;
-    opacity: 0.04;
+    display: none;
   }
   .proc-head {
     margin-bottom: 60px;

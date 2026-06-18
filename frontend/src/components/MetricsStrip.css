@@ -27,10 +27,12 @@
 }
 
 .mstrip-label {
+  /* Aligned with .section-label across the rest of the site so the eye reads
+     this strip's intro as part of the same typographic system. */
   font-family: 'Courier New', 'Consolas', monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 2.5px;
+  letter-spacing: 3px;
   color: var(--slate-400);
   flex-shrink: 0;
 }
@@ -87,13 +89,25 @@
   }
 }
 
-@media (max-width: 640px) {
+/* Mobile — 2x2 grid kicks in at the same 768px breakpoint as the rest of
+   the site (was 640px, which left 641–768px with a cramped 4-col layout).
+   Section padding matches the adjacent ProcessSection/FaqSection rhythm. */
+@media (max-width: 768px) {
   .mstrip {
-    padding: 48px 0;
+    padding: 72px 0;
   }
 
   .mstrip-items {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 22px 16px;
+  }
+
+  /* Mobile GPUs don't need the 24px blur glow under each digit — it's a
+     decorative accent that doubles paint cost on already-large display type. */
+  .mstrip-item--tech .mstrip-value,
+  .mstrip-item--highlight .mstrip-value,
+  .mstrip-item--trust .mstrip-value,
+  .mstrip-item--interactive .mstrip-value {
+    text-shadow: none;
   }
 }

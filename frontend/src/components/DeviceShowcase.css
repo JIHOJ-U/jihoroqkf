@@ -616,3 +616,12 @@
     width: 180px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .device-laptop,
+  .device-phone,
+  .phone-app__live::before,
+  .phone-cursor {
+    animation: none;
+  }
+}
