@@ -10,6 +10,7 @@ import HospitalityMockup from '../components/mockups/HospitalityMockup';
 import PortalMockup      from '../components/mockups/PortalMockup';
 import ProductMockup     from '../components/mockups/ProductMockup';
 import CorporateMockup   from '../components/mockups/CorporateMockup';
+import ProjectMockup     from '../components/mockups/ProjectMockup';
 import '../components/mockups/EditorialMockup.css';
 import '../components/mockups/ClinicMockup.css';
 import '../components/mockups/HospitalityMockup.css';
@@ -67,6 +68,11 @@ const TEMPLATE_COMPONENTS = {
   portal:      PortalMockup,
   product:     ProductMockup,
   corporate:   CorporateMockup,
+  /* 'project' is the custom-demo path: each entry's data.demoKey picks
+     which interactive ProjectMockup demo to render (Cafe24 / AI Flow /
+     Integrations / Multi-channel / Booking). It bypasses the standard
+     mockup-data schema and renders its own BrowserFrame-wrapped UI. */
+  project:     ProjectMockup,
 };
 
 function ReferenceDetail() {

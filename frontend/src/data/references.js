@@ -14,6 +14,7 @@ export const CATEGORIES = [
   { key: 'realestate',    ko: '부동산/건축',   en: 'Real Estate' },
   { key: 'beauty',        ko: '뷰티/패션',     en: 'Beauty / Fashion' },
   { key: 'saas',          ko: '스타트업/SaaS', en: 'Startup / SaaS' },
+  { key: 'tools',         ko: '운영/도구',     en: 'Ops & Tools' },
   { key: 'nonprofit',     ko: '비영리/단체',   en: 'Nonprofit' },
 ];
 
@@ -725,6 +726,58 @@ export const REFERENCES = [
       ],
       hint: '시간 추적·진행률·리포트가 모든 작업에서 자동 집계.',
     },
+  }),
+
+  // ============ 운영/도구 (project demos) ============
+  r({
+    slug: 'cafe24-kakao-alimtalk', cat: 'tools',
+    titleKo: '카페24 알림톡 통합', titleEn: 'Cafe24 + KakaoTalk',
+    subKo: '주문/배송/장바구니 자동 카톡 + 광고추적',
+    descKo: '카페24 사장님 화면 · 주문/배송/장바구니/재입고 4종 템플릿 + 폰 미리보기 + GA4/Meta Pixel/KakaoBiz 이벤트 동시 발사',
+    descEn: 'Cafe24 admin with 4 alimtalk templates, live phone preview, and synced GA4 / Meta Pixel / KakaoBiz event firing',
+    img: 'https://images.unsplash.com/photo-1556742212-5b321f3c261b?w=800&q=80',
+    template: 'project', demoKey: 'cafe24',
+    mockup: { accent: '#6366f1' },
+  }),
+  r({
+    slug: 'ai-content-automation', cat: 'tools',
+    titleKo: 'AI 콘텐츠 자동화', titleEn: 'AI Content Automation',
+    subKo: 'RSS·노션·스크립트 → Claude → 쇼츠 발행',
+    descKo: '3-column 파이프라인 (Source → Engine → Output) · 쇼츠 썸네일 클릭 시 큐와 소스가 cross-column highlight',
+    descEn: '3-column pipeline (Source → Engine → Output). Clicking a Shorts thumbnail traces back to the queue and feed.',
+    img: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80',
+    template: 'project', demoKey: 'aiflow',
+    mockup: { accent: '#8b5cf6' },
+  }),
+  r({
+    slug: 'api-integrations-hub', cat: 'tools',
+    titleKo: 'API 연동 허브', titleEn: 'API Integrations Hub',
+    subKo: '결제·메시징·분석·CRM 한 화면 운영',
+    descKo: '10개 통합 카드 (토스·아임포트·카카오비즈·NCloud·GA4·Meta·Slack·Notion·Mailchimp·S3) + webhook·토큰·이벤트 로그 detail panel',
+    descEn: '10 integration cards with webhook URL, masked token, and recent event log in a per-card detail panel.',
+    img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80',
+    template: 'project', demoKey: 'integrations',
+    mockup: { accent: '#0ea5e9' },
+  }),
+  r({
+    slug: 'multi-channel-commerce', cat: 'tools',
+    titleKo: '다국어 커머스 채널', titleEn: 'Multi-channel Commerce',
+    subKo: '한·중·일·미 4채널 통합 운영',
+    descKo: '한국 자사몰 · Tmall · Rakuten · Shopify Plus 동시 연결 · 한 상품 마스터로 4채널 가격/재고/번역 + 혼합 언어 주문 피드',
+    descEn: 'KR self-store, Tmall, Rakuten, Shopify Plus connected. One master syncs prices/stock/translation; mixed-language order feed.',
+    img: 'https://images.unsplash.com/photo-1535350356005-fd52b3b524fb?w=800&q=80',
+    template: 'project', demoKey: 'multichannel',
+    mockup: { accent: '#10b981' },
+  }),
+  r({
+    slug: 'booking-reminders', cat: 'tools',
+    titleKo: '예약 알리미 대시보드', titleEn: 'Booking & Reminders',
+    subKo: '캘린더 + 카톡/SMS 자동 알림',
+    descKo: '시간대별 슬롯 + 선택된 예약 detail + 알리미 큐 (카톡/SMS) · 노쇼율 14% → 2.4% 가는 운영 도구',
+    descEn: 'Per-hour calendar + booking detail card + reminder queue (KakaoTalk / SMS). No-show rate from 14% to 2.4%.',
+    img: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=800&q=80',
+    template: 'project', demoKey: 'booking',
+    mockup: { accent: '#f59e0b' },
   }),
 
   // ============ 비영리 ============
