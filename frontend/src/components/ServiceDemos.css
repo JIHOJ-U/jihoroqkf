@@ -1978,3 +1978,615 @@
   .d-admin-stats { grid-template-columns: 1fr 1fr; padding: 14px 16px 10px; }
   .d-admin-row { grid-template-columns: 1fr; padding: 0 16px 16px; }
 }
+
+/* =========================================================
+   7. Ops Console Demo — Dev.Vibe's own inbound pipeline
+   ========================================================= */
+
+.d-ops {
+  position: relative;
+  background:
+    radial-gradient(ellipse 600px 200px at 90% 0%, rgba(99, 102, 241, 0.07), transparent 70%),
+    radial-gradient(ellipse 500px 200px at 10% 100%, rgba(6, 182, 212, 0.05), transparent 70%),
+    linear-gradient(180deg, #0a0d14 0%, #0d1320 100%);
+  color: #e6e9f2;
+  font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
+  padding: 14px 16px 18px;
+  overflow: hidden;
+}
+
+/* PCB-trace decoration anchored bottom-right, low-opacity callback to PCBScene3D */
+.d-ops-pcb {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  height: 110px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* === Topbar === */
+.d-ops-topbar {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.d-ops-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 8px;
+  background: rgba(99, 102, 241, 0.07);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  border-radius: 8px;
+}
+
+.d-ops-brand-mark {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.d-ops-brand-text { line-height: 1.1; min-width: 0; }
+.d-ops-brand-name { font-size: 0.82rem; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+.d-ops-brand-sub  { font-size: 0.66rem; color: rgba(224, 231, 255, 0.55); font-family: 'Courier New', 'Consolas', monospace; letter-spacing: 0.5px; margin-top: 1px; }
+.d-ops-brand-chev { color: rgba(224, 231, 255, 0.35); font-size: 0.7rem; }
+
+.d-ops-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: rgba(224, 231, 255, 0.55);
+}
+
+.d-ops-search svg { color: rgba(224, 231, 255, 0.55); font-size: 0.95rem; }
+.d-ops-search > span:first-of-type { flex: 1; }
+
+.d-ops-kbd {
+  font-family: 'Courier New', monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: rgba(224, 231, 255, 0.7);
+}
+
+.d-ops-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(224, 231, 255, 0.75);
+  letter-spacing: 0.5px;
+}
+
+.d-ops-date-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  animation: d-ops-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes d-ops-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+/* === Chip row === */
+.d-ops-chiprow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 4px 14px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+}
+
+.d-ops-chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+
+.d-ops-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: rgba(224, 231, 255, 0.7);
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.d-ops-chip:hover { color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+.d-ops-chip:active { transform: translateY(1px); }
+
+.d-ops-chip-label {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+}
+
+.d-ops-chip-count {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  color: rgba(224, 231, 255, 0.65);
+}
+
+.d-ops-chip--all.is-active   { background: rgba(99, 102, 241, 0.14); border-color: rgba(99, 102, 241, 0.55); color: #c7d2fe; }
+.d-ops-chip--all.is-active .d-ops-chip-count   { background: rgba(99, 102, 241, 0.22); color: #fff; }
+.d-ops-chip--top.is-active   { background: rgba(16, 185, 129, 0.14); border-color: rgba(16, 185, 129, 0.55); color: #6ee7b7; }
+.d-ops-chip--top.is-active .d-ops-chip-count   { background: rgba(16, 185, 129, 0.22); color: #fff; }
+.d-ops-chip--good.is-active  { background: rgba(6, 182, 212, 0.14);  border-color: rgba(6, 182, 212, 0.55);  color: #67e8f9; }
+.d-ops-chip--good.is-active .d-ops-chip-count  { background: rgba(6, 182, 212, 0.22); color: #fff; }
+.d-ops-chip--mix.is-active   { background: rgba(245, 158, 11, 0.14); border-color: rgba(245, 158, 11, 0.55); color: #fbbf24; }
+.d-ops-chip--mix.is-active .d-ops-chip-count   { background: rgba(245, 158, 11, 0.22); color: #fff; }
+.d-ops-chip--skip.is-active  { background: rgba(148, 163, 184, 0.16); border-color: rgba(148, 163, 184, 0.45); color: #cbd5e1; }
+.d-ops-chip--skip.is-active .d-ops-chip-count  { background: rgba(148, 163, 184, 0.25); color: #fff; }
+
+.d-ops-chip-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.4px;
+  color: rgba(224, 231, 255, 0.45);
+}
+
+.d-ops-chip-meta-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6366f1;
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.7);
+}
+
+/* === Grid === */
+.d-ops-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) 1fr;
+  gap: 14px;
+  padding-top: 14px;
+}
+
+.d-ops-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.d-ops-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* === Cards (shared) === */
+.d-ops-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 14px 14px 12px;
+}
+
+.d-ops-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.d-ops-card-tag {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(224, 231, 255, 0.5);
+}
+
+.d-ops-card-id,
+.d-ops-card-meta {
+  font-family: 'Courier New', monospace;
+  font-size: 0.64rem;
+  color: rgba(224, 231, 255, 0.4);
+  letter-spacing: 0.3px;
+}
+
+.d-ops-card-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.62rem;
+  color: rgba(16, 185, 129, 0.85);
+  letter-spacing: 0.5px;
+}
+
+.d-ops-live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 5px #10b981;
+  animation: d-ops-pulse 1.6s ease-in-out infinite;
+}
+
+/* === Stack ID card === */
+.d-ops-stack { display: flex; flex-direction: column; gap: 12px; }
+.d-ops-stack-row { display: flex; align-items: center; gap: 10px; }
+
+.d-ops-stack-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.d-ops-stack-name { font-size: 0.82rem; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+.d-ops-stack-role { font-size: 0.66rem; color: rgba(224, 231, 255, 0.5); font-family: 'Courier New', monospace; letter-spacing: 0.4px; margin-top: 1px; }
+
+.d-ops-stack-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.d-ops-stack-tags span {
+  font-family: 'Courier New', monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  border-radius: 4px;
+  color: #a5b4fc;
+}
+
+.d-ops-stack-meta {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.d-ops-stack-meta li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 0.72rem;
+}
+
+.d-ops-stack-meta li span {
+  font-family: 'Courier New', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: rgba(224, 231, 255, 0.4);
+  text-transform: uppercase;
+}
+
+.d-ops-stack-meta li strong { font-weight: 600; color: rgba(255, 255, 255, 0.85); font-size: 0.74rem; }
+
+/* === Rules card === */
+.d-ops-rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.d-ops-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-family: 'Courier New', 'Consolas', monospace;
+  letter-spacing: 0.2px;
+}
+
+.d-ops-rule svg { font-size: 0.85rem; flex-shrink: 0; }
+
+.d-ops-rule--ok { color: rgba(110, 231, 183, 0.92); background: rgba(16, 185, 129, 0.05); }
+.d-ops-rule--ok svg { color: #10b981; }
+
+.d-ops-rule--bad { color: rgba(224, 231, 255, 0.55); background: transparent; }
+.d-ops-rule-x { color: rgba(244, 114, 182, 0.7); font-weight: 700; }
+
+.d-ops-rule-sep {
+  list-style: none;
+  height: 1px;
+  margin: 6px 4px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* === Pipeline === */
+.d-ops-pipe-card { padding-bottom: 4px; }
+.d-ops-pipe { display: flex; flex-direction: column; }
+
+.d-ops-pipe-head,
+.d-ops-row {
+  display: grid;
+  grid-template-columns: 60px 38px 1fr 110px 140px;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 4px;
+}
+
+.d-ops-pipe-head {
+  font-family: 'Courier New', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: rgba(224, 231, 255, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+.d-ops-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  font-size: 0.78rem;
+  transition: background 0.2s ease;
+}
+
+.d-ops-row:hover { background: rgba(255, 255, 255, 0.02); }
+.d-ops-row:last-child { border-bottom: none; }
+
+.d-ops-row-score {
+  font-family: 'Courier New', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 1px;
+  color: rgba(224, 231, 255, 0.7);
+}
+
+.d-ops-row-score-dim { color: rgba(255, 255, 255, 0.18); }
+
+.d-ops-row-fit {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.d-ops-row-fit--top  { color: #6ee7b7; }
+.d-ops-row-fit--good { color: #67e8f9; }
+.d-ops-row-fit--mix  { color: #fbbf24; }
+.d-ops-row-fit--skip { color: rgba(244, 114, 182, 0.55); }
+
+.d-ops-row-title {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.d-ops-row--skip .d-ops-row-title {
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.15);
+}
+
+.d-ops-row-amt {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.72rem;
+  color: rgba(224, 231, 255, 0.65);
+  font-variant-numeric: tabular-nums;
+}
+
+.d-ops-row-reason {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: rgba(224, 231, 255, 0.55);
+  letter-spacing: 0.2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.d-ops-row--top .d-ops-row-reason  { color: #6ee7b7; }
+.d-ops-row--good .d-ops-row-reason { color: #67e8f9; }
+.d-ops-row--mix .d-ops-row-reason  { color: #fbbf24; }
+
+.d-ops-empty {
+  padding: 36px 0;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: rgba(224, 231, 255, 0.4);
+  letter-spacing: 0.5px;
+}
+
+/* === Bottom row === */
+.d-ops-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.d-ops-week {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.d-ops-week li {
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 7px;
+  font-size: 0.75rem;
+}
+
+.d-ops-week-rank {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #a5b4fc;
+  letter-spacing: 0.3px;
+}
+
+.d-ops-week-title { color: rgba(255, 255, 255, 0.9); font-weight: 600; letter-spacing: -0.01em; }
+.d-ops-week-stage { font-family: 'Courier New', monospace; font-size: 0.68rem; color: rgba(224, 231, 255, 0.55); letter-spacing: 0.3px; }
+
+.d-ops-week-action {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.d-ops-week-action--go   { color: #6ee7b7; background: rgba(16, 185, 129, 0.1);  border: 1px solid rgba(16, 185, 129, 0.25); }
+.d-ops-week-action--wait { color: #fbbf24; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.22); }
+
+/* KPI card */
+.d-ops-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.d-ops-kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 7px;
+}
+
+.d-ops-kpi span {
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.d-ops-kpi strong {
+  font-family: var(--font-display, 'Manrope'), sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.d-ops-kpi--top span  { color: #6ee7b7; }
+.d-ops-kpi--good span { color: #67e8f9; }
+.d-ops-kpi--mix span  { color: #fbbf24; }
+.d-ops-kpi--skip span { color: rgba(244, 114, 182, 0.7); }
+
+.d-ops-kpi--top  { border-color: rgba(16, 185, 129, 0.22); }
+.d-ops-kpi--good { border-color: rgba(6, 182, 212, 0.22); }
+.d-ops-kpi--mix  { border-color: rgba(245, 158, 11, 0.22); }
+.d-ops-kpi--skip { border-color: rgba(148, 163, 184, 0.2); }
+
+.d-ops-kpi-foot {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.4px;
+  color: rgba(224, 231, 255, 0.5);
+}
+
+.d-ops-kpi-foot strong { color: #fff; font-weight: 700; font-size: 0.78rem; }
+.d-ops-kpi-sep { color: rgba(255, 255, 255, 0.2); }
+
+/* === Responsive === */
+@media (max-width: 920px) {
+  .d-ops-pipe-head,
+  .d-ops-row {
+    grid-template-columns: 50px 32px 1fr 96px;
+  }
+  .d-ops-pipe-head > span:last-child,
+  .d-ops-row-reason { display: none; }
+}
+
+@media (max-width: 740px) {
+  .d-ops-grid { grid-template-columns: 1fr; }
+  .d-ops-bottom { grid-template-columns: 1fr; }
+  .d-ops-topbar { grid-template-columns: 1fr auto; gap: 10px; }
+  .d-ops-search { grid-column: 1 / -1; order: 3; }
+}
+
+@media (max-width: 540px) {
+  .d-ops { padding: 12px 12px 14px; }
+  .d-ops-pipe-head,
+  .d-ops-row {
+    grid-template-columns: 28px 1fr 80px;
+    gap: 8px;
+    font-size: 0.72rem;
+  }
+  .d-ops-pipe-head > span:first-child,
+  .d-ops-row-score { display: none; }
+  .d-ops-stack-meta li { font-size: 0.7rem; }
+  .d-ops-kpi-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .d-ops-kpi { padding: 8px 4px; }
+  .d-ops-kpi strong { font-size: 1.2rem; }
+  .d-ops-week li { grid-template-columns: 28px 1fr auto; gap: 8px; }
+  .d-ops-week-stage { display: none; }
+}

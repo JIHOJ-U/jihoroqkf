@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   HiSearch, HiHeart, HiShoppingCart, HiUserCircle,
   HiTrendingUp, HiTrendingDown, HiHome, HiChartBar, HiUsers, HiCog,
@@ -732,6 +732,234 @@ export function AdminDemo() {
 }
 
 /* =========================================================
+   7. Ops Console Demo — Dev.Vibe's own inbound-pipeline review tool
+   ========================================================= */
+
+/* Real freelance review pipeline content, presented as Dev.Vibe's own
+   internal ops console. Each row carries a fit score, amount, and the
+   exact rule that drove the verdict — so a visitor clicking ✗ sees not
+   just "we filtered them" but WHY. */
+const OPS_PIPELINE = [
+  { fit: '◎', score: 3, title: '카페24 알림톡 + 광고추적',  amt: '150 · 10일',     status: '지원서 ✓',  reason: '재택 · 즉시 시작' },
+  { fit: '◎', score: 3, title: 'React/Next 프론트 6개월',  amt: '협의 · 180일',   status: '검토 중',   reason: '스택 100% 일치' },
+  { fit: '○', score: 2, title: 'Claude 쇼츠 자동화',        amt: '500 · 30일',     status: '지원서 ✓',  reason: 'AI 활용 강점' },
+  { fit: '○', score: 2, title: '예비창업 AI 챗봇',          amt: '300~400 · 3mo',  status: '이력카드',  reason: '사업자 등록 후' },
+  { fit: '○', score: 2, title: '한·중 커머스 (재택 3h)',     amt: '월 250',         status: '검토 중',   reason: '병행 가능' },
+  { fit: '△', score: 1, title: '분양 데이터 크롤링 + CRM',  amt: '500 · 30일',     status: '보류',     reason: '네이버 차단 변수' },
+  { fit: '△', score: 1, title: '특허 SaaS 고도화',           amt: '월 500',         status: '보류',     reason: 'FastAPI 어긋남' },
+  { fit: '△', score: 1, title: 'AI 에이전트 수행사',         amt: '건별',           status: '보류',     reason: '팀 우대' },
+  { fit: '✗', score: 0, title: 'RAG 심리분석 AI',            amt: '—',             status: '거름',     reason: 'LLM 직접 개발' },
+  { fit: '✗', score: 0, title: '화상영어 플랫폼 (Zoom+PG)',  amt: '—',             status: '거름',     reason: '결제 3종 + DST' },
+  { fit: '✗', score: 0, title: 'Shopify 헤더 개편',          amt: '—',             status: '거름',     reason: 'Liquid 특수' },
+  { fit: '✗', score: 0, title: 'Vue 복지 플랫폼 (상주)',    amt: '—',             status: '거름',     reason: '마포 출근' },
+  { fit: '✗', score: 0, title: 'Spring 1년 상주',            amt: '—',             status: '거름',     reason: '스택 다름' },
+  { fit: '✗', score: 0, title: '뽑기/복권 PG 심사',          amt: '—',             status: '거름',     reason: '동시성 · 심사' },
+];
+
+const opsCount = (fit) => OPS_PIPELINE.filter(p => p.fit === fit).length;
+const OPS_COUNTS = {
+  all: OPS_PIPELINE.length,
+  top:  opsCount('◎'),
+  good: opsCount('○'),
+  mix:  opsCount('△'),
+  skip: opsCount('✗'),
+};
+
+const opsCls = (fit) =>
+  fit === '◎' ? 'top'  :
+  fit === '○' ? 'good' :
+  fit === '△' ? 'mix'  : 'skip';
+
+export function OpsConsoleDemo() {
+  const [filter, setFilter] = useState('all');
+  const shown = filter === 'all' ? OPS_PIPELINE : OPS_PIPELINE.filter(p => p.fit === filter);
+
+  const chips = [
+    { key: 'all', label: 'All',  count: OPS_COUNTS.all,  cls: 'all'  },
+    { key: '◎',   label: '◎',    count: OPS_COUNTS.top,  cls: 'top'  },
+    { key: '○',   label: '○',    count: OPS_COUNTS.good, cls: 'good' },
+    { key: '△',   label: '△',    count: OPS_COUNTS.mix,  cls: 'mix'  },
+    { key: '✗',   label: '✗',    count: OPS_COUNTS.skip, cls: 'skip' },
+  ];
+
+  return (
+    <BrowserFrame url="ops.devvibe.work" theme="dark">
+      <div className="d-ops">
+        {/* PCB-trace decoration — subtle callback to PCBScene3D on home */}
+        <svg className="d-ops-pcb" viewBox="0 0 320 110" preserveAspectRatio="none" aria-hidden="true">
+          <g stroke="rgba(99, 102, 241, 0.18)" strokeWidth="1" fill="none">
+            <path d="M0,55 H56 L70,38 H148 L162,55 H230" />
+            <path d="M56,55 V92 H240" />
+            <path d="M148,38 V12 H300" />
+            <path d="M230,55 L246,38 H300" />
+          </g>
+          <g fill="none" strokeWidth="1.4">
+            <circle cx="56"  cy="55" r="2.6" stroke="rgba(99, 102, 241, 0.55)" />
+            <circle cx="148" cy="38" r="2.6" stroke="rgba(6, 182, 212, 0.65)"  />
+            <circle cx="230" cy="55" r="2.6" stroke="rgba(99, 102, 241, 0.55)" />
+            <circle cx="240" cy="92" r="2.6" stroke="rgba(16, 185, 129, 0.7)"  />
+            <circle cx="300" cy="12" r="2.6" stroke="rgba(245, 158, 11, 0.7)"  />
+          </g>
+        </svg>
+
+        <div className="d-ops-topbar">
+          <div className="d-ops-brand">
+            <span className="d-ops-brand-mark">◆</span>
+            <div className="d-ops-brand-text">
+              <div className="d-ops-brand-name">Dev.Vibe</div>
+              <div className="d-ops-brand-sub">Inbound Pipeline</div>
+            </div>
+            <span className="d-ops-brand-chev">▾</span>
+          </div>
+          <div className="d-ops-search">
+            <HiSearch />
+            <span>공고·룰·태그 검색…</span>
+            <span className="d-ops-kbd">⌘K</span>
+          </div>
+          <div className="d-ops-date">
+            <span className="d-ops-date-dot" />
+            <span className="d-ops-date-text">06-18 FRI</span>
+          </div>
+        </div>
+
+        <div className="d-ops-chiprow">
+          <div className="d-ops-chips">
+            {chips.map(c => (
+              <button
+                key={c.key}
+                type="button"
+                onClick={() => setFilter(c.key)}
+                className={`d-ops-chip d-ops-chip--${c.cls} ${filter === c.key ? 'is-active' : ''}`}
+              >
+                <span className="d-ops-chip-label">{c.label}</span>
+                <span className="d-ops-chip-count">{c.count}</span>
+              </button>
+            ))}
+          </div>
+          <div className="d-ops-chip-meta">
+            <span className="d-ops-chip-meta-pulse" />
+            reviewed this week · auto-scored
+          </div>
+        </div>
+
+        <div className="d-ops-grid">
+          <aside className="d-ops-rail">
+            <section className="d-ops-card">
+              <header className="d-ops-card-head">
+                <span className="d-ops-card-tag">STACK ID</span>
+                <span className="d-ops-card-id">#01</span>
+              </header>
+              <div className="d-ops-stack">
+                <div className="d-ops-stack-row">
+                  <span className="d-ops-stack-mark">◆</span>
+                  <div>
+                    <div className="d-ops-stack-name">Dev.Vibe / 김지호</div>
+                    <div className="d-ops-stack-role">Full-stack · solo</div>
+                  </div>
+                </div>
+                <div className="d-ops-stack-tags">
+                  <span>Vue3</span><span>Node</span><span>React</span><span>MySQL</span><span>Vercel</span>
+                </div>
+                <ul className="d-ops-stack-meta">
+                  <li><span>모드</span><strong>재택 풀타임</strong></li>
+                  <li><span>형태</span><strong>1인 프리랜서</strong></li>
+                  <li><span>AI</span><strong>활용형 (직접 개발 ✕)</strong></li>
+                </ul>
+              </div>
+            </section>
+
+            <section className="d-ops-card">
+              <header className="d-ops-card-head">
+                <span className="d-ops-card-tag">RULES</span>
+                <span className="d-ops-card-live"><span className="d-ops-live-dot" /> live</span>
+              </header>
+              <ul className="d-ops-rules">
+                <li className="d-ops-rule d-ops-rule--ok"><HiCheck /> Remote-OK</li>
+                <li className="d-ops-rule d-ops-rule--ok"><HiCheck /> JS-stack main</li>
+                <li className="d-ops-rule d-ops-rule--ok"><HiCheck /> Solo OK</li>
+                <li className="d-ops-rule d-ops-rule--ok"><HiCheck /> Experience open</li>
+                <li className="d-ops-rule-sep" />
+                <li className="d-ops-rule d-ops-rule--bad"><span className="d-ops-rule-x">✕</span> Python/Spring main</li>
+                <li className="d-ops-rule d-ops-rule--bad"><span className="d-ops-rule-x">✕</span> LLM direct dev</li>
+                <li className="d-ops-rule d-ops-rule--bad"><span className="d-ops-rule-x">✕</span> Billing PG core</li>
+                <li className="d-ops-rule d-ops-rule--bad"><span className="d-ops-rule-x">✕</span> Special platform</li>
+                <li className="d-ops-rule d-ops-rule--bad"><span className="d-ops-rule-x">✕</span> Senior-only / N-yr req</li>
+              </ul>
+            </section>
+          </aside>
+
+          <main className="d-ops-main">
+            <section className="d-ops-card d-ops-pipe-card">
+              <header className="d-ops-card-head">
+                <span className="d-ops-card-tag">INBOUND PIPELINE</span>
+                <span className="d-ops-card-meta">
+                  {shown.length} of {OPS_PIPELINE.length} · {filter === 'all' ? 'all fits' : `fit ${filter}`}
+                </span>
+              </header>
+              <div className="d-ops-pipe">
+                <div className="d-ops-pipe-head">
+                  <span>SCORE</span>
+                  <span>FIT</span>
+                  <span>TITLE</span>
+                  <span>AMT · TERM</span>
+                  <span>REASON</span>
+                </div>
+                {shown.length === 0 ? (
+                  <div className="d-ops-empty">No items match this filter.</div>
+                ) : shown.map((p, i) => (
+                  <div key={`${filter}-${i}`} className={`d-ops-row d-ops-row--${opsCls(p.fit)}`}>
+                    <span className="d-ops-row-score" aria-label={`score ${p.score} of 3`}>
+                      {'●'.repeat(p.score)}<span className="d-ops-row-score-dim">{'○'.repeat(3 - p.score)}</span>
+                    </span>
+                    <span className={`d-ops-row-fit d-ops-row-fit--${opsCls(p.fit)}`}>{p.fit}</span>
+                    <span className="d-ops-row-title">{p.title}</span>
+                    <span className="d-ops-row-amt">{p.amt}</span>
+                    <span className="d-ops-row-reason">{p.reason}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <div className="d-ops-bottom">
+              <section className="d-ops-card d-ops-week-card">
+                <header className="d-ops-card-head">
+                  <span className="d-ops-card-tag">THIS WEEK</span>
+                  <span className="d-ops-card-meta">priority queue</span>
+                </header>
+                <ul className="d-ops-week">
+                  <li><span className="d-ops-week-rank">#1</span><span className="d-ops-week-title">카페24 알림톡</span><span className="d-ops-week-stage">지원서 ✓</span><span className="d-ops-week-action d-ops-week-action--go">제출 대기</span></li>
+                  <li><span className="d-ops-week-rank">#2</span><span className="d-ops-week-title">쇼츠 자동화</span><span className="d-ops-week-stage">지원서 ✓</span><span className="d-ops-week-action d-ops-week-action--go">제출 대기</span></li>
+                  <li><span className="d-ops-week-rank">#3</span><span className="d-ops-week-title">예비창업 AI</span><span className="d-ops-week-stage">이력카드</span><span className="d-ops-week-action d-ops-week-action--wait">사업자 후</span></li>
+                </ul>
+              </section>
+
+              <section className="d-ops-card d-ops-kpi-card">
+                <header className="d-ops-card-head">
+                  <span className="d-ops-card-tag">WEEK SUMMARY</span>
+                </header>
+                <div className="d-ops-kpi-grid">
+                  <div className="d-ops-kpi d-ops-kpi--top"><span>◎</span><strong>{OPS_COUNTS.top}</strong></div>
+                  <div className="d-ops-kpi d-ops-kpi--good"><span>○</span><strong>{OPS_COUNTS.good}</strong></div>
+                  <div className="d-ops-kpi d-ops-kpi--mix"><span>△</span><strong>{OPS_COUNTS.mix}</strong></div>
+                  <div className="d-ops-kpi d-ops-kpi--skip"><span>✗</span><strong>{OPS_COUNTS.skip}</strong></div>
+                </div>
+                <div className="d-ops-kpi-foot">
+                  <span>APPLIED</span><strong>2</strong>
+                  <span className="d-ops-kpi-sep">·</span>
+                  <span>DRAFT</span><strong>1</strong>
+                  <span className="d-ops-kpi-sep">·</span>
+                  <span>REVIEWED</span><strong>{OPS_PIPELINE.length}</strong>
+                </div>
+              </section>
+            </div>
+          </main>
+        </div>
+      </div>
+    </BrowserFrame>
+  );
+}
+
+/* =========================================================
    Dispatcher
    ========================================================= */
 
@@ -743,6 +971,7 @@ export default function ServiceDemo({ serviceKey }) {
     case 'mobile':    return <MobileDemo />;
     case 'ecommerce': return <EcommerceDemo />;
     case 'admin':     return <AdminDemo />;
+    case 'ops':       return <OpsConsoleDemo />;
     default:          return null;
   }
 }
