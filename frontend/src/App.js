@@ -16,7 +16,6 @@ import AchievementToast from './components/AchievementToast';
 import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
 import ChannelTalk from './components/ChannelTalk';
-import AvailabilityBadge from './components/AvailabilityBadge';
 import Analytics from './components/Analytics';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -76,7 +75,6 @@ function AppChrome({ children }) {
           <ExplorerSidebar />
           <QuickActionsDock />
           <ChannelTalk />
-          <AvailabilityBadge variant="bar" />
         </>
       )}
       {isAdmin ? <AdminNavbar /> : <Navbar />}
