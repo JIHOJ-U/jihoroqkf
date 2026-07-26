@@ -1,0 +1,99 @@
+/* === EmojiReactions — chip-row on PortfolioDetail ========================== */
+
+.emoji-rx {
+  --pf-coral: #ff5b47;
+  --rx-surface: var(--bg-secondary, #141821);
+  --rx-rule: var(--border, rgba(255, 255, 255, 0.08));
+  --rx-text: var(--text-primary, #e8eaf0);
+  --rx-muted: var(--text-muted, #7a8194);
+
+  margin: 40px 0 8px;
+}
+
+.emoji-rx__title {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rx-muted);
+  margin: 0 0 12px;
+  letter-spacing: -0.005em;
+}
+
+.emoji-rx__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.emoji-rx__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--rx-surface);
+  border: 1px solid var(--rx-rule);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--rx-text);
+  font: inherit;
+  transition: transform 180ms ease-out, border-color 180ms ease-out, background 180ms ease-out;
+}
+
+.emoji-rx__btn:hover,
+.emoji-rx__btn:focus-visible {
+  border-color: var(--pf-coral);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.emoji-rx__btn.is-mine {
+  border-color: var(--pf-coral);
+  background: rgba(255, 91, 71, 0.12);
+}
+.emoji-rx__btn.is-mine .emoji-rx__count { color: #ffffff; }
+
+.emoji-rx__emoji {
+  font-size: 20px;
+  line-height: 1;
+  display: inline-block;
+  transform-origin: center;
+}
+
+.emoji-rx__count {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--rx-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5ch;
+  text-align: right;
+  transition: color 300ms ease-out;
+}
+
+/* === Tap animations === */
+.emoji-rx__emoji.is-pop {
+  animation: rx-pop 220ms ease-out;
+}
+.emoji-rx__count.is-flash {
+  animation: rx-flash 500ms ease-out;
+}
+
+@keyframes rx-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+@keyframes rx-flash {
+  0%   { color: var(--pf-coral); }
+  100% { color: #ffffff; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emoji-rx__btn { transition: none; }
+  .emoji-rx__btn:hover,
+  .emoji-rx__btn:focus-visible { transform: none; }
+  .emoji-rx__emoji.is-pop,
+  .emoji-rx__count.is-flash { animation: none; }
+}

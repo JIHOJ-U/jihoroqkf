@@ -1,0 +1,67 @@
+/* === CollectionButton — bottom-left floating pill ========================= */
+
+.collection-btn {
+  --pf-coral: #ff5b47;
+  --cb-surface: var(--bg-secondary, #141821);
+  --cb-rule: var(--border, rgba(255, 255, 255, 0.10));
+  --cb-text: var(--text-primary, #e8eaf0);
+
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 9990;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--cb-surface);
+  border: 1px solid var(--cb-rule);
+  border-radius: 4px;
+  color: var(--cb-text);
+  cursor: pointer;
+  font: inherit;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.35);
+  transition: transform 180ms ease-out, border-color 180ms ease-out;
+  animation: cb-in 220ms ease-out both;
+}
+
+.collection-btn:hover,
+.collection-btn:focus-visible {
+  border-color: var(--pf-coral);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.collection-btn__heart {
+  color: var(--pf-coral);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.collection-btn__text {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--cb-text);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes cb-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .collection-btn {
+    left: 16px;
+    bottom: 16px;
+    padding: 8px 12px;
+  }
+  .collection-btn__text { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-btn { animation: none; transition: none; }
+  .collection-btn:hover,
+  .collection-btn:focus-visible { transform: none; }
+}

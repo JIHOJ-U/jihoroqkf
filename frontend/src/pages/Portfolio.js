@@ -6,6 +6,7 @@ import { getPortfolios, getImageUrl } from '../api';
 import { useLanguage } from '../contexts/LanguageContext';
 import useTypewriterPlaceholder from '../hooks/useTypewriterPlaceholder';
 import useSpotlight from '../hooks/useSpotlight';
+import { useCollection } from '../hooks/useCollection';
 import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
 import './Portfolio.css';
 
@@ -41,6 +42,14 @@ function PortfolioCard({ item, index }) {
   const domain = getPreviewDomain(item);
   const onSpot = useSpotlight();
   const transitionNavigate = useViewTransitionNavigate();
+  const { has, toggle } = useCollection();
+  const pinned = has(item.id);
+
+  const handlePin = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggle(item.id);
+  };
 
   const handleClick = (e) => {
     // Only intercept when the View Transitions API is available — otherwise
@@ -96,6 +105,15 @@ function PortfolioCard({ item, index }) {
               <div className="pf-thumb-placeholder"><HiCode /></div>
             )}
             {item.category && <span className="pf-badge">{item.category}</span>}
+            <button
+              type="button"
+              className={`pf-pin ${pinned ? 'pf-pin--on' : ''}`}
+              onClick={handlePin}
+              aria-pressed={pinned}
+              aria-label={pinned ? `Unpin ${item.title}` : `Pin ${item.title}`}
+            >
+              <span aria-hidden="true">📌</span>
+            </button>
             {/* Color block that covers image, then slides up to reveal */}
             <motion.div
               className="pf-thumb-curtain"

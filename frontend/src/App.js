@@ -14,6 +14,7 @@ import ReadingProgress from './components/ReadingProgress';
 import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
 import ChannelTalk from './components/ChannelTalk';
+import CollectionButton from './components/CollectionButton';
 import Analytics from './components/Analytics';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -74,6 +75,7 @@ function AppChrome({ children }) {
           <ExplorerSidebar />
           <QuickActionsDock />
           <ChannelTalk />
+          <CollectionButton />
         </>
       )}
       {isAdmin ? <AdminNavbar /> : <Navbar />}

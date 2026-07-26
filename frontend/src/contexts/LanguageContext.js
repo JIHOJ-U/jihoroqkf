@@ -358,6 +358,18 @@ export const translations = {
         { key: 'revisions', label: '수정 횟수', values: ['3회', '5회', '제한없음'] },
       ],
     },
+    reactions: {
+      title: '> 어떠셨어요?',
+      aria: (emoji, count) => `${emoji} 반응 (${count}개)`,
+    },
+    collection: {
+      trigger: '> saved',
+      header: 'saved.json',
+      empty: '저장한 프로젝트가 여기 모여요.\n📌 아이콘으로 저장해보세요.',
+      clearAll: '모두 지우기',
+      clearConfirm: '저장한 프로젝트를 모두 지울까요?',
+      close: '닫기',
+    },
   },
   en: {
     nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
@@ -712,6 +724,18 @@ export const translations = {
         { key: 'workdays',  label: 'Timeline',  values: ['10 days', '21 days', '45 days'] },
         { key: 'revisions', label: 'Revisions', values: ['3 rounds', '5 rounds', 'Unlimited'] },
       ],
+    },
+    reactions: {
+      title: '> How was it?',
+      aria: (emoji, count) => `${emoji} reaction (${count})`,
+    },
+    collection: {
+      trigger: '> saved',
+      header: 'saved.json',
+      empty: 'Saved projects show up here.\nPin one with the 📌 icon.',
+      clearAll: 'Clear all',
+      clearConfirm: 'Clear all saved projects?',
+      close: 'Close',
     },
   },
 };

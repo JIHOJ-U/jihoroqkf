@@ -7,6 +7,7 @@ import { getPortfolio, getPortfolios, deletePortfolio, getImageUrl } from '../ap
 import { useAchievement } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import MarkdownContent from '../components/MarkdownContent';
+import EmojiReactions from '../components/EmojiReactions';
 import { trackCta, trackPortfolioOpen } from '../utils/analytics';
 import './PortfolioDetail.css';
 
@@ -329,6 +330,8 @@ function PortfolioDetail() {
               </ul>
             </motion.section>
           )}
+
+          <EmojiReactions portfolioId={id} />
 
           {/* "Want one like this?" CTA — prefills the contact form with this
               project's category + a starting description so the inquiry already
