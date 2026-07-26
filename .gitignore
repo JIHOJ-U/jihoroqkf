@@ -38,4 +38,5 @@ backend/data/*.json
 
 # Misc
 .claude/
+.claude-flow/
 *.tmp
