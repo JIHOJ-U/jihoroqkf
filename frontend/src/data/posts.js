@@ -299,8 +299,8 @@ const api = axios.create({
       en: 'Wiring Channel Talk into a React site cleanly',
     },
     summary: {
-      ko: '플러그인 키 찾기, idle 시점 부팅으로 초기 로딩 보호, 도크 버튼에서 직접 메신저 열기까지.',
-      en: 'Finding the plugin key, booting on idle to protect first paint, and opening the messenger from a custom dock button.',
+      ko: '플러그인 키 찾기, idle 시점 부팅으로 초기 로딩 보호, 그리고 도크 버튼을 오히려 뺀 이유까지.',
+      en: 'Finding the plugin key, booting on idle to protect first paint, and why I ended up removing a custom dock button.',
     },
     tags: ['integrations', 'channel-talk', 'performance'],
     cover: '',
@@ -343,24 +343,9 @@ function ChannelTalk() {
 }
 \`\`\`
 
-## 도크 버튼에서 직접 메신저 열기
+## 도크 버튼 채팅 진입점은 오히려 뺐다
 
-기본 우하단 초록 버튼을 그대로 두지 않고, 사이트 디자인과 어울리는 도크 버튼에 \`showMessenger\`를 붙였습니다. SDK가 아직 부팅 전이면 \`/contact\`로 폴백:
-
-\`\`\`jsx
-const openChat = () => {
-  trackChatOpen('quick_dock');
-  try {
-    ChannelService.showMessenger();
-  } catch (e) {
-    window.location.assign('/contact');
-  }
-};
-
-<button type="button" onClick={openChat} className="qdock-btn">
-  <HiOutlineChatAlt2 /> 1:1 상담
-</button>
-\`\`\`
+처음엔 사이트 디자인에 맞춘 도크 버튼에 \`showMessenger\`를 붙여서 커스텀 채팅 진입점을 만들었어요. 그런데 채널톡 SDK가 기본으로 우하단에 자체 런처 버튼을 이미 띄운다는 걸 뒤늦게 확인했습니다 — 결과적으로 같은 채팅을 여는 진입점이 화면에 두 개 떠 있었던 셈이죠. 도크에서는 버튼을 빼고 기본 런처 하나로 정리했습니다. 위젯을 붙일 때는 그게 이미 뭘 그리고 있는지부터 확인하는 게 먼저더라고요.
 
 ## 라우트 로더가 위젯을 덮도록 z-index 정리
 
@@ -424,24 +409,9 @@ function ChannelTalk() {
 }
 \`\`\`
 
-## Open the messenger from a custom dock button
+## Actually ended up removing the dock chat button
 
-Instead of leaning on the default bottom-right launcher, attach \`showMessenger\` to a dock button that fits the site's design language. If the SDK isn't ready yet, fall back to \`/contact\`:
-
-\`\`\`jsx
-const openChat = () => {
-  trackChatOpen('quick_dock');
-  try {
-    ChannelService.showMessenger();
-  } catch (e) {
-    window.location.assign('/contact');
-  }
-};
-
-<button type="button" onClick={openChat} className="qdock-btn">
-  <HiOutlineChatAlt2 /> 1:1 chat
-</button>
-\`\`\`
+I originally wired \`showMessenger\` to a custom dock button matching the site's design language. Turned out the Channel Talk SDK already injects its own launcher bottom-right by default — so there were two entry points opening the same chat at once. Pulled the dock button and kept the native launcher as the single entry point. Lesson: check what a widget already renders before building a duplicate on top of it.
 
 ## Z-index housekeeping for the route loader
 

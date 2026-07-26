@@ -65,10 +65,20 @@ function DeviceShowcase() {
                     <span />
                   </div>
                   <div className="laptop-window__body">
-                    <img
-                      src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80"
-                      alt="code editor"
-                    />
+                    {/* Mock of the real /projects grid — not a stock photo,
+                        so the browser chrome above actually matches what's inside. */}
+                    <div className="lw-projects" aria-hidden="true">
+                      <div className="lw-projects__head">
+                        <span className="lw-projects__title">Projects</span>
+                        <span className="lw-projects__count">12</span>
+                      </div>
+                      <div className="lw-projects__grid">
+                        <div className="lw-projects__card lw-projects__card--accent" />
+                        <div className="lw-projects__card" />
+                        <div className="lw-projects__card" />
+                        <div className="lw-projects__card" />
+                      </div>
+                    </div>
                     <div className="laptop-window__overlay" />
                   </div>
                 </div>

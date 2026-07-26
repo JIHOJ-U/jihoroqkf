@@ -31,7 +31,6 @@ const TREE = [
       { type: 'link', name: 'blog.naver.com', url: 'https://blog.naver.com/longnight0719', icon: 'link' },
     ],
   },
-  { type: 'file', name: 'package.json', path: '/about', icon: 'json' },
   { type: 'file', name: 'README.md', path: '/', icon: 'md' },
 ];
 
@@ -173,7 +172,7 @@ function ExplorerSidebar() {
             </div>
 
             <div className="exp-section">
-              <div className="exp-section-title">DEVVIBE</div>
+              <div className="exp-section-title">DEV.VIBE</div>
               <div className="exp-tree">
                 {TREE.map((node, i) => (
                   <TreeNode

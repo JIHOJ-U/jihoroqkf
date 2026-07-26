@@ -14,10 +14,10 @@ import MetricsStrip from '../components/MetricsStrip';
 import ViewportTester from '../components/ViewportTester';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import BlurImage from '../components/BlurImage';
+import ActivityHeatmap from '../components/ActivityHeatmap';
 import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
 import useMediaQuery from '../hooks/useMediaQuery';
 import useSpotlight from '../hooks/useSpotlight';
-import RevealImage from '../components/RevealImage';
 import InquiryCTA from '../components/InquiryCTA';
 import PricingTiers from '../components/PricingTiers';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -386,24 +386,9 @@ function Home() {
               </div>
             </motion.div>
             <motion.div className="intro-right" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <div className="intro-image-stack">
-                <div className="intro-img intro-img--1">
-                  <RevealImage
-                    src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80"
-                    alt="circuit board macro"
-                    direction="left"
-                  />
-                </div>
-                <div className="intro-img intro-img--2">
-                  <RevealImage
-                    src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
-                    alt="pcb detail"
-                    direction="right"
-                    delay={0.15}
-                  />
-                </div>
-                <div className="intro-img-deco" />
-              </div>
+              {/* Real activity, not stock photography — pulled from actual
+                  portfolio/blog publish dates via the API. */}
+              <ActivityHeatmap />
             </motion.div>
           </div>
         </div>
@@ -491,41 +476,6 @@ function Home() {
               </motion.div>
             ))}
           </motion.div>
-
-          {/* Benefits Cards */}
-          <div className="why-benefits">
-            <div className="why-benefits-header">
-              <span className="section-label">{t.why.benefitsLabel}</span>
-              <h3>{t.why.benefitsTitle}</h3>
-            </div>
-            <div className="why-cards">
-              {(lang === 'ko' ? [
-                { num: '01', title: '소스코드 완전 소유', highlight: '플랫폼에서 자유롭게', desc: '제작된 코드를 직접 소유하여, 플랫폼 종속 없이 언제든 이전·운영할 수 있습니다.' },
-                { num: '02', title: '무한한 기능 확장', highlight: '필요한 기능 무엇이든', desc: 'PG 결제, CRM, ERP, 자체 API 등 어떤 외부 시스템이든 자유롭게 통합 가능합니다.' },
-                { num: '03', title: '운영 비용 절감', highlight: '월 구독료 0원', desc: '도메인·호스팅 비용만 발생하여, 장기 운영 시 빌더 대비 수백만원 이상 절감됩니다.' },
-                { num: '04', title: '브랜드 정체성 확립', highlight: '오직 당신만의 사이트', desc: '템플릿 한계 없이 비즈니스에 최적화된 고유한 디자인과 사용자 경험을 구현합니다.' },
-              ] : [
-                { num: '01', title: 'Full Code Ownership', highlight: 'Free from any platform', desc: 'You own the source code — migrate, run, scale anytime without lock-in.' },
-                { num: '02', title: 'Unlimited Extensibility', highlight: 'Any feature, anytime', desc: 'Integrate PG, CRM, ERP, custom APIs — any external system without limits.' },
-                { num: '03', title: 'Lower Operating Cost', highlight: 'Zero monthly subscription', desc: 'Only domain & hosting fees — saves millions over years compared to builders.' },
-                { num: '04', title: 'True Brand Identity', highlight: 'Uniquely yours', desc: 'No template limits — custom design and UX optimized for your business.' },
-              ]).map((c, i) => (
-                <motion.div
-                  key={i}
-                  className="why-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <span className="why-card-num">{c.num}</span>
-                  <h4>{c.title}</h4>
-                  <span className="why-card-highlight">{c.highlight}</span>
-                  <p>{c.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 

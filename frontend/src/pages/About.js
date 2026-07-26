@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HiArrowRight, HiUpload, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-import { FaReact, FaNodeJs, FaPython, FaDocker, FaAws, FaFigma, FaVuejs, FaGitAlt, FaHtml5, FaCss3Alt, FaJava, FaNpm } from 'react-icons/fa';
-import { SiTypescript, SiNextdotjs, SiMongodb, SiPostgresql, SiFlutter, SiTailwindcss, SiRedis, SiGraphql, SiFirebase, SiVercel, SiJavascript, SiMysql, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
-import FloatingParticles from '../components/FloatingParticles';
+import { FaReact, FaNodeJs, FaPython, FaVuejs, FaGitAlt, FaHtml5, FaCss3Alt, FaNpm } from 'react-icons/fa';
+import { SiJavascript } from 'react-icons/si';
 import ValueChip from '../components/ValueChip';
 import ProcessPipeline from '../components/ProcessPipeline';
 import DevTerminal from '../components/DevTerminal';
@@ -32,13 +31,13 @@ const COPY = {
     titlePre: '안녕하세요,', titleAccent: '풀스택 개발자', titlePost: '입니다',
     heroDesc: '사용자 경험을 최우선으로 생각하며, 비즈니스 가치를 극대화하는 개발을 추구합니다. 기획부터 배포까지, 프로젝트의 모든 단계를 함께합니다.',
     stats: [
-      { num: '50+', label: '프로젝트' },
+      { num: '12+', label: '프로젝트' },
       { num: '3+', label: '경력 (년)' },
       { num: '99%', label: '만족도' },
     ],
     addPhoto: '사진 추가', prev: '이전', next: '다음',
     photoAlt: (n) => `프로필 ${n}`, photoDot: (n) => `사진 ${n}`,
-    skillsTitle: '기술 스택', skillsDesc: '프론트엔드부터 백엔드, 모바일, DevOps까지 폭넓은 기술력',
+    skillsTitle: '기술 스택', skillsDesc: '실제로 다루는 프론트엔드·백엔드 스택',
     activityTitle: '개발 활동', activityDesc: '실제 개발 활동과 기술 글을 통해 꾸준히 성장하고 있습니다.',
     trophyTitle: '트로피 룸', trophyPre: '사이트를 탐색하며 발견한 이스터에그들. ', trophyPost: ' 달성',
     locked: '잠금 해제하려면 탐색해보세요',
@@ -57,13 +56,13 @@ const COPY = {
     titlePre: "Hi, I'm a", titleAccent: 'Full-Stack Developer', titlePost: '',
     heroDesc: 'I put user experience first and build to maximize business value. From planning to deployment, I\'m with you at every stage of the project.',
     stats: [
-      { num: '50+', label: 'Projects' },
+      { num: '12+', label: 'Projects' },
       { num: '3+', label: 'Years exp.' },
       { num: '99%', label: 'Satisfaction' },
     ],
     addPhoto: 'Add photo', prev: 'Previous', next: 'Next',
     photoAlt: (n) => `Profile ${n}`, photoDot: (n) => `Photo ${n}`,
-    skillsTitle: 'Tech Stack', skillsDesc: 'Broad expertise from frontend to backend, mobile, and DevOps',
+    skillsTitle: 'Tech Stack', skillsDesc: 'The stack I actually build with, front to back',
     activityTitle: 'Developer Activity', activityDesc: 'Growing steadily through real development work and technical writing.',
     trophyTitle: 'Trophy Room', trophyPre: 'Easter eggs found while exploring the site. ', trophyPost: ' unlocked',
     locked: 'Keep exploring to unlock',
@@ -111,32 +110,14 @@ function About() {
 
   const skills = [
     { icon: <SiJavascript />, name: 'JavaScript', color: '#F7DF1E' },
-    { icon: <SiTypescript />, name: 'TypeScript', color: '#3178C6' },
     { icon: <FaReact />, name: 'React', color: '#61DAFB' },
-    { icon: <SiNextdotjs />, name: 'Next.js', color: '#000000' },
     { icon: <FaVuejs />, name: 'Vue.js', color: '#4FC08D' },
     { icon: <FaHtml5 />, name: 'HTML5', color: '#E34F26' },
     { icon: <FaCss3Alt />, name: 'CSS3', color: '#1572B6' },
-    { icon: <SiTailwindcss />, name: 'Tailwind', color: '#06B6D4' },
     { icon: <FaNodeJs />, name: 'Node.js', color: '#339933' },
     { icon: <FaPython />, name: 'Python', color: '#3776AB' },
-    { icon: <FaJava />, name: 'Java', color: '#ED8B00' },
-    { icon: <SiGo />, name: 'Go', color: '#00ADD8' },
-    { icon: <SiSwift />, name: 'Swift', color: '#FA7343' },
-    { icon: <SiKotlin />, name: 'Kotlin', color: '#7F52FF' },
-    { icon: <SiFlutter />, name: 'Flutter', color: '#02569B' },
-    { icon: <SiMongodb />, name: 'MongoDB', color: '#47A248' },
-    { icon: <SiPostgresql />, name: 'PostgreSQL', color: '#4169E1' },
-    { icon: <SiMysql />, name: 'MySQL', color: '#4479A1' },
-    { icon: <SiRedis />, name: 'Redis', color: '#DC382D' },
-    { icon: <SiGraphql />, name: 'GraphQL', color: '#E10098' },
-    { icon: <SiFirebase />, name: 'Firebase', color: '#FFCA28' },
-    { icon: <FaDocker />, name: 'Docker', color: '#2496ED' },
-    { icon: <FaAws />, name: 'AWS', color: '#FF9900' },
-    { icon: <SiVercel />, name: 'Vercel', color: '#000000' },
     { icon: <FaGitAlt />, name: 'Git', color: '#F05032' },
     { icon: <FaNpm />, name: 'npm', color: '#CB3837' },
-    { icon: <FaFigma />, name: 'Figma', color: '#F24E1E' },
   ];
 
   const values = [
@@ -249,36 +230,6 @@ function About() {
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Dev Image Banner */}
-      <section className="about-banner">
-        <div className="about-banner-grid">
-          <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=700&q=80" alt="circuit traces" />
-            <div className="about-banner-overlay">
-              <span>Clean Code</span>
-            </div>
-          </motion.div>
-          <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <img src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=700&q=80" alt="hardware components" />
-            <div className="about-banner-overlay">
-              <span>Dev Setup</span>
-            </div>
-          </motion.div>
-          <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=700&q=80" alt="motherboard chipset" />
-            <div className="about-banner-overlay">
-              <span>Build & Deploy</span>
-            </div>
-          </motion.div>
-          <motion.div className="about-banner-item" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }}>
-            <img src="https://images.unsplash.com/photo-1563770660941-20978e870e26?w=700&q=80" alt="ram memory module" />
-            <div className="about-banner-overlay">
-              <span>Problem Solving</span>
-            </div>
-          </motion.div>
         </div>
       </section>
 

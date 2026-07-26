@@ -10,9 +10,7 @@ import RouteLoader from './components/RouteLoader';
 import ScrollToTop from './components/ScrollToTop';
 import CommandPalette from './components/CommandPalette';
 import KonamiCode from './components/KonamiCode';
-import CmdKHint from './components/CmdKHint';
 import ReadingProgress from './components/ReadingProgress';
-import AchievementToast from './components/AchievementToast';
 import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
 import ChannelTalk from './components/ChannelTalk';
@@ -62,16 +60,17 @@ function isAdminRoute(pathname) {
 function AppChrome({ children }) {
   const location = useLocation();
   const isAdmin = isAdminRoute(location.pathname);
+  const isBlog = location.pathname.startsWith('/blog');
 
   return (
     <>
+      {/* Scroll progress only makes sense for long-form reading (blog posts) */}
+      {isBlog && <ReadingProgress />}
       {!isAdmin && (
         <>
           <CursorFollower />
           <CommandPalette />
           <KonamiCode />
-          <CmdKHint />
-          <AchievementToast />
           <ExplorerSidebar />
           <QuickActionsDock />
           <ChannelTalk />
@@ -129,7 +128,6 @@ function App() {
             <Analytics />
             {/* SmoothScroll (Lenis) disabled — native scroll feels snappier with many animations */}
             <ScrollToTop />
-            <ReadingProgress />
             <div className="App">
               <AppChrome>
                 <AnimatedRoutes />

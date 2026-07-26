@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HiOutlineCalculator, HiOutlineChatAlt2, HiOutlineArrowUp } from 'react-icons/hi';
-import * as ChannelService from '@channel.io/channel-web-sdk-loader';
+import { HiOutlineCalculator, HiOutlineArrowUp } from 'react-icons/hi';
 import { useLanguage } from '../contexts/LanguageContext';
-import { trackCta, trackChatOpen } from '../utils/analytics';
+import { trackCta } from '../utils/analytics';
 import './QuickActionsDock.css';
 
 function QuickActionsDock() {
@@ -26,17 +25,6 @@ function QuickActionsDock() {
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Open the Channel Talk live-chat messenger. If the SDK hasn't finished its
-  // deferred boot yet, fall back to the contact page.
-  const openChat = () => {
-    trackChatOpen('quick_dock');
-    try {
-      ChannelService.showMessenger();
-    } catch (e) {
-      window.location.assign('/contact');
-    }
-  };
-
   return (
     <div className={`qdock ${mounted ? 'qdock--in' : ''}`} aria-label="Quick actions">
       <Link
@@ -51,20 +39,9 @@ function QuickActionsDock() {
 
       <button
         type="button"
-        onClick={openChat}
-        className="qdock-btn"
-        style={{ '--i': 1 }}
-        aria-label={labels.chat}
-      >
-        <span className="qdock-icon"><HiOutlineChatAlt2 /></span>
-        <span className="qdock-label">{labels.chat}</span>
-      </button>
-
-      <button
-        type="button"
         onClick={scrollTop}
         className={`qdock-btn ${scrolled ? 'qdock-btn--visible' : 'qdock-btn--hidden'}`}
-        style={{ '--i': 2 }}
+        style={{ '--i': 1 }}
         aria-label={labels.top}
       >
         <span className="qdock-icon"><HiOutlineArrowUp /></span>

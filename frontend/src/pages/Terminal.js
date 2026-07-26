@@ -4,14 +4,12 @@ import { useAchievement } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Terminal.css';
 
-const PROMPT = 'visitor@devvibe:~$';
+const PROMPT = 'visitor@dev.vibe:~$';
 
 const SKILLS_JSON = JSON.stringify({
-  frontend: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind'],
-  backend: ['Node.js', 'Express', 'Python', 'GraphQL'],
-  database: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
-  mobile: ['React Native', 'Flutter'],
-  devops: ['Docker', 'AWS', 'Vercel', 'Git']
+  frontend: ['React', 'Vue.js', 'JavaScript', 'HTML5', 'CSS3'],
+  backend: ['Node.js', 'Express', 'Python'],
+  tools: ['Git', 'npm']
 }, null, 2);
 
 const buildFiles = (lang) => ({
@@ -32,7 +30,7 @@ From planning to deployment, I'm with you at every stage.`
 📍 Location: ${lang === 'en' ? 'Anyang, South Korea (remote OK)' : '경기도 안양시 (원격 작업 가능)'}`,
   'experience.md': lang === 'en'
     ? `# Experience
-- 50+ projects delivered
+- 12+ projects delivered
 - 3+ years of full-stack experience
 - 99% client satisfaction
 
@@ -40,7 +38,7 @@ From planning to deployment, I'm with you at every stage.`
 - Rent/lease platform web development (Vue.js / Node.js / MySQL)
 - ...type 'cat portfolio.txt' for more`
     : `# Experience
-- 50+ 프로젝트 완수
+- 12+ 프로젝트 완수
 - 3+ 년 풀스택 개발 경력
 - 99% 클라이언트 만족도
 
@@ -90,8 +88,8 @@ const buildCommands = (lang) => ({
   ]),
   whoami: () => [
     { type: 'output', text: '┌──────────────────────────────────────┐' },
-    { type: 'output', text: '│  DeVibe — Freelance Full-Stack Dev   │' },
-    { type: 'output', text: '│  React · Node · Vue · Flutter · AWS  │' },
+    { type: 'output', text: '│  Dev.Vibe — Freelance Full-Stack Dev │' },
+    { type: 'output', text: '│  React · Vue · Node.js · Python      │' },
     { type: 'output', text: '└──────────────────────────────────────┘' },
   ],
   ls: () => [
@@ -290,7 +288,7 @@ function Terminal() {
           <span className="t-dot t-dot--red" />
           <span className="t-dot t-dot--yellow" />
           <span className="t-dot t-dot--green" />
-          <span className="terminal-title">visitor@devvibe — bash — 80×24</span>
+          <span className="terminal-title">visitor@dev.vibe — bash — 80×24</span>
         </div>
         <div className="terminal-body">
           {lines.map((l, i) => (
