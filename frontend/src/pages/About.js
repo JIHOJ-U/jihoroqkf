@@ -79,8 +79,9 @@ const COPY = {
 };
 
 function About() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const c = COPY[lang] || COPY.ko;
+  const mission = t.about?.mission;
   const [extraImages, setExtraImages] = useState([]);
   const [slideIndex, setSlideIndex] = useState(0);
   const { unlocked, totalCount, unlockedCount } = useAchievement();
@@ -163,6 +164,11 @@ function About() {
               <h1 className="about-title">
                 {c.titlePre}<br /><span className="accent-text">{c.titleAccent}</span>{c.titlePost}
               </h1>
+              {mission && (
+                <p className="about-mission">
+                  {mission}
+                </p>
+              )}
               <p className="about-desc">
                 {c.heroDesc}
               </p>

@@ -1,0 +1,85 @@
+/* ===== TrustCompliance — horizontal 4-item strip =============================
+   Sits below the IDE hero, above the pricing / product blocks. Dark ink base
+   with monospace bracket icons keeps the terminal identity. */
+
+.tcomp {
+  --tc-ink: #0b0d12;
+  --tc-rule: rgba(255, 255, 255, 0.08);
+  --tc-text: #f5f6fa;
+  --tc-muted: #9199ac;
+  --tc-indigo: #6366f1;
+
+  background: var(--tc-ink);
+  border-top: 1px solid var(--tc-rule);
+  border-bottom: 1px solid var(--tc-rule);
+  padding: 24px;
+  color: var(--tc-text);
+  /* Keep first-child radius corners crisp inside home-curtain */
+  border-radius: 0;
+}
+
+.tcomp__list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.tcomp__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 4px;
+}
+
+.tcomp__icon {
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--tc-indigo);
+  padding-top: 2px;
+  white-space: nowrap;
+}
+
+.tcomp__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tcomp__label {
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--tc-text);
+  letter-spacing: -0.005em;
+}
+
+.tcomp__sub {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--tc-muted);
+}
+
+/* --- Mobile 2×2 ------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .tcomp {
+    padding: 20px 16px;
+  }
+  .tcomp__list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 12px;
+  }
+  .tcomp__label {
+    font-size: 13px;
+  }
+  .tcomp__sub {
+    font-size: 11px;
+  }
+}

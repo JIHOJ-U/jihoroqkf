@@ -76,6 +76,15 @@
   background-clip: text;
 }
 
+.about-mission {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.7;
+  color: var(--text-primary);
+  max-width: 60ch;
+  margin: 8px 0 20px;
+  letter-spacing: -0.005em;
+}
+
 .about-desc {
   font-size: 1.05rem;
   color: var(--text-muted);

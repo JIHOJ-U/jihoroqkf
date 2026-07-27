@@ -87,8 +87,84 @@ export const translations = {
     },
     intro: {
       label: 'WHO WE ARE',
-      title: '홈페이지 제작부터 운영까지\n아이디어를 현실로 만드는 풀스택 개발 파트너',
-      desc: '홈페이지 제작 기획부터 디자인, 개발, 배포, 운영까지 — 프리랜서 풀스택 개발자가 비즈니스 성장을 위한 디지털 솔루션을 원스톱으로 제공합니다. 최신 기술 스택과 풍부한 경험을 바탕으로 높은 품질의 결과물을 합리적인 비용에 만나보세요.',
+      title: '기업 홈페이지가 필요할 때\n먼저 떠올리는 브랜드',
+      desc: '홈페이지공방은 PC와 모바일에서 고객 문의가 끊기지 않도록 화면을 맞추고, 회사 운영에 필요한 관리자·예약·연동 기능을 직접 만들며, 납품 이후에도 계속 관리해 드리는 홈페이지 파트너입니다. 필요할 때 확장 가능한 구조로 만들어, 다음 담당자가 와도 계속 이어갈 수 있습니다.',
+    },
+    about: {
+      mission: '홈페이지공방은 PC와 모바일에서 고객 문의가 잘 이어지도록 반응형 기업 홈페이지를 만들고, 필요한 관리자·예약·연동 기능을 직접 개발하며, 납품 후에도 계속 관리하는 홈페이지 파트너입니다.',
+    },
+    customerProblems: {
+      eyebrow: '> problems/',
+      headline: '이런 고민, 익숙하시죠?',
+      caption: '홈페이지공방은 이 세 가지에 정답을 준비합니다.',
+      cards: [
+        {
+          num: '문제 01',
+          problem: '모바일에서 문의가 자꾸 유실돼요',
+          solution: 'PC와 모바일 어디서든 문의와 예약이 끊기지 않도록 화면을 맞추고, 문의폼은 3초 안에 열리도록 최적화합니다.',
+        },
+        {
+          num: '문제 02',
+          problem: '관리자 기능이 없어서 매번 개발자에게 부탁해야 해요',
+          solution: '반복 업무를 줄이는 관리자 기능과 자동화를 함께 개발해, 콘텐츠 수정을 직접 하실 수 있습니다.',
+        },
+        {
+          num: '문제 03',
+          problem: '개발자가 떠나면 홈페이지 관리가 곤란해질까 걱정입니다',
+          solution: '계약서에 소스코드 인도와 데이터 귀속을 명시하고, 납품 후 30일 무상 하자 보수와 월 유지관리 상품을 제공합니다.',
+        },
+      ],
+    },
+    trustCompliance: {
+      ariaLabel: '계약·유지관리 안내',
+      items: [
+        { icon: '[ 01 ]', label: '1인 프리랜서 계약', sub: '원천징수 3.3% 처리 가능' },
+        { icon: '[ 02 ]', label: '소스코드 인도', sub: '계약서에 명시' },
+        { icon: '[ 03 ]', label: '30일 무상 하자보수', sub: '납품 후 자동 적용' },
+        { icon: '[ 04 ]', label: '월 유지관리 상품', sub: '12만~50만원/월' },
+      ],
+    },
+    starterProducts: {
+      eyebrow: '> starter/',
+      headline: '빠르게 시작할 수 있는 소형 상품',
+      caption: '본격 기업 홈페이지 전에 먼저 감을 잡고 싶다면. 체험 후 정식 계약으로 전환할 수 있습니다.',
+      tagLabel: 'STARTER',
+      list: [
+        {
+          name: '랜딩 페이지 1장',
+          body: '제품·이벤트 홍보 원페이지. 반응형·문의폼 포함.',
+          price: '30만원~',
+          cta: '상담 시작 →',
+          prefill: {
+            projectType: '웹 개발',
+            budget: '100만원 이하',
+            description: '[STARTER] 랜딩 페이지 1장 상담 요청드립니다. (제품·이벤트 홍보 원페이지, 반응형·문의폼 포함)',
+          },
+        },
+        {
+          name: '명함형 사이트 3페이지',
+          body: '회사소개·서비스·연락처. 기본 SEO·배포 포함.',
+          price: '40만원~',
+          cta: '상담 시작 →',
+          prefill: {
+            projectType: '웹 개발',
+            budget: '100만원 이하',
+            description: '[STARTER] 명함형 사이트 3페이지 상담 요청드립니다. (회사소개·서비스·연락처, 기본 SEO·배포 포함)',
+          },
+        },
+        {
+          name: '문의폼 세트',
+          body: '기존 사이트에 문의폼·자동회신 이메일 추가.',
+          price: '25만원~',
+          cta: '상담 시작 →',
+          prefill: {
+            projectType: '유지보수',
+            budget: '100만원 이하',
+            description: '[STARTER] 문의폼 세트 상담 요청드립니다. (기존 사이트에 문의폼·자동회신 이메일 추가)',
+          },
+        },
+      ],
+      bridge: '> 본격 기업 홈페이지가 필요하다면 아래 상품을 참고하세요 ↓',
     },
     services: {
       label: 'SERVICES',
@@ -136,7 +212,7 @@ export const translations = {
         },
         {
           key: 'ecommerce', title: 'E-commerce', titleKo: '쇼핑몰',
-          desc: '상품·장바구니·결제·주문 관리까지 풀스택 구축. 외부 PG·배송 API 연동 포함.',
+          desc: '상품·장바구니·결제·주문 관리까지 통합 구축. 결제·배송사 연동과 필요할 때 확장 가능한 구조로 만듭니다.',
           tagline: '단순 카페24/식스샵으로는 어려운 커스텀 쇼핑 경험. 정기구독·B2B 도매 등',
           features: ['상품·옵션·재고 관리', '장바구니 + 주문/결제', 'PG 연동 (토스·아임포트·KG이니시스)', '배송 추적 (CJ대한통운 등)', '쿠폰·할인·포인트', '리뷰·Q&A', '관리자 매출/주문 대시보드', '회원 등급제'],
           tech: ['Next.js', 'Node.js', 'PostgreSQL', 'Toss Payments'],
@@ -168,20 +244,20 @@ export const translations = {
     },
     works: { label: 'WORKS', title: '최근 프로젝트', viewAll: '전체 보기' },
     why: {
-      label: 'WHY FULL-STACK',
-      title: '왜 풀스택 개발이어야 할까요?',
+      label: 'WHY CUSTOM',
+      title: '왜 직접 개발한 홈페이지여야 할까요?',
       desc1: '아임웹, Wix 같은 빌더는 간편하지만 한계가 명확합니다.',
-      desc2: '비즈니스가 성장할수록 커스텀 개발의 가치가 빛납니다.',
+      desc2: '비즈니스가 성장할수록 직접 개발한 홈페이지의 가치가 커집니다.',
       benefitsLabel: 'KEY BENEFITS',
-      benefitsTitle: '풀스택 개발이 비즈니스에 주는 4가지 가치',
+      benefitsTitle: '직접 개발한 홈페이지가 비즈니스에 주는 4가지 가치',
     },
     cta: {
-      title: '프로젝트를 시작할 준비가 되셨나요?',
+      title: '기업 홈페이지 준비, 함께 시작할까요?',
       desc1: '무료 상담',
-      desc2: '을 통해 프로젝트 범위와 예산을 함께 논의해보세요.',
+      desc2: '을 통해 필요한 기능과 예산을 함께 정리해드립니다.',
       btn: '무료 상담 신청',
     },
-    banner: { tag: '// LIVE CODING', title: 'Code with Passion', desc: '최고의 기술로 최고의 결과물을 만듭니다' },
+    banner: { tag: '// STUDIO NOTE', title: '홈페이지공방', desc: '고객 문의가 잘 이어지는 홈페이지, 납품 후에도 계속 관리합니다' },
     capabilities: {
       label: 'WHAT I CAN BUILD',
       title: '이런 기능들,\n다 만들어드릴 수 있어요',
@@ -262,7 +338,7 @@ export const translations = {
     inquiryCTA: {
       prefix: '지금',
       suffix: '을 문의하세요',
-      words: ['반응형 웹', '풀스택 개발', '하이브리드 앱', '쇼핑몰', '플랫폼', '랜딩 페이지', '관리자 대시보드'],
+      words: ['기업 홈페이지', '예약·문의 폼', '관리자 페이지', '쇼핑몰', '모바일 대응', '랜딩 페이지', '운영 자동화'],
       primary: '1:1 문의하기',
     },
     availability: {
@@ -275,7 +351,7 @@ export const translations = {
       title: '자주 묻는 질문',
       desc: '계약 전에 가장 많이 받는 질문들을 모았습니다.\n더 궁금한 점은 1:1 문의로 편하게 물어봐주세요.',
       items: [
-        { q: '제작 기간은 얼마나 걸리나요?', a: '랜딩 페이지는 1~2주, 일반 홈페이지(5~10페이지)는 3~6주, 풀스택 플랫폼은 8~16주 정도 소요됩니다.\n범위·디자인 복잡도에 따라 달라지며, 첫 상담 후 일정표를 함께 정리해드립니다.' },
+        { q: '제작 기간은 얼마나 걸리나요?', a: '랜딩 페이지는 1~2주, 일반 홈페이지(5~10페이지)는 3~6주, 관리자·예약 기능이 포함된 종합 플랫폼은 8~16주 정도 소요됩니다.\n범위·디자인 복잡도에 따라 달라지며, 첫 상담 후 일정표를 함께 정리해드립니다.' },
         { q: '비용은 어떻게 책정되나요?', a: '무료 상담으로 범위를 확정한 뒤 고정가로 견적을 드립니다 (시간당이 아닌 결과물 기반).\n계약 후 추가 요청이 나오면, 별도 견적으로 사전 동의받고 진행합니다 — "공사 끝나고 청구서가 늘어나는" 일은 없습니다.' },
         { q: '소스코드는 누가 소유하나요?', a: '잔금 완납 시 소스코드와 디자인 원본을 모두 클라이언트가 소유합니다.\nGitHub 저장소·디자인 파일·운영 가이드를 함께 인계해, 추후 다른 개발자에게 맡기더라도 종속 없이 이어갈 수 있습니다.' },
         { q: '도메인·서버 비용은 별도인가요?', a: '네, 도메인(연 1.5~2만원)과 호스팅(월 2~5만원)은 클라이언트 명의로 직접 가입하시는 걸 권장드립니다.\n이렇게 하면 개발자가 바뀌어도 인프라 소유권이 안전합니다. 가입·세팅 가이드를 직접 도와드립니다.' },
@@ -454,8 +530,84 @@ export const translations = {
     },
     intro: {
       label: 'WHO WE ARE',
-      title: 'Your Partner\nFrom Idea To Reality',
-      desc: 'From planning, design, development to deployment — we deliver one-stop digital solutions for your business growth. Get high-quality results at a reasonable price with the latest tech stack and proven experience.',
+      title: 'The studio you call\nwhen you need a company site.',
+      desc: '홈페이지공방 keeps your inquiries flowing on desktop and mobile alike, builds the admin, booking, and integration features your team actually needs, and stays around to maintain it after launch. Built to extend when you need it — so the next person on your team can pick right up.',
+    },
+    about: {
+      mission: '홈페이지공방 is a homepage partner: we build responsive company sites that keep customer inquiries flowing across desktop and mobile, develop the admin, booking, and integration features you need in-house, and keep maintaining them long after launch.',
+    },
+    customerProblems: {
+      eyebrow: '> problems/',
+      headline: 'Do these sound familiar?',
+      caption: '홈페이지공방 has answers to all three.',
+      cards: [
+        {
+          num: 'PROBLEM 01',
+          problem: 'Mobile inquiries keep falling through the cracks',
+          solution: 'We tune the site so inquiries and bookings hold up on desktop and mobile alike, and make sure the contact form opens within 3 seconds.',
+        },
+        {
+          num: 'PROBLEM 02',
+          problem: 'No admin panel — every content edit needs a developer',
+          solution: 'We build the admin tools and automations that cut repetitive work, so your team can update content directly.',
+        },
+        {
+          num: 'PROBLEM 03',
+          problem: 'What happens to the site if the developer walks away?',
+          solution: 'The contract spells out source code and data handover, and every delivery ships with a 30-day free bug-fix window plus optional monthly maintenance.',
+        },
+      ],
+    },
+    trustCompliance: {
+      ariaLabel: 'Contract & maintenance overview',
+      items: [
+        { icon: '[ 01 ]', label: 'Freelance contract', sub: '3.3% withholding supported' },
+        { icon: '[ 02 ]', label: 'Source code handover', sub: 'Written into the contract' },
+        { icon: '[ 03 ]', label: '30-day free bug fixes', sub: 'Applied automatically after delivery' },
+        { icon: '[ 04 ]', label: 'Monthly maintenance plans', sub: '₩120k–₩500k / month' },
+      ],
+    },
+    starterProducts: {
+      eyebrow: '> starter/',
+      headline: 'Quick-start compact products',
+      caption: 'Get a feel for how we work before committing to a full company site. Trials can convert into a formal contract.',
+      tagLabel: 'STARTER',
+      list: [
+        {
+          name: 'Single landing page',
+          body: 'One page for a product or campaign. Responsive with a contact form.',
+          price: 'from ₩300k',
+          cta: 'Start consult →',
+          prefill: {
+            projectType: 'Web Development',
+            budget: 'Under $1k',
+            description: '[STARTER] Requesting a consult for a single landing page (product/campaign, responsive, contact form).',
+          },
+        },
+        {
+          name: 'Business-card site (3 pages)',
+          body: 'About / services / contact. Basic SEO and deployment included.',
+          price: 'from ₩400k',
+          cta: 'Start consult →',
+          prefill: {
+            projectType: 'Web Development',
+            budget: 'Under $1k',
+            description: '[STARTER] Requesting a consult for a 3-page business-card site (about, services, contact, basic SEO, deployment).',
+          },
+        },
+        {
+          name: 'Inquiry-form kit',
+          body: 'Add a contact form and auto-reply email to an existing site.',
+          price: 'from ₩250k',
+          cta: 'Start consult →',
+          prefill: {
+            projectType: 'Maintenance',
+            budget: 'Under $1k',
+            description: '[STARTER] Requesting a consult for adding an inquiry form and auto-reply email to an existing site.',
+          },
+        },
+      ],
+      bridge: '> Ready for a full company site? See the plans below ↓',
     },
     services: {
       label: 'SERVICES',
@@ -503,7 +655,7 @@ export const translations = {
         },
         {
           key: 'ecommerce', title: 'E-commerce', titleKo: 'Shop',
-          desc: 'Full-stack store: products, cart, checkout, orders, plus PG and shipping APIs.',
+          desc: 'End-to-end store: products, cart, checkout, orders — payment and shipping integrations included, built to extend later.',
           tagline: 'Custom shopping experiences beyond Shopify templates — subscriptions, B2B wholesale, etc.',
           features: ['Product, option, inventory management', 'Cart, orders, checkout', 'Payment gateways (Stripe / Toss / etc.)', 'Shipping tracking integration', 'Coupons, discounts, loyalty points', 'Reviews & Q&A', 'Sales / orders admin dashboard', 'Membership tiers'],
           tech: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
@@ -535,20 +687,20 @@ export const translations = {
     },
     works: { label: 'WORKS', title: 'Recent Projects', viewAll: 'View all' },
     why: {
-      label: 'WHY FULL-STACK',
-      title: 'Why choose Full-Stack development?',
+      label: 'WHY CUSTOM',
+      title: 'Why a custom-built site?',
       desc1: 'Builders like I\'mWeb and Wix are convenient but limited.',
-      desc2: 'As your business grows, custom development truly shines.',
+      desc2: 'As your business grows, owning your site truly starts to pay off.',
       benefitsLabel: 'KEY BENEFITS',
-      benefitsTitle: '4 Values Full-Stack Development Brings to Your Business',
+      benefitsTitle: '4 Ways a Custom-Built Site Pays Off',
     },
     cta: {
-      title: 'Ready to start your project?',
+      title: 'Ready to plan your company site?',
       desc1: 'Free consultation',
-      desc2: ' — let\'s discuss your project scope and budget together.',
+      desc2: ' — we\'ll help you narrow down features and budget together.',
       btn: 'Request Free Consultation',
     },
-    banner: { tag: '// LIVE CODING', title: 'Code with Passion', desc: 'Top results with top technology' },
+    banner: { tag: '// STUDIO NOTE', title: '홈페이지공방', desc: 'A site that keeps inquiries flowing — and we stay on to maintain it' },
     capabilities: {
       label: 'WHAT I CAN BUILD',
       title: 'All these features,\nbuilt for you.',
@@ -629,7 +781,7 @@ export const translations = {
     inquiryCTA: {
       prefix: 'Inquire about your',
       suffix: 'now',
-      words: ['Responsive Web', 'Full-Stack Build', 'Hybrid App', 'E-commerce', 'Platform', 'Landing Page', 'Admin Dashboard'],
+      words: ['Company Site', 'Inquiry & Booking Form', 'Admin Panel', 'Online Shop', 'Mobile-Ready Site', 'Landing Page', 'Ops Automation'],
       primary: 'Start 1:1 Chat',
     },
     availability: {
@@ -642,7 +794,7 @@ export const translations = {
       title: 'Frequently asked questions',
       desc: 'The most common questions before signing.\nNot covered here? Just send a 1:1 message.',
       items: [
-        { q: 'How long does a project take?', a: 'Landing page: 1–2 weeks. Standard website (5–10 pages): 3–6 weeks. Full-stack platform: 8–16 weeks.\nFinal timeline depends on scope and design complexity — we draft a roadmap together at the first consultation.' },
+        { q: 'How long does a project take?', a: 'Landing page: 1–2 weeks. Standard website (5–10 pages): 3–6 weeks. Sites with admin, booking, or integrations: 8–16 weeks.\nFinal timeline depends on scope and design complexity — we draft a roadmap together at the first consultation.' },
         { q: 'How is pricing decided?', a: 'After a free consultation to lock scope, you get a fixed-price quote (deliverable-based, not hourly).\nAny scope change after contract is quoted separately with prior approval — no surprise invoices at the end.' },
         { q: 'Who owns the source code?', a: 'On final payment, you own all source code and design assets — full stop.\nWe hand over the GitHub repo, design files, and an operations guide, so any future developer can take over without lock-in.' },
         { q: 'Are domain & hosting fees separate?', a: 'Yes. We recommend you register the domain (~$15/year) and hosting (~$5–$10/month) directly under your name.\nThis keeps infrastructure ownership safe even if you switch developers. We guide you through the setup.' },

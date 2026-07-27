@@ -20,6 +20,9 @@ import useMediaQuery from '../hooks/useMediaQuery';
 import useSpotlight from '../hooks/useSpotlight';
 import InquiryCTA from '../components/InquiryCTA';
 import PricingTiers from '../components/PricingTiers';
+import CustomerProblems from '../components/CustomerProblems';
+import TrustCompliance from '../components/TrustCompliance';
+import StarterProducts from '../components/StarterProducts';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Home.css';
 
@@ -140,6 +143,11 @@ function Home() {
 
   return (
     <div className="home">
+      {/* Customer-outcome problem framing — sits above the IDE hero so the
+          first thing SMB owners read is a mirror of their own pain, not our
+          stack. Dark ink keeps continuity with the hero below. */}
+      <CustomerProblems />
+
       {/* Hero - IDE editor card */}
       <section
         className="hero-full"
@@ -357,6 +365,15 @@ function Home() {
 
       {/* Curtain wrapper — content slides UP over the sticky hero */}
       <div className="home-curtain">
+
+      {/* Trust & compliance strip — sits right at the top of the curtain so
+          it renders "immediately after" the hero once the curtain rolls up.
+          Dark ink strip preserves the terminal identity into the light body. */}
+      <TrustCompliance />
+
+      {/* Quick-start compact products — low-ticket entry before the full
+          pricing matrix. Bridge line points visitors down to PricingTiers. */}
+      <StarterProducts />
 
       {/* Pricing tiers — desktop only (the 4-col matrix collapses to a long
           stack on mobile that fights the conversion flow with InquiryCTA below) */}
