@@ -6,7 +6,6 @@ import { getPortfolios, getImageUrl } from '../api';
 import Marquee from '../components/Marquee';
 import DeviceShowcase from '../components/DeviceShowcase';
 import ProcessSection from '../components/ProcessSection';
-import PCBScene3D from '../components/PCBScene3D';
 import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
@@ -48,8 +47,8 @@ function Home() {
   const [activeTabKey, setActiveTabKey] = useState('profile');
   const onSpot = useSpotlight();
   // Above-tablet only. Below this width the heavy / desktop-only sections
-  // (3D PCB scene, viewport tester, trust badges) skip rendering entirely
-  // so mobile doesn't pay their JS / WebGL / iframe cost.
+  // (viewport tester, trust badges) skip rendering entirely so mobile
+  // doesn't pay their JS / iframe cost.
   const isDesktop = useMediaQuery('(min-width: 769px)');
   const transitionNavigate = useViewTransitionNavigate();
   const handleWorkClick = (e, id) => {
@@ -414,9 +413,6 @@ function Home() {
       {/* Device Showcase — desktop only (600px stage + laptop/phone floats are
           decorative; mobile already lives on a real device) */}
       {isDesktop && <DeviceShowcase />}
-
-      {/* 3D PCB scene — desktop only (heavy WebGL, detail invisible at <769px) */}
-      {isDesktop && <PCBScene3D />}
 
       {/* Why Full-Stack */}
       <section className="why-section">
