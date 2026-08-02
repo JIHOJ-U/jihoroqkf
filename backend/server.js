@@ -8,7 +8,7 @@ const fs = require('fs');
 const Parser = require('rss-parser');
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
-const mongoose = require('mongoose');
+const { Pool } = require('pg');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -130,47 +130,70 @@ function writeData(name, data) {
   fs.writeFileSync(getFilePath(name), JSON.stringify(data, null, 2), 'utf-8');
 }
 
-// ========== MongoDB (inquiries — persistent across Render free-tier restarts) ==========
-// If MONGODB_URI is set, inquiries route through Mongoose (persistent). Otherwise
-// they fall back to the file-based readData/writeData path (dev local, or if
-// Atlas isn't set up yet). Portfolios stay file-based since they're re-seeded
-// from seed-portfolios.json on each deploy.
+// ========== PostgreSQL (inquiries — persistent across Render free-tier restarts) ==========
+// If DATABASE_URL is set (Render Postgres), inquiries route through pg (persistent).
+// Otherwise they fall back to file-based readData/writeData (local dev). Portfolios
+// stay file-based since they're re-seeded from seed-portfolios.json on each deploy.
 
-const MONGODB_URI = process.env.MONGODB_URI || '';
-let useMongo = false;
+const DATABASE_URL = process.env.DATABASE_URL || '';
+let pgPool = null;
+let usePg = false;
 
-const InquirySchema = new mongoose.Schema(
-  {
-    id:          { type: String, unique: true, index: true },
-    name:        { type: String, required: true },
-    email:       { type: String, required: true },
-    phone:       { type: String, default: '' },
-    company:     { type: String, default: '' },
-    projectType: { type: String, default: '웹 개발' },
-    budget:      { type: String, default: '' },
-    timeline:    { type: String, default: '' },
-    description: { type: String, required: true },
-    status:      { type: String, default: '접수됨' },
-    createdAt:   { type: String },
-    updatedAt:   { type: String },
-  },
-  { collection: 'inquiries', versionKey: false }
-);
-const Inquiry = mongoose.model('Inquiry', InquirySchema);
+if (DATABASE_URL) {
+  pgPool = new Pool({
+    connectionString: DATABASE_URL,
+    // Render Postgres requires SSL; the internal URL uses a self-signed cert
+    // so rejectUnauthorized:false is needed. Non-Render URLs may not need SSL.
+    ssl: /render\.com|amazonaws|onrender/.test(DATABASE_URL) || process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
+    max: 5,
+    idleTimeoutMillis: 30000,
+  });
 
-if (MONGODB_URI) {
-  mongoose
-    .connect(MONGODB_URI, { serverSelectionTimeoutMS: 8000 })
+  pgPool
+    .query(`
+      CREATE TABLE IF NOT EXISTS inquiries (
+        id           UUID PRIMARY KEY,
+        name         TEXT NOT NULL,
+        email        TEXT NOT NULL,
+        phone        TEXT DEFAULT '',
+        company      TEXT DEFAULT '',
+        project_type TEXT DEFAULT '웹 개발',
+        budget       TEXT DEFAULT '',
+        timeline     TEXT DEFAULT '',
+        description  TEXT NOT NULL,
+        status       TEXT DEFAULT '접수됨',
+        created_at   TIMESTAMPTZ DEFAULT NOW(),
+        updated_at   TIMESTAMPTZ
+      );
+    `)
     .then(() => {
-      useMongo = true;
-      console.log('✅ MongoDB connected — inquiries are persistent');
+      usePg = true;
+      console.log('✅ PostgreSQL connected — inquiries are persistent');
     })
     .catch(err => {
-      console.warn('[mongo] connect failed, falling back to file storage:', err.message);
+      console.warn('[pg] init failed, falling back to file storage:', err.message);
     });
 } else {
-  console.log('[mongo] MONGODB_URI not set — using file storage (data will not persist across restarts)');
+  console.log('[pg] DATABASE_URL not set — using file storage (data will not persist across restarts)');
 }
+
+// Convert Postgres row (snake_case) → API response shape (camelCase).
+const rowToInquiry = (row) => ({
+  id: row.id,
+  name: row.name,
+  email: row.email,
+  phone: row.phone || '',
+  company: row.company || '',
+  projectType: row.project_type || '웹 개발',
+  budget: row.budget || '',
+  timeline: row.timeline || '',
+  description: row.description,
+  status: row.status || '접수됨',
+  createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+  updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : (row.updated_at || undefined),
+});
 
 // ========== Health ==========
 app.get('/api/health', (req, res) => {
@@ -291,8 +314,17 @@ app.post('/api/inquiries', async (req, res) => {
     createdAt: new Date().toISOString(),
   };
   try {
-    if (useMongo) {
-      await Inquiry.create(newInquiry);
+    if (usePg && pgPool) {
+      await pgPool.query(
+        `INSERT INTO inquiries
+           (id, name, email, phone, company, project_type, budget, timeline, description, status, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+        [
+          newInquiry.id, newInquiry.name, newInquiry.email, newInquiry.phone, newInquiry.company,
+          newInquiry.projectType, newInquiry.budget, newInquiry.timeline, newInquiry.description,
+          newInquiry.status, newInquiry.createdAt,
+        ]
+      );
     } else {
       const inquiries = readData('inquiries');
       inquiries.unshift(newInquiry);
@@ -308,9 +340,9 @@ app.post('/api/inquiries', async (req, res) => {
 
 app.get('/api/inquiries', async (req, res) => {
   try {
-    if (useMongo) {
-      const docs = await Inquiry.find({}, { _id: 0 }).sort({ createdAt: -1 }).lean();
-      return res.json(docs);
+    if (usePg && pgPool) {
+      const result = await pgPool.query('SELECT * FROM inquiries ORDER BY created_at DESC');
+      return res.json(result.rows.map(rowToInquiry));
     }
     res.json(readData('inquiries'));
   } catch (e) {
@@ -321,21 +353,40 @@ app.get('/api/inquiries', async (req, res) => {
 
 app.patch('/api/inquiries/:id', async (req, res) => {
   try {
-    if (useMongo) {
-      const updated = await Inquiry.findOneAndUpdate(
-        { id: req.params.id },
-        { ...req.body, updatedAt: new Date().toISOString() },
-        { new: true, projection: { _id: 0 } }
-      ).lean();
-      if (!updated) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
-      return res.json(updated);
+    if (usePg && pgPool) {
+      // Map incoming (camelCase) → column names (snake_case) and only touch allowed columns.
+      const colByField = {
+        name: 'name', email: 'email', phone: 'phone', company: 'company',
+        projectType: 'project_type', budget: 'budget', timeline: 'timeline',
+        description: 'description', status: 'status',
+      };
+      const sets = [];
+      const values = [];
+      let idx = 1;
+      for (const [field, column] of Object.entries(colByField)) {
+        if (req.body[field] !== undefined) {
+          sets.push(`${column} = $${idx++}`);
+          values.push(req.body[field]);
+        }
+      }
+      if (sets.length === 0) {
+        return res.status(400).json({ error: '수정할 항목이 없습니다.' });
+      }
+      sets.push(`updated_at = $${idx++}`);
+      values.push(new Date().toISOString());
+      values.push(req.params.id);
+      const q = `UPDATE inquiries SET ${sets.join(', ')} WHERE id = $${idx} RETURNING *`;
+      const result = await pgPool.query(q, values);
+      if (result.rows.length === 0) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+      return res.json(rowToInquiry(result.rows[0]));
     }
+    // File fallback
     const inquiries = readData('inquiries');
-    const idx = inquiries.findIndex(i => i.id === req.params.id);
-    if (idx === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
-    inquiries[idx] = { ...inquiries[idx], ...req.body, updatedAt: new Date().toISOString() };
+    const i = inquiries.findIndex(inq => inq.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+    inquiries[i] = { ...inquiries[i], ...req.body, updatedAt: new Date().toISOString() };
     writeData('inquiries', inquiries);
-    res.json(inquiries[idx]);
+    res.json(inquiries[i]);
   } catch (e) {
     console.error('[inquiry.update] failed:', e.message);
     res.status(500).json({ error: '문의 수정 중 오류가 발생했습니다.' });
