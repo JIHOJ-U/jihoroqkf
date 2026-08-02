@@ -8,6 +8,7 @@ const fs = require('fs');
 const Parser = require('rss-parser');
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -129,6 +130,48 @@ function writeData(name, data) {
   fs.writeFileSync(getFilePath(name), JSON.stringify(data, null, 2), 'utf-8');
 }
 
+// ========== MongoDB (inquiries — persistent across Render free-tier restarts) ==========
+// If MONGODB_URI is set, inquiries route through Mongoose (persistent). Otherwise
+// they fall back to the file-based readData/writeData path (dev local, or if
+// Atlas isn't set up yet). Portfolios stay file-based since they're re-seeded
+// from seed-portfolios.json on each deploy.
+
+const MONGODB_URI = process.env.MONGODB_URI || '';
+let useMongo = false;
+
+const InquirySchema = new mongoose.Schema(
+  {
+    id:          { type: String, unique: true, index: true },
+    name:        { type: String, required: true },
+    email:       { type: String, required: true },
+    phone:       { type: String, default: '' },
+    company:     { type: String, default: '' },
+    projectType: { type: String, default: '웹 개발' },
+    budget:      { type: String, default: '' },
+    timeline:    { type: String, default: '' },
+    description: { type: String, required: true },
+    status:      { type: String, default: '접수됨' },
+    createdAt:   { type: String },
+    updatedAt:   { type: String },
+  },
+  { collection: 'inquiries', versionKey: false }
+);
+const Inquiry = mongoose.model('Inquiry', InquirySchema);
+
+if (MONGODB_URI) {
+  mongoose
+    .connect(MONGODB_URI, { serverSelectionTimeoutMS: 8000 })
+    .then(() => {
+      useMongo = true;
+      console.log('✅ MongoDB connected — inquiries are persistent');
+    })
+    .catch(err => {
+      console.warn('[mongo] connect failed, falling back to file storage:', err.message);
+    });
+} else {
+  console.log('[mongo] MONGODB_URI not set — using file storage (data will not persist across restarts)');
+}
+
 // ========== Health ==========
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
@@ -234,7 +277,6 @@ app.delete('/api/portfolios/:id', (req, res) => {
 
 // ========== Inquiry API ==========
 app.post('/api/inquiries', async (req, res) => {
-  const inquiries = readData('inquiries');
   const { name, email, phone, company, projectType, budget, timeline, description } = req.body;
   if (!name || !email || !description) {
     return res.status(400).json({ error: '이름, 이메일, 프로젝트 설명은 필수입니다.' });
@@ -248,23 +290,56 @@ app.post('/api/inquiries', async (req, res) => {
     description, status: '접수됨',
     createdAt: new Date().toISOString(),
   };
-  inquiries.unshift(newInquiry);
-  writeData('inquiries', inquiries);
+  try {
+    if (useMongo) {
+      await Inquiry.create(newInquiry);
+    } else {
+      const inquiries = readData('inquiries');
+      inquiries.unshift(newInquiry);
+      writeData('inquiries', inquiries);
+    }
+  } catch (e) {
+    console.error('[inquiry.create] failed:', e.message);
+    return res.status(500).json({ error: '문의 저장 중 오류가 발생했습니다.' });
+  }
   notifyNewInquiry(newInquiry).catch(err => console.error('[notify] failed:', err.message));
   res.status(201).json({ message: '문의가 접수되었습니다.', inquiry: newInquiry });
 });
 
-app.get('/api/inquiries', (req, res) => {
-  res.json(readData('inquiries'));
+app.get('/api/inquiries', async (req, res) => {
+  try {
+    if (useMongo) {
+      const docs = await Inquiry.find({}, { _id: 0 }).sort({ createdAt: -1 }).lean();
+      return res.json(docs);
+    }
+    res.json(readData('inquiries'));
+  } catch (e) {
+    console.error('[inquiry.list] failed:', e.message);
+    res.status(500).json({ error: '문의 조회 중 오류가 발생했습니다.' });
+  }
 });
 
-app.patch('/api/inquiries/:id', (req, res) => {
-  const inquiries = readData('inquiries');
-  const idx = inquiries.findIndex(i => i.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
-  inquiries[idx] = { ...inquiries[idx], ...req.body, updatedAt: new Date().toISOString() };
-  writeData('inquiries', inquiries);
-  res.json(inquiries[idx]);
+app.patch('/api/inquiries/:id', async (req, res) => {
+  try {
+    if (useMongo) {
+      const updated = await Inquiry.findOneAndUpdate(
+        { id: req.params.id },
+        { ...req.body, updatedAt: new Date().toISOString() },
+        { new: true, projection: { _id: 0 } }
+      ).lean();
+      if (!updated) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+      return res.json(updated);
+    }
+    const inquiries = readData('inquiries');
+    const idx = inquiries.findIndex(i => i.id === req.params.id);
+    if (idx === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+    inquiries[idx] = { ...inquiries[idx], ...req.body, updatedAt: new Date().toISOString() };
+    writeData('inquiries', inquiries);
+    res.json(inquiries[idx]);
+  } catch (e) {
+    console.error('[inquiry.update] failed:', e.message);
+    res.status(500).json({ error: '문의 수정 중 오류가 발생했습니다.' });
+  }
 });
 
 // ========== GitHub Stats ==========
