@@ -63,6 +63,14 @@ function AppChrome({ children }) {
   const isAdmin = isAdminRoute(location.pathname);
   const isBlog = location.pathname.startsWith('/blog');
 
+  // Admin routes don't render CursorFollower, so we must undo the global
+  // `cursor: none` rule from index.css — otherwise the mouse cursor
+  // disappears entirely inside /admin (문의 내역 관리 포함).
+  useEffect(() => {
+    document.body.classList.toggle('is-admin-route', isAdmin);
+    return () => document.body.classList.remove('is-admin-route');
+  }, [isAdmin]);
+
   return (
     <>
       {/* Scroll progress only makes sense for long-form reading (blog posts) */}

@@ -372,9 +372,10 @@ img {
 
 /* Custom cursor - hide default on desktop only (touch devices keep native cursor).
    CursorFollower renders on all fine-pointer devices (incl. reduced-motion), so the
-   native cursor can be safely hidden here. */
+   native cursor can be safely hidden here. Admin routes are excluded so the
+   inquiry management UI stays usable — see AppChrome useEffect. */
 @media (hover: hover) and (pointer: fine) {
-  * {
+  body:not(.is-admin-route) * {
     cursor: none !important;
   }
 }
