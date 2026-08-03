@@ -43,6 +43,7 @@ const Portfolio = withMinDelay(() => import('./pages/Portfolio'));
 const PortfolioDetail = withMinDelay(() => import('./pages/PortfolioDetail'));
 const PortfolioForm = withMinDelay(() => import('./pages/PortfolioForm'));
 const Contact = withMinDelay(() => import('./pages/Contact'));
+const AiPreview = withMinDelay(() => import('./pages/AiPreview'));
 const About = withMinDelay(() => import('./pages/About'));
 const Admin = withMinDelay(() => import('./pages/Admin'));
 const Privacy = withMinDelay(() => import('./pages/Privacy'));
@@ -110,6 +111,7 @@ function AnimatedRoutes() {
           <Route path="/portfolio/new" element={<PageTransition><PortfolioForm /></PageTransition>} />
           <Route path="/portfolio/edit/:id" element={<PageTransition><PortfolioForm /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+          <Route path="/ai-preview" element={<PageTransition><AiPreview /></PageTransition>} />
           <Route path="/about" element={<PageTransition><About /></PageTransition>} />
           <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
