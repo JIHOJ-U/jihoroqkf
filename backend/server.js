@@ -9,6 +9,71 @@ const Parser = require('rss-parser');
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
+const Anthropic = require('@anthropic-ai/sdk');
+
+const anthropic = process.env.ANTHROPIC_API_KEY
+  ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  : null;
+
+const AI_PREVIEW_MODEL = 'claude-haiku-4-5-20251001';
+
+const AI_PREVIEW_SYSTEM_PROMPT = `You are a website copywriter and information architect for Dev.Vibe, a freelance full-stack developer studio in South Korea. Given a visitor's business description, propose a homepage structure.
+
+Rules:
+- Respond ONLY by calling the generate_site_proposal tool — never write prose outside the tool call.
+- Write every text field in the language given by the "lang" field (ko or en).
+- headline: under 20 words, concrete and specific to the described business — never generic filler like "Welcome to our website" or "Unlock your business potential".
+- sections: 3 to 6 items, ordered top to bottom as they would appear on the page. Each title is short (2-4 words); each description is one plain sentence explaining what that section shows.
+- toneSuggestion: a short phrase (not a paragraph) naming a visual direction, e.g. "Minimal with warm accents".
+- suggestedColors: 2 to 3 hex color codes that fit the requested mood.
+- Never invent specific prices, statistics, or claims about the business beyond what you were given.`;
+
+const AI_PREVIEW_TOOL = {
+  name: 'generate_site_proposal',
+  description: 'Generate a website homepage proposal based on the business description.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      headline: { type: 'string' },
+      tagline: { type: 'string' },
+      sections: {
+        type: 'array',
+        minItems: 3,
+        maxItems: 6,
+        items: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            description: { type: 'string' },
+          },
+          required: ['title', 'description'],
+        },
+      },
+      toneSuggestion: { type: 'string' },
+      suggestedColors: {
+        type: 'array',
+        minItems: 2,
+        maxItems: 3,
+        items: { type: 'string' },
+      },
+    },
+    required: ['headline', 'tagline', 'sections', 'toneSuggestion', 'suggestedColors'],
+  },
+};
+
+// In-memory per-IP daily limit — single Render instance, no external store needed.
+const aiPreviewHits = new Map();
+const AI_PREVIEW_DAILY_LIMIT = 3;
+
+function aiPreviewRateLimitOk(ip) {
+  const now = Date.now();
+  const oneDayAgo = now - 24 * 60 * 60 * 1000;
+  const hits = (aiPreviewHits.get(ip) || []).filter((t) => t > oneDayAgo);
+  if (hits.length >= AI_PREVIEW_DAILY_LIMIT) return false;
+  hits.push(now);
+  aiPreviewHits.set(ip, hits);
+  return true;
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -195,6 +260,42 @@ const rowToInquiry = (row) => ({
   updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : (row.updated_at || undefined),
 });
 
+if (DATABASE_URL) {
+  pgPool
+    .query(`
+      CREATE TABLE IF NOT EXISTS ai_previews (
+        id             UUID PRIMARY KEY,
+        email          TEXT NOT NULL,
+        business_type  TEXT DEFAULT '',
+        site_goal      TEXT DEFAULT '',
+        mood           TEXT DEFAULT '',
+        must_have      TEXT DEFAULT '',
+        reference_site TEXT DEFAULT '',
+        lang           TEXT DEFAULT 'ko',
+        result         JSONB,
+        status         TEXT DEFAULT '생성중',
+        created_at     TIMESTAMPTZ DEFAULT NOW()
+      );
+    `)
+    .catch(err => {
+      console.warn('[pg] ai_previews table init failed:', err.message);
+    });
+}
+
+const rowToAiPreview = (row) => ({
+  id: row.id,
+  email: row.email,
+  businessType: row.business_type || '',
+  siteGoal: row.site_goal || '',
+  mood: row.mood || '',
+  mustHave: row.must_have || '',
+  referenceSite: row.reference_site || '',
+  lang: row.lang || 'ko',
+  result: row.result || null,
+  status: row.status || '생성중',
+  createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+});
+
 // ========== Health ==========
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
@@ -336,6 +437,78 @@ app.post('/api/inquiries', async (req, res) => {
   }
   notifyNewInquiry(newInquiry).catch(err => console.error('[notify] failed:', err.message));
   res.status(201).json({ message: '문의가 접수되었습니다.', inquiry: newInquiry });
+});
+
+app.post('/api/ai-preview', async (req, res) => {
+  const { email, businessType, siteGoal, mood, mustHave, referenceSite, lang } = req.body || {};
+
+  if (!email || !businessType || !siteGoal || !mood) {
+    return res.status(400).json({ error: 'missing_fields' });
+  }
+  const MAX_LEN = 500;
+  const fields = [email, businessType, siteGoal, mood, mustHave, referenceSite];
+  if (fields.some((v) => typeof v === 'string' && v.length > MAX_LEN)) {
+    return res.status(400).json({ error: 'input_too_long' });
+  }
+  if (!usePg || !pgPool) {
+    return res.status(503).json({ error: 'db_unavailable' });
+  }
+
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress;
+  if (!aiPreviewRateLimitOk(ip)) {
+    return res.status(429).json({ error: 'rate_limited' });
+  }
+
+  const id = uuidv4();
+  const record = {
+    businessType,
+    siteGoal,
+    mood,
+    mustHave: mustHave || '',
+    referenceSite: referenceSite || '',
+    lang: lang === 'en' ? 'en' : 'ko',
+  };
+
+  try {
+    await pgPool.query(
+      `INSERT INTO ai_previews (id, email, business_type, site_goal, mood, must_have, reference_site, lang, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, '생성중')`,
+      [id, email, record.businessType, record.siteGoal, record.mood, record.mustHave, record.referenceSite, record.lang]
+    );
+  } catch (err) {
+    console.error('[ai-preview] failed to save input:', err.message);
+    return res.status(500).json({ error: 'save_failed' });
+  }
+
+  if (!anthropic) {
+    return res.status(503).json({ error: 'ai_unavailable', id });
+  }
+
+  try {
+    const message = await anthropic.messages.create({
+      model: AI_PREVIEW_MODEL,
+      max_tokens: 600,
+      system: [{ type: 'text', text: AI_PREVIEW_SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+      tools: [AI_PREVIEW_TOOL],
+      tool_choice: { type: 'tool', name: 'generate_site_proposal' },
+      messages: [{
+        role: 'user',
+        content: `lang: ${record.lang}\nbusinessType: ${record.businessType}\nsiteGoal: ${record.siteGoal}\nmood: ${record.mood}\nmustHave: ${record.mustHave}\nreferenceSite: ${record.referenceSite}`,
+      }],
+    });
+
+    const toolUse = message.content.find((c) => c.type === 'tool_use');
+    if (!toolUse) throw new Error('no tool_use block in response');
+    const result = toolUse.input;
+
+    await pgPool.query(`UPDATE ai_previews SET result = $1, status = '완료' WHERE id = $2`, [JSON.stringify(result), id]);
+
+    res.json({ id, ...result });
+  } catch (err) {
+    console.error('[ai-preview] generation failed:', err.message);
+    await pgPool.query(`UPDATE ai_previews SET status = '실패' WHERE id = $1`, [id]).catch(() => {});
+    res.status(502).json({ error: 'generation_failed', id });
+  }
 });
 
 app.get('/api/inquiries', async (req, res) => {
