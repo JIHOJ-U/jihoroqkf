@@ -25,6 +25,9 @@ export const deletePortfolio = (id) => api.delete(`/portfolios/${id}`);
 export const submitInquiry = (data) => api.post('/inquiries', data);
 export const getInquiries = () => api.get('/inquiries');
 
+// AI Preview API
+export const submitAiPreview = (data) => api.post('/ai-preview', data);
+
 // GitHub & Blog
 export const getGithubStats = () => api.get('/github/stats');
 export const getBlogPosts = () => api.get('/blog/posts');
