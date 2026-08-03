@@ -140,7 +140,7 @@ function aiPreviewRateLimitOk(ip) {
 }
 
 const app = express();
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
 
 // Config
