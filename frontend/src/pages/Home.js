@@ -340,6 +340,9 @@ function Home() {
           <Link to="/portfolio" className="hero-cta hero-cta--secondary">
             {heroCard.secondaryCta}
           </Link>
+          <Link to="/ai-preview" className="hero-cta hero-cta--secondary">
+            {lang === 'ko' ? 'AI로 먼저 시안 받아보기' : 'Try the AI draft'}
+          </Link>
         </div>
 
         {/* Circular scroll indicator */}
