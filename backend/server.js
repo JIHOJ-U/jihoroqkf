@@ -591,6 +591,19 @@ app.post('/api/ai-preview', async (req, res) => {
   }
 });
 
+app.get('/api/ai-previews', async (req, res) => {
+  if (!usePg || !pgPool) {
+    return res.json([]);
+  }
+  try {
+    const result = await pgPool.query('SELECT * FROM ai_previews ORDER BY created_at DESC');
+    res.json(result.rows.map(rowToAiPreview));
+  } catch (err) {
+    console.error('[ai-previews] fetch failed:', err.message);
+    res.status(500).json({ error: 'fetch_failed' });
+  }
+});
+
 app.get('/api/inquiries', async (req, res) => {
   try {
     if (usePg && pgPool) {
