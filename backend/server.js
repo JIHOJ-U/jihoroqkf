@@ -26,11 +26,73 @@ Rules:
 - sections: 3 to 6 items, ordered top to bottom as they would appear on the page. Each title is short (2-4 words); each description is one plain sentence explaining what that section shows.
 - toneSuggestion: a short phrase (not a paragraph) naming a visual direction, e.g. "Minimal with warm accents".
 - suggestedColors: 2 to 3 hex color codes that fit the requested mood.
-- Never invent specific prices, statistics, or claims about the business beyond what you were given.`;
+- Never invent specific prices, statistics, or claims about the business beyond what you were given.
+
+Examples of the expected quality bar (illustrative only — always write your actual response in the language given by the "lang" field, regardless of the language used in these examples):
+
+Example A — input: businessType=Cafe/Restaurant, siteGoal=More bookings, mood=Warm
+{
+  "headline": "A warm cup, booked in three seconds",
+  "tagline": "A neighborhood cafe that roasts its own beans every morning",
+  "sections": [
+    {"title": "Today's Menu", "description": "The day's signature drinks and bakery items shown with photos."},
+    {"title": "Live Booking", "description": "Pick a time slot and the reservation is confirmed instantly."},
+    {"title": "The Space", "description": "Photos of the seating layout and atmosphere before you visit."},
+    {"title": "Getting Here", "description": "Map, parking, and transit info in one view."}
+  ],
+  "toneSuggestion": "Warm wood tones with a soft serif headline",
+  "suggestedColors": ["#8B5E3C", "#F5E6D3"]
+}
+
+Example B — input: businessType=Clinic/Hospital, siteGoal=More bookings, mood=Trustworthy
+{
+  "headline": "Same-week appointments with board-certified specialists",
+  "tagline": "A local clinic focused on clear communication and follow-through care",
+  "sections": [
+    {"title": "Book Online", "description": "Pick a specialist and time slot, confirmed instantly."},
+    {"title": "Our Doctors", "description": "Credentials, specialties, and patient reviews for each doctor."},
+    {"title": "Services", "description": "A clear list of treatments offered with plain-language explanations."},
+    {"title": "Patient Resources", "description": "Insurance info, forms, and what to expect on your first visit."},
+    {"title": "Location & Hours", "description": "Map, parking, and weekday/weekend hours in one view."}
+  ],
+  "toneSuggestion": "Clean clinical white with a single trustworthy blue accent",
+  "suggestedColors": ["#2563EB", "#F8FAFC"]
+}
+
+Example C — input: businessType=E-commerce, siteGoal=More sales, mood=Playful
+{
+  "headline": "Order today, it's at your door tomorrow — shop worry-free",
+  "tagline": "A daily-wear edit for people in their 20s and 30s",
+  "sections": [
+    {"title": "Best Sellers", "description": "Live sales rankings shown alongside real-time stock levels."},
+    {"title": "Browse by Category", "description": "Tops, bottoms, and accessories in a fast image-first grid."},
+    {"title": "Cart & Checkout", "description": "One-click add-to-cart and simplified payment front and center."},
+    {"title": "Customer Reviews", "description": "Real buyer photos and reviews shown on every product."},
+    {"title": "Shipping Info", "description": "Same-day dispatch cutoff and order tracking explained clearly."}
+  ],
+  "toneSuggestion": "Vivid accent color on a grid-based layout",
+  "suggestedColors": ["#FF4D6D", "#111111", "#FFFFFF"]
+}
+
+Example D — input: businessType=Beauty/Salon, siteGoal=More bookings, mood=Premium
+{
+  "headline": "A quiet, unhurried hour just for you",
+  "tagline": "A private studio taking a limited number of clients per day",
+  "sections": [
+    {"title": "Services & Pricing", "description": "Every treatment listed with duration and price, no surprises."},
+    {"title": "Book a Slot", "description": "See real-time open times and reserve without a phone call."},
+    {"title": "Portfolio", "description": "Before-and-after photos organized by treatment type."},
+    {"title": "Meet the Team", "description": "Stylist profiles with their specialties and experience."},
+    {"title": "Visit Us", "description": "Studio photos, address, and parking guidance."}
+  ],
+  "toneSuggestion": "Muted neutrals with a single warm gold accent",
+  "suggestedColors": ["#C9A876", "#2B2622"]
+}`;
 
 const AI_PREVIEW_TOOL = {
   name: 'generate_site_proposal',
   description: 'Generate a website homepage proposal based on the business description.',
+  strict: true,
   input_schema: {
     type: 'object',
     properties: {
@@ -47,6 +109,7 @@ const AI_PREVIEW_TOOL = {
             description: { type: 'string' },
           },
           required: ['title', 'description'],
+          additionalProperties: false,
         },
       },
       toneSuggestion: { type: 'string' },
@@ -58,6 +121,7 @@ const AI_PREVIEW_TOOL = {
       },
     },
     required: ['headline', 'tagline', 'sections', 'toneSuggestion', 'suggestedColors'],
+    additionalProperties: false,
   },
 };
 
@@ -76,6 +140,7 @@ function aiPreviewRateLimitOk(ip) {
 }
 
 const app = express();
+app.set('trust proxy', true);
 const PORT = process.env.PORT || 3001;
 
 // Config
@@ -454,7 +519,7 @@ app.post('/api/ai-preview', async (req, res) => {
     return res.status(503).json({ error: 'db_unavailable' });
   }
 
-  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress;
+  const ip = req.ip;
   if (!aiPreviewRateLimitOk(ip)) {
     return res.status(429).json({ error: 'rate_limited' });
   }
@@ -500,6 +565,21 @@ app.post('/api/ai-preview', async (req, res) => {
     const toolUse = message.content.find((c) => c.type === 'tool_use');
     if (!toolUse) throw new Error('no tool_use block in response');
     const result = toolUse.input;
+
+    const isValidResult = result
+      && typeof result.headline === 'string'
+      && typeof result.tagline === 'string'
+      && Array.isArray(result.sections)
+      && result.sections.length >= 3
+      && result.sections.length <= 6
+      && result.sections.every((s) => typeof s.title === 'string' && typeof s.description === 'string')
+      && typeof result.toneSuggestion === 'string'
+      && Array.isArray(result.suggestedColors);
+
+    if (!isValidResult) {
+      await pgPool.query(`UPDATE ai_previews SET status = '실패' WHERE id = $1`, [id]).catch(() => {});
+      return res.status(502).json({ error: 'generation_failed', id });
+    }
 
     await pgPool.query(`UPDATE ai_previews SET result = $1, status = '완료' WHERE id = $2`, [JSON.stringify(result), id]);
 
