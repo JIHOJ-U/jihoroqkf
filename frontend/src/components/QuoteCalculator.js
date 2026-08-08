@@ -33,7 +33,6 @@ const FEATURES = [
   { id: 'analytics',  cost: 250000, label: { ko: '대시보드 / 통계', en: 'Dashboard / analytics' } },
   { id: 'api-3rd',    cost: 200000, label: { ko: '외부 API 연동', en: 'Third-party API' } },
   { id: 'seo',        cost: 150000, label: { ko: 'SEO 최적화', en: 'SEO optimization' } },
-  { id: 'mobile',     cost: 100000, label: { ko: '모바일 반응형', en: 'Mobile responsive' } },
 ];
 
 const TIMELINE_MULT = {
