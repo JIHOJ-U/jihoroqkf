@@ -43,14 +43,13 @@ const buildCommands = (lang) => ({
     '',
     lang === 'en' ? '> Freelance dev collective' : '> 프리랜서 개발 콜렉티브',
     lang === 'en' ? '> From planning to deployment — built full-stack.' : '> 기획부터 배포까지, 풀스택으로 만듭니다.',
-    '> Stack: React · Node · Python · Flutter · AWS',
+    '> Stack: React · Next.js · Node · TypeScript · AWS',
   ],
   services: () => [
     '+------------------+-----------------------+',
     '| Service          | Description           |',
     '+------------------+-----------------------+',
     '| Web Development  | React, Next.js        |',
-    '| App Development  | React Native, Flutter |',
     '| Backend / API    | Node.js, Python       |',
     '| UI/UX Design     | Figma, Prototyping    |',
     '+------------------+-----------------------+',
@@ -58,7 +57,6 @@ const buildCommands = (lang) => ({
   skills: () => [
     'frontend  : React · Next.js · TypeScript · Tailwind',
     'backend   : Node.js · Python · Go · PostgreSQL',
-    'mobile    : React Native · Flutter · Swift',
     'devops    : AWS · Docker · GitHub Actions · Vercel',
     '',
     'cal: 96% — calibrated this quarter',

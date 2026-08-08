@@ -11,7 +11,7 @@ import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useVie
 import './Portfolio.css';
 
 const REVEAL_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#06b6d4', '#10b981'];
-const PF_SEARCH_HINTS = ['반응형 웹', '쇼핑몰', '모바일 앱', '관리자 대시보드', 'React', 'Node.js'];
+const PF_SEARCH_HINTS = ['반응형 웹', '쇼핑몰', '기업 홈페이지', '관리자 대시보드', 'React', 'Node.js'];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },

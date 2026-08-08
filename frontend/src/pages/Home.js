@@ -106,7 +106,7 @@ function Home() {
     };
   }, [t.faq]);
 
-  const techLogos = ['React', 'Node.js', 'TypeScript', 'Next.js', 'Python', 'Flutter'];
+  const techLogos = ['React', 'Node.js', 'TypeScript', 'Next.js', 'Python', 'PostgreSQL'];
 
   // Lightweight syntax highlighter for the editor card lines.
   // Splits each line into (head, trailing //comment) then tokenizes the head into

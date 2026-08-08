@@ -11,7 +11,6 @@ const DISCOUNT_MULT = 0.2; // 80% promotional discount (client pays 20% of list 
 
 const PROJECT_TYPES = [
   { id: 'web',   base: 500000,  label: { ko: '웹사이트', en: 'Website' } },
-  { id: 'app',   base: 1500000, label: { ko: '모바일 앱', en: 'Mobile App' } },
   { id: 'admin', base: 700000,  label: { ko: '관리자/백오피스', en: 'Admin / Back-office' } },
   { id: 'api',   base: 500000,  label: { ko: 'API / 서버', en: 'API / Server' } },
 ];
@@ -67,7 +66,7 @@ const COPY = {
     cta: '이 견적으로 정식 문의',
     disclaimer: '본 계산은 참고용이며, 실제 견적은 요구사항 분석 후 협의됩니다. 프로모션 기간 중 정가에서 80% 할인이 자동 적용됩니다.',
     budgets: ['100만원 이하', '100~300만원', '300~500만원', '500~1000만원', '1000만원 이상'],
-    types: { web: '웹 개발', app: '앱 개발', admin: '백엔드/API', api: '백엔드/API' },
+    types: { web: '웹 개발', admin: '백엔드/API', api: '백엔드/API' },
     none: '없음',
     descTemplate: ({ project, pages, design, featureLabels, timeline, listMin, listMax, chargedMin, chargedMax, none }) => `[견적 계산기로 작성됨]
 프로젝트 유형: ${project}
@@ -105,7 +104,7 @@ const COPY = {
     cta: 'Send this quote as an inquiry',
     disclaimer: 'This estimate is for reference; the final quote is agreed after requirement analysis. During the promotion, an 80% discount from list is applied automatically.',
     budgets: ['Under $1k', '$1k–$3k', '$3k–$5k', '$5k–$10k', 'Over $10k'],
-    types: { web: 'Web Development', app: 'App Development', admin: 'Backend / API', api: 'Backend / API' },
+    types: { web: 'Web Development', admin: 'Backend / API', api: 'Backend / API' },
     none: 'None',
     descTemplate: ({ project, pages, design, featureLabels, timeline, listMin, listMax, chargedMin, chargedMax, none }) => `[Created with the quote calculator]
 Project type: ${project}

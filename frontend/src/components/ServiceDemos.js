@@ -413,106 +413,7 @@ export function WebAppDemo() {
 }
 
 /* =========================================================
-   4. Mobile App Demo — Toss/finance quality
-   ========================================================= */
-
-export function MobileDemo() {
-  return (
-    <PhoneFrame>
-      <div className="d-mobile">
-        <header className="d-mobile-header">
-          <div className="d-mobile-avatar">J</div>
-          <div className="d-mobile-greet">
-            <div className="d-mobile-hello">안녕하세요</div>
-            <div className="d-mobile-name">Jiho ✦</div>
-          </div>
-          <div className="d-mobile-header-icons">
-            <HiSearch />
-            <span className="d-mobile-bell-wrap">
-              <HiBell />
-              <span className="d-mobile-bell-dot" />
-            </span>
-          </div>
-        </header>
-
-        <div className="d-mobile-balance">
-          <div className="d-mobile-balance-label">Total balance</div>
-          <div className="d-mobile-balance-amount">₩ 2,847,200</div>
-          <div className="d-mobile-balance-trend">
-            <HiTrendingUp /> +₩ 124,500 this month
-          </div>
-        </div>
-
-        <div className="d-mobile-actions">
-          <div className="d-mobile-action">
-            <div className="d-mobile-action-icon" style={{ background: 'rgba(99,102,241,0.12)', color: '#6366f1' }}>↑</div>
-            <span>Send</span>
-          </div>
-          <div className="d-mobile-action">
-            <div className="d-mobile-action-icon" style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981' }}>↓</div>
-            <span>Receive</span>
-          </div>
-          <div className="d-mobile-action">
-            <div className="d-mobile-action-icon" style={{ background: 'rgba(245,158,11,0.12)', color: '#f59e0b' }}>★</div>
-            <span>Invest</span>
-          </div>
-          <div className="d-mobile-action">
-            <div className="d-mobile-action-icon" style={{ background: 'rgba(236,72,153,0.12)', color: '#ec4899' }}>⋯</div>
-            <span>More</span>
-          </div>
-        </div>
-
-        <div className="d-mobile-section-head">
-          <span className="d-mobile-section-title">Recent</span>
-          <span className="d-mobile-section-link">See all</span>
-        </div>
-
-        <div className="d-mobile-tx">
-          <div className="d-mobile-tx-icon" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>☕</div>
-          <div className="d-mobile-tx-body">
-            <div className="d-mobile-tx-name">Atelier Coffee</div>
-            <div className="d-mobile-tx-meta">Today · 2:14 PM</div>
-          </div>
-          <div className="d-mobile-tx-amt d-mobile-tx-amt--out">−₩ 4,800</div>
-        </div>
-
-        <div className="d-mobile-tx">
-          <div className="d-mobile-tx-icon" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>💼</div>
-          <div className="d-mobile-tx-body">
-            <div className="d-mobile-tx-name">Salary · Acme Co.</div>
-            <div className="d-mobile-tx-meta">Yesterday</div>
-          </div>
-          <div className="d-mobile-tx-amt d-mobile-tx-amt--in">+₩ 3,200,000</div>
-        </div>
-
-        <nav className="d-mobile-tabs">
-          <div className="d-mobile-tab d-mobile-tab--active">
-            <HiHome />
-            <span>Home</span>
-          </div>
-          <div className="d-mobile-tab">
-            <HiChartBar />
-            <span>Insights</span>
-          </div>
-          <div className="d-mobile-tab d-mobile-tab--fab">
-            <span className="d-mobile-fab">+</span>
-          </div>
-          <div className="d-mobile-tab">
-            <HiHeart />
-            <span>Saved</span>
-          </div>
-          <div className="d-mobile-tab">
-            <HiUserCircle />
-            <span>Me</span>
-          </div>
-        </nav>
-      </div>
-    </PhoneFrame>
-  );
-}
-
-/* =========================================================
-   5. Ecommerce Demo — Aesop/Apple quality
+   4. Ecommerce Demo — Aesop/Apple quality
    ========================================================= */
 
 export function EcommerceDemo() {
@@ -602,7 +503,7 @@ export function EcommerceDemo() {
 }
 
 /* =========================================================
-   6. Admin Dashboard Demo — Stripe quality
+   5. Admin Dashboard Demo — Stripe quality
    ========================================================= */
 
 export function AdminDemo() {
@@ -732,7 +633,7 @@ export function AdminDemo() {
 }
 
 /* =========================================================
-   7. Ops Console Demo — Dev.Vibe's own inbound-pipeline review tool
+   6. Ops Console Demo — Dev.Vibe's own inbound-pipeline review tool
    ========================================================= */
 
 /* Real freelance review pipeline content, presented as Dev.Vibe's own
@@ -968,7 +869,6 @@ export default function ServiceDemo({ serviceKey }) {
     case 'landing':   return <LandingDemo />;
     case 'business':  return <BusinessDemo />;
     case 'webapp':    return <WebAppDemo />;
-    case 'mobile':    return <MobileDemo />;
     case 'ecommerce': return <EcommerceDemo />;
     case 'admin':     return <AdminDemo />;
     case 'ops':       return <OpsConsoleDemo />;

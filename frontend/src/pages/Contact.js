@@ -23,7 +23,7 @@ const fadeUp = {
 
 const COPY = {
   ko: {
-    projectTypes: ['웹 개발', '앱 개발', '백엔드/API', 'UI/UX 디자인', '유지보수', '기타'],
+    projectTypes: ['웹 개발', '백엔드/API', 'UI/UX 디자인', '유지보수', '기타'],
     budgets: ['100만원 이하', '100~300만원', '300~500만원', '500~1000만원', '1000만원 이상', '미정'],
     timelines: ['1개월 이내', '1~3개월', '3~6개월', '6개월 이상', '미정'],
     title: '프로젝트 문의',
@@ -48,7 +48,7 @@ const COPY = {
     },
   },
   en: {
-    projectTypes: ['Web Development', 'App Development', 'Backend / API', 'UI/UX Design', 'Maintenance', 'Other'],
+    projectTypes: ['Web Development', 'Backend / API', 'UI/UX Design', 'Maintenance', 'Other'],
     budgets: ['Under $1k', '$1k–$3k', '$3k–$5k', '$5k–$10k', 'Over $10k', 'Undecided'],
     timelines: ['Within 1 month', '1–3 months', '3–6 months', '6+ months', 'Undecided'],
     title: 'Project Inquiry',

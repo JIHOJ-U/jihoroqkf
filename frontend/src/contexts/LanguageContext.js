@@ -39,7 +39,6 @@ export const translations = {
               { kind: 'keyword',     code: 'export const stack = {' },
               { kind: 'declaration', code: '  frontend: ["React", "Next.js", "TypeScript", "Tailwind"],' },
               { kind: 'declaration', code: '  backend:  ["Node.js", "Express", "PostgreSQL", "Redis"],' },
-              { kind: 'declaration', code: '  mobile:   ["React Native", "Expo", "Flutter"],' },
               { kind: 'declaration', code: '  cloud:    ["AWS", "Render", "Vercel", "Cloudflare"],' },
               { kind: 'declaration', code: '  tools:    ["Docker", "GitHub Actions", "Figma"],' },
               { kind: 'declaration', code: '  yearsExp: 3,' },
@@ -205,16 +204,6 @@ export const translations = {
           ideal: 'SaaS, 매칭 플랫폼, 커뮤니티, 협업 도구',
         },
         {
-          key: 'mobile', title: 'Mobile App', titleKo: '모바일 앱',
-          desc: '하나의 코드로 iOS·Android 동시 출시. React Native·Flutter 기반 하이브리드.',
-          tagline: '한 번의 개발로 양쪽 스토어에 동시 출시. 네이티브 앱 못지않은 성능',
-          features: ['iOS·Android 동시 출시', '푸시 알림 (FCM)', '카메라·갤러리·위치 등 기기 기능', '오프라인 모드 (선택)', '인앱 결제 (Apple/Google)', '앱스토어 등록 가이드', '업데이트 배포 시스템'],
-          tech: ['React Native', 'Expo', 'Flutter', 'Firebase'],
-          timeline: '8~16주',
-          starting: '600만원~',
-          ideal: '배달·예약·O2O, 커뮤니티, 콘텐츠 소비 앱',
-        },
-        {
           key: 'ecommerce', title: 'E-commerce', titleKo: '쇼핑몰',
           desc: '상품·장바구니·결제·주문 관리까지 통합 구축. 결제·배송사 연동과 필요할 때 확장 가능한 구조로 만듭니다.',
           tagline: '단순 카페24/식스샵으로는 어려운 커스텀 쇼핑 경험. 정기구독·B2B 도매 등',
@@ -312,7 +301,7 @@ export const translations = {
         {
           key: 'push',
           title: '푸시 알림',
-          desc: '앱·웹에서 \"새 메시지 도착\" 같은 알림을 보내서, 사용자가 다시 들어오게.',
+          desc: '웹에서 \"새 메시지 도착\" 같은 알림을 보내서, 사용자가 다시 들어오게.',
           tags: ['FCM', 'Web Push', 'OneSignal'],
         },
         {
@@ -373,7 +362,6 @@ export const translations = {
         { client: '이OO님', initial: '이', tag: '풀스택 개발', tagKey: 'api', body: '복잡한 로직까지 한 사람이 깔끔하게 구현해주셔서, 커뮤니케이션 비용이 정말 적었습니다.' },
         { client: '박OO님', initial: '박', tag: 'UI/UX 디자인', tagKey: 'ux', body: '템플릿이 아닌 우리만의 디자인을 가지게 됐어요. 사용자 경험까지 신경 써주신 게 보입니다.' },
         { client: '최OO님', initial: '최', tag: '플랫폼 구축', tagKey: 'web', body: '기획부터 같이 정리해주신 덕분에 길을 잃지 않고 진행할 수 있었어요. 결과물도 만족스럽습니다.' },
-        { client: '정OO님', initial: '정', tag: '하이브리드 앱', tagKey: 'app', body: '앱·웹·서버를 한 번에 맡길 수 있어서 일정 관리가 훨씬 수월했습니다. 강력 추천합니다.' },
         { client: '윤OO님', initial: '윤', tag: 'API 연동', tagKey: 'api', body: '결제·배송 외부 API 연동을 깔끔하게 처리해주셔서 운영 단계에서도 문제가 없었어요.' },
         { client: '송OO님', initial: '송', tag: '랜딩 페이지', tagKey: 'web', body: '예산 안에서 최대치의 결과물을 만들어주셨어요. 약속 일정도 정확하게 지켜주셨습니다.' },
         { client: '한OO님', initial: '한', tag: '관리자 대시보드', tagKey: 'ux', body: '운영 편의성을 정말 잘 고려해주셨어요. 비개발 직원도 바로 적응할 수 있는 화면이 나왔습니다.' },
@@ -527,7 +515,6 @@ export const translations = {
               { kind: 'keyword',     code: 'export const stack = {' },
               { kind: 'declaration', code: '  frontend: ["React", "Next.js", "TypeScript", "Tailwind"],' },
               { kind: 'declaration', code: '  backend:  ["Node.js", "Express", "PostgreSQL", "Redis"],' },
-              { kind: 'declaration', code: '  mobile:   ["React Native", "Expo", "Flutter"],' },
               { kind: 'declaration', code: '  cloud:    ["AWS", "Render", "Vercel", "Cloudflare"],' },
               { kind: 'declaration', code: '  tools:    ["Docker", "GitHub Actions", "Figma"],' },
               { kind: 'declaration', code: '  yearsExp: 3,' },
@@ -693,16 +680,6 @@ export const translations = {
           ideal: 'SaaS, matching platforms, communities, collaboration tools',
         },
         {
-          key: 'mobile', title: 'Mobile App', titleKo: 'Mobile',
-          desc: 'Ship iOS and Android from one codebase — React Native / Flutter hybrid.',
-          tagline: 'Build once, ship to both stores. Near-native performance.',
-          features: ['Simultaneous iOS & Android release', 'Push notifications (FCM)', 'Camera, gallery, location, etc.', 'Offline mode (optional)', 'In-app purchases (Apple/Google)', 'App store submission guide', 'OTA update system'],
-          tech: ['React Native', 'Expo', 'Flutter', 'Firebase'],
-          timeline: '8–16 weeks',
-          starting: 'from $5,000',
-          ideal: 'Delivery, booking, O2O, community, content apps',
-        },
-        {
           key: 'ecommerce', title: 'E-commerce', titleKo: 'Shop',
           desc: 'End-to-end store: products, cart, checkout, orders — payment and shipping integrations included, built to extend later.',
           tagline: 'Custom shopping experiences beyond Shopify templates — subscriptions, B2B wholesale, etc.',
@@ -800,7 +777,7 @@ export const translations = {
         {
           key: 'push',
           title: 'Push Notifications',
-          desc: 'Send "new message" style alerts to web and mobile so users come back.',
+          desc: 'Send "new message" style alerts on the web so users come back.',
           tags: ['FCM', 'Web Push', 'OneSignal'],
         },
         {
@@ -861,7 +838,6 @@ export const translations = {
         { client: 'Mr. Lee',  initial: 'L', tag: 'Full-Stack',        tagKey: 'api', body: 'Complex logic handled cleanly by one developer — communication overhead was nearly zero.' },
         { client: 'Ms. Park', initial: 'P', tag: 'UI/UX Design',      tagKey: 'ux',  body: 'We now have a design that is ours — not a template. The thought put into UX clearly shows.' },
         { client: 'Mr. Choi', initial: 'C', tag: 'Platform',          tagKey: 'web', body: 'Strategic guidance from planning kept us on track. We are very happy with the final outcome.' },
-        { client: 'Mr. Jung', initial: 'J', tag: 'Hybrid App',        tagKey: 'app', body: 'App, web and backend in one pair of hands made scheduling much easier. Strongly recommended.' },
         { client: 'Ms. Yoon', initial: 'Y', tag: 'API Integration',   tagKey: 'api', body: 'Payment and shipping API integrations were rock solid — no operational issues post-launch.' },
         { client: 'Mr. Song', initial: 'S', tag: 'Landing Page',      tagKey: 'web', body: 'Maximum output within budget, and every deadline was hit precisely. A pleasure to work with.' },
         { client: 'Ms. Han',  initial: 'H', tag: 'Admin Dashboard',   tagKey: 'ux',  body: 'Operations were clearly considered — non-technical staff onboarded to the UI in minutes.' },

@@ -9,7 +9,6 @@ import './PortfolioForm.css';
 // `value` is the stored category (kept in Korean for data consistency); `en` is the display label.
 const CATEGORIES = [
   { value: '웹 개발', en: 'Web Development' },
-  { value: '앱 개발', en: 'App Development' },
   { value: '백엔드/API', en: 'Backend / API' },
   { value: 'UI/UX 디자인', en: 'UI/UX Design' },
   { value: '기타', en: 'Other' },
