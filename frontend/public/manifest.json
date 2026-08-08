@@ -1,10 +1,10 @@
 {
-  "short_name": "Dev.Vibe",
-  "name": "Dev.Vibe — 프리랜서 풀스택 개발자",
-  "description": "아이디어를 현실로 만드는 프리랜서 풀스택 개발 파트너. 웹·앱·백엔드·UI/UX.",
+  "short_name": "홈페이지공방",
+  "name": "홈페이지공방 — 프리랜서 풀스택 개발자의 홈페이지 제작·운영 파트너",
+  "description": "PC와 모바일에서 고객 문의가 잘 이어지도록 반응형 기업 홈페이지를 만들고, 필요한 관리자·예약·연동 기능을 직접 개발하며, 납품 후에도 계속 관리하는 홈페이지 파트너.",
   "icons": [
-    { "src": "favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" },
-    { "src": "favicon.jpg", "type": "image/jpeg", "sizes": "192x192 512x512", "purpose": "any" }
+    { "src": "favicon.jpg", "type": "image/jpeg", "sizes": "any", "purpose": "any" },
+    { "src": "devibefavicon1200x630.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" }
   ],
   "start_url": "/",
   "scope": "/",
