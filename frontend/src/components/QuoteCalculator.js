@@ -345,10 +345,6 @@ function QuoteCalculator() {
               <span className="qc-price-tilde">~</span>
               <span className="qc-price-to">{fmt(calc.chargedMax)}</span>
             </div>
-            <div className="qc-price-badges">
-              <span className="qc-price-badge">{c.discountBadge}</span>
-              <span className="qc-price-charged-label">{c.chargedPriceLabel}</span>
-            </div>
             <p className="qc-price-note">{c.priceNote}</p>
 
             <div className="qc-breakdown">
