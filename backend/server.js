@@ -694,6 +694,62 @@ app.get('/api/github/stats', async (req, res) => {
   }
 });
 
+// ========== Site RSS Feed ==========
+// Emits RSS 2.0 for portfolios so feed readers (and Google/Naver) can pick up
+// new work. Referenced from index.html via <link rel="alternate" type="application/rss+xml">.
+const SITE_BASE_URL = process.env.SITE_BASE_URL || 'https://홈페이지공방.kr';
+const SITE_TITLE = '홈페이지공방';
+const SITE_DESC = '프리랜서 풀스택 개발자가 직접 운영하는 홈페이지 제작·운영 스튜디오. 랜딩·기업 홈페이지·쇼핑몰·웹앱까지 원스톱.';
+
+function escapeXml(s) {
+  return String(s == null ? '' : s).replace(/[<>&'"]/g, (c) =>
+    ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c])
+  );
+}
+
+app.get('/api/rss', (req, res) => {
+  const items = readData('portfolios') || [];
+  const recent = items.slice(0, 20);
+  const lastBuild = new Date().toUTCString();
+
+  const itemsXml = recent.map((p) => {
+    const pubDate = p.createdAt ? new Date(p.createdAt).toUTCString() : lastBuild;
+    const link = `${SITE_BASE_URL}/portfolio/${p.id}`;
+    const summary = (p.description || '').slice(0, 300);
+    const categoryTag = p.category
+      ? `\n      <category>${escapeXml(p.category)}</category>`
+      : '';
+    return [
+      '    <item>',
+      `      <title>${escapeXml(p.title || '')}</title>`,
+      `      <link>${escapeXml(link)}</link>`,
+      `      <guid isPermaLink="true">${escapeXml(link)}</guid>`,
+      `      <pubDate>${pubDate}</pubDate>`,
+      `      <description>${escapeXml(summary)}</description>${categoryTag}`,
+      '    </item>',
+    ].join('\n');
+  }).join('\n');
+
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+    '  <channel>',
+    `    <title>${escapeXml(SITE_TITLE)}</title>`,
+    `    <link>${escapeXml(SITE_BASE_URL + '/')}</link>`,
+    `    <description>${escapeXml(SITE_DESC)}</description>`,
+    '    <language>ko-KR</language>',
+    `    <lastBuildDate>${lastBuild}</lastBuildDate>`,
+    `    <atom:link href="${escapeXml(SITE_BASE_URL + '/api/rss')}" rel="self" type="application/rss+xml" />`,
+    itemsXml,
+    '  </channel>',
+    '</rss>',
+  ].join('\n');
+
+  res.set('Content-Type', 'application/rss+xml; charset=utf-8');
+  res.set('Cache-Control', 'public, max-age=1800');
+  res.send(xml);
+});
+
 // ========== Blog RSS ==========
 app.get('/api/blog/posts', async (req, res) => {
   try {

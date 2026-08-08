@@ -76,6 +76,36 @@ function Home() {
     getPortfolios().then(res => setPortfolios(res.data.slice(0, 6))).catch(() => {});
   }, []);
 
+  // FAQPage JSON-LD (Google/Naver rich result). Injected only while Home is
+  // mounted so other routes don't inherit it. Rebuilds on language switch so
+  // Q/A text matches the currently displayed FAQ.
+  useEffect(() => {
+    const faqItems = t.faq?.items || [];
+    if (faqItems.length === 0) return undefined;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    };
+    const id = 'faq-schema';
+    let tag = document.getElementById(id);
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = id;
+      document.head.appendChild(tag);
+    }
+    tag.textContent = JSON.stringify(schema);
+    return () => {
+      const existing = document.getElementById(id);
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    };
+  }, [t.faq]);
+
   const techLogos = ['React', 'Node.js', 'TypeScript', 'Next.js', 'Python', 'Flutter'];
 
   // Lightweight syntax highlighter for the editor card lines.
@@ -157,8 +187,8 @@ function Home() {
         {/* Visually-hidden semantic H1 for SEO / screen readers */}
         <h1 className="sr-only">
           {lang === 'ko'
-            ? 'DEVIBE — 프리랜서 풀스택 개발자, 이번 달 1건 접수 가능'
-            : 'DEVIBE — Full-Stack Dev Partner, 1 slot this month'}
+            ? '홈페이지공방 — 프리랜서 풀스택 개발자의 홈페이지 제작·운영 파트너 (이번 달 1건 접수 가능)'
+            : 'DEVIBE — Freelance full-stack developer for company website design, build & operation (1 slot this month)'}
         </h1>
 
         <motion.div
@@ -559,7 +589,10 @@ function Home() {
           ) : (
             <div className="works-empty">
               <div className="works-empty-img">
-                <img src="https://images.unsplash.com/photo-1597733336794-12d05021d510?w=500&q=80" alt="microchip" />
+                <img
+                  src="https://images.unsplash.com/photo-1597733336794-12d05021d510?w=500&q=80"
+                  alt={lang === 'ko' ? '등록된 프로젝트가 없을 때 표시되는 마이크로칩 일러스트' : 'Microchip illustration shown when no projects are registered yet'}
+                />
               </div>
               <h3>{lang === 'ko' ? '아직 등록된 프로젝트가 없습니다' : 'No projects registered yet'}</h3>
               <p>{lang === 'ko' ? '첫 번째 포트폴리오를 등록해보세요.' : 'Add your first portfolio.'}</p>

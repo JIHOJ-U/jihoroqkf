@@ -129,10 +129,12 @@ export const translations = {
       headline: '빠르게 시작할 수 있는 소형 상품',
       caption: '본격 기업 홈페이지 전에 먼저 감을 잡고 싶다면. 체험 후 정식 계약으로 전환할 수 있습니다.',
       tagLabel: 'STARTER',
+      discountLabel: '80% 할인',
       list: [
         {
           name: '랜딩 페이지 1장',
           body: '제품·이벤트 홍보 원페이지. 반응형·문의폼 포함.',
+          listPrice: '150만원',
           price: '30만원~',
           cta: '상담 시작 →',
           prefill: {
@@ -144,6 +146,7 @@ export const translations = {
         {
           name: '명함형 사이트 3페이지',
           body: '회사소개·서비스·연락처. 기본 SEO·배포 포함.',
+          listPrice: '200만원',
           price: '40만원~',
           cta: '상담 시작 →',
           prefill: {
@@ -155,6 +158,7 @@ export const translations = {
         {
           name: '문의폼 세트',
           body: '기존 사이트에 문의폼·자동회신 이메일 추가.',
+          listPrice: '125만원',
           price: '25만원~',
           cta: '상담 시작 →',
           prefill: {
@@ -382,10 +386,12 @@ export const translations = {
       comparisonHeader: '패키지 설명',
       ctaText: '상담받기',
       smallNote: '✱ 모든 플랜은 무료 상담 후 정식 견적을 확정합니다.',
+      discountLabel: '80% 할인',
       tiers: [
         {
           key: 'standard',
           name: 'STANDARD',
+          listPrice: '1,500,000원',
           price: '300,000원',
           descTitle: 'Web Page 반응형 웹사이트',
           descBody: '1~3페이지 랜딩페이지 제작, 반응형 웹, 문의 폼 포함 (홈페이지 배포 X)',
@@ -398,6 +404,7 @@ export const translations = {
         {
           key: 'deluxe',
           name: 'DELUXE',
+          listPrice: '7,500,000원',
           price: '1,500,000원',
           descTitle: 'Multi Page 기업 웹사이트',
           descBody: '다중 페이지 홈페이지, 반응형 웹, 문의/상담 기능, 도메인·SSL 배포 포함',
@@ -410,6 +417,7 @@ export const translations = {
         {
           key: 'premium',
           name: 'PREMIUM',
+          listPrice: '25,000,000원',
           price: '5,000,000원',
           descTitle: '풀스택 웹 플랫폼 + 관리자',
           descBody: '관리자 대시보드, 로그인·회원, DB 연동, 실서버 배포까지 풀스택 일괄',
@@ -609,10 +617,12 @@ export const translations = {
       headline: 'Quick-start compact products',
       caption: 'Get a feel for how we work before committing to a full company site. Trials can convert into a formal contract.',
       tagLabel: 'STARTER',
+      discountLabel: '80% OFF',
       list: [
         {
           name: 'Single landing page',
           body: 'One page for a product or campaign. Responsive with a contact form.',
+          listPrice: 'from ₩1,500k',
           price: 'from ₩300k',
           cta: 'Start consult →',
           prefill: {
@@ -624,6 +634,7 @@ export const translations = {
         {
           name: 'Business-card site (3 pages)',
           body: 'About / services / contact. Basic SEO and deployment included.',
+          listPrice: 'from ₩2,000k',
           price: 'from ₩400k',
           cta: 'Start consult →',
           prefill: {
@@ -635,6 +646,7 @@ export const translations = {
         {
           name: 'Inquiry-form kit',
           body: 'Add a contact form and auto-reply email to an existing site.',
+          listPrice: 'from ₩1,250k',
           price: 'from ₩250k',
           cta: 'Start consult →',
           prefill: {
@@ -862,10 +874,12 @@ export const translations = {
       comparisonHeader: 'Package Overview',
       ctaText: 'Get a Quote',
       smallNote: '✱ Every plan is finalized with a free consultation and formal quote.',
+      discountLabel: '80% OFF',
       tiers: [
         {
           key: 'standard',
           name: 'STANDARD',
+          listPrice: '1,500,000원',
           price: '300,000원',
           descTitle: 'Single-page Responsive Site',
           descBody: '1–3 page landing site, responsive, contact form (hosting not included)',
@@ -878,6 +892,7 @@ export const translations = {
         {
           key: 'deluxe',
           name: 'DELUXE',
+          listPrice: '7,500,000원',
           price: '1,500,000원',
           descTitle: 'Multi-page Business Site',
           descBody: 'Multi-page site, responsive, inquiry & chat, domain + SSL deployment included',
@@ -890,6 +905,7 @@ export const translations = {
         {
           key: 'premium',
           name: 'PREMIUM',
+          listPrice: '25,000,000원',
           price: '5,000,000원',
           descTitle: 'Full-stack Platform + Admin',
           descBody: 'Admin dashboard, login/membership, DB integration, production deploy — full-stack end-to-end',

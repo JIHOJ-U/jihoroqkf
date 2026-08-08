@@ -28,6 +28,7 @@ function PricingTiers() {
     quantitative,
     ctaText,
     smallNote,
+    discountLabel,
   } = t.pricing;
 
   const handleCta = (tier) => {
@@ -66,7 +67,13 @@ function PricingTiers() {
                 data-tier={tier.name}
               >
                 <span className="pricing-cell__tier-name">{tier.name}</span>
+                {tier.listPrice && (
+                  <span className="pricing-cell__list-price">{tier.listPrice}</span>
+                )}
                 <span className="pricing-cell__tier-price">{tier.price}</span>
+                {tier.listPrice && discountLabel && (
+                  <span className="pricing-cell__discount-badge">{discountLabel}</span>
+                )}
               </div>
             ))}
           </div>

@@ -86,6 +86,36 @@ function ReferenceDetail() {
     if (!ref) navigate('/references', { replace: true });
   }, [slug, ref, navigate]);
 
+  // BreadcrumbList JSON-LD — Home > 레퍼런스 > [title]. Removed on unmount
+  // so the schema stays scoped to this route (SPA head is shared).
+  useEffect(() => {
+    if (!ref) return undefined;
+    const origin = window.location.origin;
+    const refTitle = lang === 'ko' ? ref.titleKo : ref.titleEn;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: lang === 'ko' ? '홈' : 'Home', item: `${origin}/` },
+        { '@type': 'ListItem', position: 2, name: lang === 'ko' ? '레퍼런스' : 'Designs', item: `${origin}/references` },
+        { '@type': 'ListItem', position: 3, name: refTitle, item: window.location.href },
+      ],
+    };
+    const domId = 'breadcrumb-schema';
+    let tag = document.getElementById(domId);
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = domId;
+      document.head.appendChild(tag);
+    }
+    tag.textContent = JSON.stringify(schema);
+    return () => {
+      const existing = document.getElementById(domId);
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    };
+  }, [ref, lang]);
+
   if (!ref) return null;
   const m = ref.mockup;
   const catLabel = CATEGORIES.find(c => c.key === ref.cat);

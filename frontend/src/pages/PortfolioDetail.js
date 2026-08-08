@@ -115,6 +115,35 @@ function PortfolioDetail() {
       .catch(() => setRelated([]));
   }, [portfolio]);
 
+  // BreadcrumbList JSON-LD — Home > 포트폴리오 > [title]. Rewrites on portfolio
+  // load / lang change; removed on unmount so other routes don't inherit it.
+  useEffect(() => {
+    if (!portfolio) return undefined;
+    const origin = window.location.origin;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: lang === 'ko' ? '홈' : 'Home', item: `${origin}/` },
+        { '@type': 'ListItem', position: 2, name: lang === 'ko' ? '포트폴리오' : 'Portfolio', item: `${origin}/portfolio` },
+        { '@type': 'ListItem', position: 3, name: portfolio.title, item: window.location.href },
+      ],
+    };
+    const domId = 'breadcrumb-schema';
+    let tag = document.getElementById(domId);
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = domId;
+      document.head.appendChild(tag);
+    }
+    tag.textContent = JSON.stringify(schema);
+    return () => {
+      const existing = document.getElementById(domId);
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    };
+  }, [portfolio, lang]);
+
   const handleDelete = async () => {
     if (window.confirm(c.confirmDelete)) {
       try {
@@ -148,7 +177,7 @@ function PortfolioDetail() {
             <div className="detail-hero">
               <img
                 src={getImageUrl(portfolio.thumbnail)}
-                alt={portfolio.title}
+                alt={lang === 'ko' ? `포트폴리오 - ${portfolio.title}` : `Portfolio - ${portfolio.title}`}
                 className={`detail-hero__img ${portfolio.thumbnailFit === 'contain' ? 'detail-hero__img--contain' : ''}`}
                 /* shared name so the Portfolio card thumbnail morphs into here
                    via the View Transitions API (Chromium 111+ / Safari 18+). */
@@ -200,7 +229,10 @@ function PortfolioDetail() {
               <div className="detail-gallery-grid">
                 {portfolio.images.map((img, i) => (
                   <a key={i} href={getImageUrl(img)} target="_blank" rel="noopener noreferrer" className="detail-gallery-item">
-                    <img src={getImageUrl(img)} alt={`${portfolio.title}-${i + 1}`} />
+                    <img
+                      src={getImageUrl(img)}
+                      alt={lang === 'ko' ? `${portfolio.title} 프로젝트 이미지 ${i + 1}` : `${portfolio.title} project image ${i + 1}`}
+                    />
                   </a>
                 ))}
               </div>
@@ -312,7 +344,7 @@ function PortfolioDetail() {
                         {p.thumbnail ? (
                           <img
                             src={getImageUrl(p.thumbnail)}
-                            alt={p.title}
+                            alt={lang === 'ko' ? `관련 포트폴리오 - ${p.title}` : `Related portfolio - ${p.title}`}
                             loading="lazy"
                             decoding="async"
                             className={p.thumbnailFit === 'contain' ? 'detail-related-thumb--contain' : ''}

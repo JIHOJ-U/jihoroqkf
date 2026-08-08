@@ -19,6 +19,16 @@
          to flag sub-pages as "Alternate page with proper canonical tag") -->
     <link rel="canonical" href="https://홈페이지공방.kr/" id="canonical-link" />
 
+    <!-- hreflang alternates — signals language variants of the same page.
+         The frontend switches locale via ?lang= (persisted in localStorage
+         by LanguageContext); x-default falls back to Korean root. -->
+    <link rel="alternate" hreflang="ko" href="https://홈페이지공방.kr/" />
+    <link rel="alternate" hreflang="en" href="https://홈페이지공방.kr/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://홈페이지공방.kr/" />
+
+    <!-- RSS feed (recent notes) -->
+    <link rel="alternate" type="application/rss+xml" title="홈페이지공방 RSS" href="/api/rss" />
+
     <!-- Search engine site verification -->
     <meta name="naver-site-verification" content="4af3ebaefe12204a581cb57baa4094cd7b7bb697" />
 
@@ -47,7 +57,7 @@
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "ProfessionalService",
+          "@type": ["ProfessionalService", "LocalBusiness"],
           "@id": "https://홈페이지공방.kr/#business",
           "name": "홈페이지공방",
           "alternateName": ["Dev.Vibe", "홈페이지 공방"],
@@ -57,6 +67,20 @@
           "logo": "https://홈페이지공방.kr/favicon.jpg",
           "email": "roqkfwkwlgh@naver.com",
           "telephone": "+82-10-8975-2847",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "KR",
+            "addressLocality": "Seoul",
+            "addressRegion": "Seoul"
+          },
+          "openingHoursSpecification": [{
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "10:00",
+            "closes": "18:00"
+          }],
+          "paymentAccepted": ["Bank Transfer", "계좌이체"],
+          "currenciesAccepted": "KRW",
           "areaServed": [
             { "@type": "Country", "name": "대한민국" },
             { "@type": "Country", "name": "South Korea" }
@@ -87,17 +111,19 @@
                 "@type": "Offer",
                 "itemOffered": {
                   "@type": "Service",
-                  "name": "랜딩페이지 제작",
-                  "description": "신규 제품·이벤트용 단일 페이지. 전환율과 로딩 속도에 초점. 1~2주 내 라이브.",
+                  "name": "랜딩페이지 · 반응형 웹사이트",
+                  "description": "1~3페이지 랜딩 사이트, 반응형 웹, 문의 폼 포함. 신규 제품·이벤트용 단일 페이지, 전환율과 로딩 속도에 초점.",
                   "provider": { "@id": "https://홈페이지공방.kr/#business" },
                   "areaServed": "KR"
                 },
                 "priceCurrency": "KRW",
-                "price": "500000",
+                "price": "300000",
+                "priceValidUntil": "2027-08-11",
+                "eligibleCustomerType": "PromotionalEntry",
                 "priceSpecification": {
                   "@type": "PriceSpecification",
                   "priceCurrency": "KRW",
-                  "minPrice": "500000"
+                  "minPrice": "300000"
                 }
               },
               {
@@ -105,12 +131,14 @@
                 "itemOffered": {
                   "@type": "Service",
                   "name": "기업 홈페이지 제작",
-                  "description": "회사 소개·서비스·연락처 5~10페이지. 브랜드 톤 커스텀 디자인과 SEO 최적화 기본 포함.",
+                  "description": "회사 소개·서비스·연락처 5~10페이지. 브랜드 톤 커스텀 디자인, SEO 최적화, 도메인·SSL 배포 포함.",
                   "provider": { "@id": "https://홈페이지공방.kr/#business" },
                   "areaServed": "KR"
                 },
                 "priceCurrency": "KRW",
                 "price": "1500000",
+                "priceValidUntil": "2027-08-11",
+                "eligibleCustomerType": "PromotionalEntry",
                 "priceSpecification": {
                   "@type": "PriceSpecification",
                   "priceCurrency": "KRW",
@@ -121,13 +149,15 @@
                 "@type": "Offer",
                 "itemOffered": {
                   "@type": "Service",
-                  "name": "웹 애플리케이션 / SaaS 개발",
-                  "description": "로그인·대시보드·실시간 기능이 핵심인 SaaS형 웹 서비스. 기획부터 함께.",
+                  "name": "풀스택 웹 플랫폼 + 관리자",
+                  "description": "관리자 대시보드, 로그인·회원, DB 연동, 실서버 배포까지 풀스택 일괄. SaaS형 서비스도 대응.",
                   "provider": { "@id": "https://홈페이지공방.kr/#business" },
                   "areaServed": "KR"
                 },
                 "priceCurrency": "KRW",
                 "price": "5000000",
+                "priceValidUntil": "2027-08-11",
+                "eligibleCustomerType": "PromotionalEntry",
                 "priceSpecification": {
                   "@type": "PriceSpecification",
                   "priceCurrency": "KRW",
@@ -145,6 +175,8 @@
                 },
                 "priceCurrency": "KRW",
                 "price": "3000000",
+                "priceValidUntil": "2027-08-11",
+                "eligibleCustomerType": "PromotionalEntry",
                 "priceSpecification": {
                   "@type": "PriceSpecification",
                   "priceCurrency": "KRW",
@@ -162,6 +194,7 @@
                 },
                 "priceCurrency": "KRW",
                 "price": "200000",
+                "priceValidUntil": "2027-08-11",
                 "priceSpecification": {
                   "@type": "PriceSpecification",
                   "priceCurrency": "KRW",

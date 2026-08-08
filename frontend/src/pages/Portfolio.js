@@ -97,7 +97,7 @@ function PortfolioCard({ item, index }) {
             {item.thumbnail ? (
               <img
                 src={getImageUrl(item.thumbnail)}
-                alt={item.title}
+                alt={item.category ? `${item.category} - ${item.title}` : `포트폴리오 - ${item.title}`}
                 loading="lazy"
                 className={item.thumbnailFit === 'contain' ? 'pf-thumb--contain' : ''}
               />

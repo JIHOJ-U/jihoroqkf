@@ -150,7 +150,11 @@ function References() {
                 >
                   <Link to={`/references/${r.slug}`} className="ref-card-link">
                     <div className="ref-card-img">
-                      <img src={r.img} alt={lang === 'ko' ? r.titleKo : r.titleEn} loading="lazy" />
+                      <img
+                        src={r.img}
+                        alt={lang === 'ko' ? `디자인 레퍼런스 - ${r.titleKo}` : `Design reference - ${r.titleEn}`}
+                        loading="lazy"
+                      />
                       <span className="ref-card-overlay">{T.cta} →</span>
                       {/* color block that covers the image, then slides up to reveal */}
                       <motion.span

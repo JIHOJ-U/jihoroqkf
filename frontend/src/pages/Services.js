@@ -51,6 +51,44 @@ function Services() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [services, activeKey]);
 
+  // Service schema (ItemList of Service entities) — helps Google understand
+  // that /services enumerates concrete offerings. Cleaned up on unmount so
+  // other routes don't inherit it.
+  useEffect(() => {
+    if (services.length === 0) return undefined;
+    const origin = window.location.origin;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: services.map((s, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'Service',
+          name: lang === 'ko' ? (s.titleKo || s.title) : s.title,
+          description: s.desc,
+          serviceType: s.title,
+          provider: { '@id': 'https://홈페이지공방.kr/#business' },
+          areaServed: 'KR',
+          url: `${origin}/services#svc-${s.key}`,
+        },
+      })),
+    };
+    const domId = 'services-schema';
+    let tag = document.getElementById(domId);
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = domId;
+      document.head.appendChild(tag);
+    }
+    tag.textContent = JSON.stringify(schema);
+    return () => {
+      const existing = document.getElementById(domId);
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    };
+  }, [services, lang]);
+
   const T = {
     label:    lang === 'ko' ? 'SERVICES' : 'SERVICES',
     intro:    lang === 'ko'

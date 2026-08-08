@@ -30,6 +30,36 @@ function BlogPost() {
     window.scrollTo({ top: 0 });
   }, [slug]);
 
+  // BreadcrumbList JSON-LD — Home > 노트 > [title]. Removed on unmount so
+  // the schema is scoped to this route.
+  useEffect(() => {
+    if (!post) return undefined;
+    const origin = window.location.origin;
+    const postTitle = post.title[lang] || post.title.ko;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: lang === 'ko' ? '홈' : 'Home', item: `${origin}/` },
+        { '@type': 'ListItem', position: 2, name: lang === 'ko' ? '노트' : 'Notes', item: `${origin}/blog` },
+        { '@type': 'ListItem', position: 3, name: postTitle, item: window.location.href },
+      ],
+    };
+    const domId = 'breadcrumb-schema';
+    let tag = document.getElementById(domId);
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = domId;
+      document.head.appendChild(tag);
+    }
+    tag.textContent = JSON.stringify(schema);
+    return () => {
+      const existing = document.getElementById(domId);
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    };
+  }, [post, lang]);
+
   if (!post) {
     return (
       <div className="blog-page">

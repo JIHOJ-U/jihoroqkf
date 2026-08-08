@@ -52,7 +52,15 @@ function StarterProducts() {
               <h3 className="stprod-card__name">{item.name}</h3>
               <p className="stprod-card__body">{item.body}</p>
               <div className="stprod-card__foot">
-                <span className="stprod-card__price">{item.price}</span>
+                <div className="stprod-card__price-block">
+                  {item.listPrice && (
+                    <span className="stprod-card__list-price">{item.listPrice}</span>
+                  )}
+                  <span className="stprod-card__price">{item.price}</span>
+                  {item.listPrice && block.discountLabel && (
+                    <span className="stprod-card__discount-badge">{block.discountLabel}</span>
+                  )}
+                </div>
                 <button
                   type="button"
                   className="stprod-card__cta"
