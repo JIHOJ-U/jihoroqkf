@@ -7,6 +7,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './QuoteCalculator.css';
 
 const USD_RATE = 1300; // KRW per USD, used only for English-mode display
+const DISCOUNT_MULT = 0.2; // 80% promotional discount (client pays 20% of list price)
 
 const PROJECT_TYPES = [
   { id: 'web',   base: 500000,  label: { ko: '웹사이트', en: 'Website' } },
@@ -55,24 +56,28 @@ const COPY = {
     step5: '5. 희망 일정',
     estTitle: '예상 견적',
     priceNote: 'VAT 별도 · 실제 견적은 상담 후 확정',
+    listPriceLabel: '정가',
+    chargedPriceLabel: '실제 청구가',
+    discountBadge: '80% 할인 적용',
     rowBase: '기본 견적',
     rowPages: '페이지 추가',
     rowFeatures: (n) => `기능 추가 (${n}개)`,
     rowDesign: '디자인 가중치',
     rowTiming: '일정 가중치',
     cta: '이 견적으로 정식 문의',
-    disclaimer: '본 계산은 참고용이며, 실제 견적은 요구사항 분석 후 협의됩니다.',
+    disclaimer: '본 계산은 참고용이며, 실제 견적은 요구사항 분석 후 협의됩니다. 프로모션 기간 중 정가에서 80% 할인이 자동 적용됩니다.',
     budgets: ['100만원 이하', '100~300만원', '300~500만원', '500~1000만원', '1000만원 이상'],
     types: { web: '웹 개발', app: '앱 개발', admin: '백엔드/API', api: '백엔드/API' },
     none: '없음',
-    descTemplate: ({ project, pages, design, featureLabels, timeline, min, max, none }) => `[견적 계산기로 작성됨]
+    descTemplate: ({ project, pages, design, featureLabels, timeline, listMin, listMax, chargedMin, chargedMax, none }) => `[견적 계산기로 작성됨]
 프로젝트 유형: ${project}
 페이지 수: ${pages}페이지
 디자인: ${design}
 필요 기능: ${featureLabels.length > 0 ? featureLabels.join(', ') : none}
 일정: ${timeline}
 
-예상 견적: ${min} ~ ${max}
+정가 견적: ${listMin} ~ ${listMax}
+80% 할인 적용가: ${chargedMin} ~ ${chargedMax}
 
 추가 요구사항:
 `,
@@ -89,24 +94,28 @@ const COPY = {
     step5: '5. Timeline',
     estTitle: 'Estimated quote',
     priceNote: 'VAT excl. · final quote confirmed after consultation',
+    listPriceLabel: 'List',
+    chargedPriceLabel: 'You pay',
+    discountBadge: '80% OFF applied',
     rowBase: 'Base quote',
     rowPages: 'Extra pages',
     rowFeatures: (n) => `Features added (${n})`,
     rowDesign: 'Design multiplier',
     rowTiming: 'Timeline multiplier',
     cta: 'Send this quote as an inquiry',
-    disclaimer: 'This estimate is for reference; the final quote is agreed after requirement analysis.',
+    disclaimer: 'This estimate is for reference; the final quote is agreed after requirement analysis. During the promotion, an 80% discount from list is applied automatically.',
     budgets: ['Under $1k', '$1k–$3k', '$3k–$5k', '$5k–$10k', 'Over $10k'],
     types: { web: 'Web Development', app: 'App Development', admin: 'Backend / API', api: 'Backend / API' },
     none: 'None',
-    descTemplate: ({ project, pages, design, featureLabels, timeline, min, max, none }) => `[Created with the quote calculator]
+    descTemplate: ({ project, pages, design, featureLabels, timeline, listMin, listMax, chargedMin, chargedMax, none }) => `[Created with the quote calculator]
 Project type: ${project}
 Pages: ${pages}
 Design: ${design}
 Features: ${featureLabels.length > 0 ? featureLabels.join(', ') : none}
 Timeline: ${timeline}
 
-Estimated quote: ${min} ~ ${max}
+List quote: ${listMin} ~ ${listMax}
+After 80% off: ${chargedMin} ~ ${chargedMax}
 
 Additional requirements:
 `,
@@ -147,8 +156,11 @@ function QuoteCalculator() {
     }, 0);
 
     const subtotal = (basePrice + pageBonus + featuresPrice) * design.mult * timing.mult;
-    const min = subtotal * 0.85;
-    const max = subtotal * 1.15;
+    const listMin = subtotal * 0.85;
+    const listMax = subtotal * 1.15;
+    // Promotional charged range = 20% of the list range (i.e. 80% off).
+    const chargedMin = listMin * DISCOUNT_MULT;
+    const chargedMax = listMax * DISCOUNT_MULT;
 
     return {
       basePrice,
@@ -157,8 +169,10 @@ function QuoteCalculator() {
       designMult: design.mult,
       timingMult: timing.mult,
       subtotal,
-      min,
-      max,
+      listMin,
+      listMax,
+      chargedMin,
+      chargedMax,
     };
   }, [projectType, pages, designLevel, features, timeline]);
 
@@ -174,17 +188,21 @@ function QuoteCalculator() {
       design: design.label[lang],
       featureLabels,
       timeline: TIMELINE_MULT[timeline].label[lang],
-      min: fmt(calc.min),
-      max: fmt(calc.max),
+      listMin: fmt(calc.listMin),
+      listMax: fmt(calc.listMax),
+      chargedMin: fmt(calc.chargedMin),
+      chargedMax: fmt(calc.chargedMax),
       none: c.none,
     });
 
-    // Map to the contact form's projectType / budget options (language-aware)
+    // Map to the contact form's projectType / budget options based on the
+    // actual charged (post-discount) price, not the list price — that's
+    // what the client will really pay.
     const budgetIndex =
-      calc.max <= 1000000 ? 0 :
-      calc.max <= 3000000 ? 1 :
-      calc.max <= 5000000 ? 2 :
-      calc.max <= 10000000 ? 3 : 4;
+      calc.chargedMax <= 1000000 ? 0 :
+      calc.chargedMax <= 3000000 ? 1 :
+      calc.chargedMax <= 5000000 ? 2 :
+      calc.chargedMax <= 10000000 ? 3 : 4;
 
     navigate('/contact', {
       state: {
@@ -318,10 +336,20 @@ function QuoteCalculator() {
             <span className="section-label">ESTIMATED QUOTE</span>
             <h3 className="qc-summary-title">{c.estTitle}</h3>
 
+            <div className="qc-price-list">
+              <span className="qc-price-list-label">{c.listPriceLabel}</span>
+              <span className="qc-price-list-value">
+                {fmt(calc.listMin)} ~ {fmt(calc.listMax)}
+              </span>
+            </div>
             <div className="qc-price">
-              <span className="qc-price-from">{fmt(calc.min)}</span>
+              <span className="qc-price-from">{fmt(calc.chargedMin)}</span>
               <span className="qc-price-tilde">~</span>
-              <span className="qc-price-to">{fmt(calc.max)}</span>
+              <span className="qc-price-to">{fmt(calc.chargedMax)}</span>
+            </div>
+            <div className="qc-price-badges">
+              <span className="qc-price-badge">{c.discountBadge}</span>
+              <span className="qc-price-charged-label">{c.chargedPriceLabel}</span>
             </div>
             <p className="qc-price-note">{c.priceNote}</p>
 

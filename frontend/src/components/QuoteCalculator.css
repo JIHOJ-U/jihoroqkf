@@ -302,6 +302,31 @@
   margin: 8px 0 20px;
 }
 
+/* List (pre-discount) price shown small + strikethrough above the charged
+   price so visitors see the 80% discount value. */
+.qc-price-list {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.qc-price-list-label {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.qc-price-list-value {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgba(148, 163, 184, 0.55);
+}
+
 .qc-price {
   display: flex;
   align-items: baseline;
@@ -325,6 +350,31 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-muted);
+}
+
+.qc-price-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.qc-price-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(255, 91, 71, 0.14);
+  color: #ff5b47;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+}
+.qc-price-charged-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
 }
 
 .qc-price-note {
