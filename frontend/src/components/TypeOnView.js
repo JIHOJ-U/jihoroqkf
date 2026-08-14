@@ -9,6 +9,7 @@ export default function TypeOnView({
   className = '',
   speed = 65,
   caret = true,
+  startDelay = 0,
 }) {
   const ref = useRef(null);
   const [started, setStarted] = useState(false);
@@ -34,14 +35,24 @@ export default function TypeOnView({
     if (!started) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { setCount(text.length); return; }
-    let i = 0;
-    const t = setInterval(() => {
-      i += 1;
-      setCount(i);
-      if (i >= text.length) clearInterval(t);
-    }, speed);
-    return () => clearInterval(t);
-  }, [started, text, speed]);
+    // Optional pre-typing delay — lets multiple TypeOnView instances in the
+    // same viewport (e.g. sequential ProcessSection steps) type one after
+    // another instead of all at once.
+    const kickoff = setTimeout(() => {
+      let i = 0;
+      const t = setInterval(() => {
+        i += 1;
+        setCount(i);
+        if (i >= text.length) clearInterval(t);
+      }, speed);
+      // Store interval on the timeout closure for cleanup
+      kickoff._interval = t;
+    }, startDelay);
+    return () => {
+      clearTimeout(kickoff);
+      if (kickoff._interval) clearInterval(kickoff._interval);
+    };
+  }, [started, text, speed, startDelay]);
 
   const done = count >= text.length;
 

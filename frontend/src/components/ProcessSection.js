@@ -52,24 +52,45 @@ function ProcessSection() {
         </div>
 
         <ol className="proc-list">
-          {steps.map((step, i) => (
-            <motion.li
-              key={step.num}
-              className="proc-step"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <div className="proc-step-num">{step.num}</div>
-              <div className="proc-step-body">
-                <div className="proc-step-tag">{step.tag}</div>
-                <h3 className="proc-step-title">{step.title}</h3>
-                <p className="proc-step-desc">{step.desc}</p>
-              </div>
-              <div className="proc-step-rule" aria-hidden="true" />
-            </motion.li>
-          ))}
+          {steps.map((step, i) => {
+            // Sequence the 4 steps so the typewriter effect chains: step 1's
+            // title finishes typing before step 2 starts, then desc, etc.
+            // Rough beats — title ~40ch × 40ms = ~1.6s. We stagger step
+            // starts by 900ms so the effect feels linear without dragging.
+            const stepDelay = i * 900;
+            return (
+              <motion.li
+                key={step.num}
+                className="proc-step"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <div className="proc-step-num">{step.num}</div>
+                <div className="proc-step-body">
+                  <div className="proc-step-tag">{step.tag}</div>
+                  <TypeOnView
+                    as="h3"
+                    className="proc-step-title"
+                    text={step.title}
+                    speed={45}
+                    caret={false}
+                    startDelay={stepDelay}
+                  />
+                  <TypeOnView
+                    as="p"
+                    className="proc-step-desc"
+                    text={step.desc}
+                    speed={22}
+                    caret={false}
+                    startDelay={stepDelay + 500}
+                  />
+                </div>
+                <div className="proc-step-rule" aria-hidden="true" />
+              </motion.li>
+            );
+          })}
         </ol>
       </div>
     </section>
