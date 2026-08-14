@@ -21,6 +21,7 @@ import InquiryCTA from '../components/InquiryCTA';
 import PricingTiers from '../components/PricingTiers';
 import MaintenanceTiers from '../components/MaintenanceTiers';
 import CustomerProblems from '../components/CustomerProblems';
+import ComingSoonBadge from '../components/ComingSoonBadge';
 import TrustCompliance from '../components/TrustCompliance';
 import StarterProducts from '../components/StarterProducts';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -371,8 +372,9 @@ function Home() {
           <Link to="/portfolio" className="hero-cta hero-cta--secondary">
             {heroCard.secondaryCta}
           </Link>
-          <Link to="/ai-preview" className="hero-cta hero-cta--secondary">
-            {lang === 'ko' ? 'AI로 먼저 시안 받아보기' : 'Try the AI draft'}
+          <Link to="/ai-preview" className="hero-cta hero-cta--secondary hero-cta--coming">
+            <span>{lang === 'ko' ? 'AI로 먼저 시안 받아보기' : 'Try the AI draft'}</span>
+            <ComingSoonBadge variant="chip" />
           </Link>
         </div>
 

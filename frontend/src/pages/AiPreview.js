@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { HiArrowRight, HiSparkles, HiExclamationCircle } from 'react-icons/hi';
 import { submitAiPreview } from '../api';
 import { useLanguage } from '../contexts/LanguageContext';
+import ComingSoonBadge from '../components/ComingSoonBadge';
 import './AiPreview.css';
 
 function AiPreview() {
@@ -64,6 +65,12 @@ function AiPreview() {
           <h1 className="ai-prev-title">{c.title}</h1>
           <p className="ai-prev-desc">{c.desc}</p>
         </header>
+
+        <ComingSoonBadge
+          variant="notice"
+          title={t.comingSoon?.aiPreviewTitle}
+          message={t.comingSoon?.aiPreviewBody}
+        />
 
         {status !== 'result' && (
           <form className="ai-prev-form" onSubmit={handleSubmit}>

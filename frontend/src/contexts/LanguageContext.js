@@ -92,6 +92,14 @@ export const translations = {
     about: {
       mission: '홈페이지공방은 PC와 모바일에서 고객 문의가 잘 이어지도록 반응형 기업 홈페이지를 만들고, 필요한 관리자·예약·연동 기능을 직접 개발하며, 납품 후에도 계속 관리하는 홈페이지 파트너입니다.',
     },
+    comingSoon: {
+      label: '준비중',
+      title: '조금만 기다려주세요!',
+      body: '해당 기능은 마무리 작업 중이에요. 곧 오픈 예정이며, 그동안은 이메일이나 카카오 오픈 채팅으로 편하게 문의해주세요.',
+      aiPreviewTitle: 'AI 시안 생성 기능은 준비 중이에요',
+      aiPreviewBody: '내부 테스트를 진행 중이에요. 곧 오픈 예정이며, 그동안은 아래 상담 폼으로 원하시는 홈페이지 방향을 알려주시면 사람이 직접 초안을 만들어 드립니다.',
+      contactCta: '지금 바로 상담하기',
+    },
     customerProblems: {
       eyebrow: '> problems/',
       headline: '이런 고민, 익숙하시죠?',
@@ -632,6 +640,14 @@ export const translations = {
     },
     about: {
       mission: '홈페이지공방 is a homepage partner: we build responsive company sites that keep customer inquiries flowing across desktop and mobile, develop the admin, booking, and integration features you need in-house, and keep maintaining them long after launch.',
+    },
+    comingSoon: {
+      label: 'Coming Soon',
+      title: 'Just a moment!',
+      body: "This feature is being finalized. It'll launch soon — in the meantime, please reach out via email or the Kakao open chat.",
+      aiPreviewTitle: 'AI draft generation is in preparation',
+      aiPreviewBody: "It's in internal testing right now. Launching soon — until then, tell us the direction you want in the consultation form below and a human will draft it for you.",
+      contactCta: 'Start a consultation',
     },
     customerProblems: {
       eyebrow: '> problems/',
