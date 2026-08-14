@@ -19,6 +19,7 @@ import useMediaQuery from '../hooks/useMediaQuery';
 import useSpotlight from '../hooks/useSpotlight';
 import InquiryCTA from '../components/InquiryCTA';
 import PricingTiers from '../components/PricingTiers';
+import MaintenanceTiers from '../components/MaintenanceTiers';
 import CustomerProblems from '../components/CustomerProblems';
 import TrustCompliance from '../components/TrustCompliance';
 import StarterProducts from '../components/StarterProducts';
@@ -410,6 +411,11 @@ function Home() {
       {/* Pricing tiers — desktop only (the 4-col matrix collapses to a long
           stack on mobile that fights the conversion flow with InquiryCTA below) */}
       {isDesktop && <PricingTiers />}
+
+      {/* Monthly maintenance tiers — orchestrated slide-in reveal. Sits right
+          after PricingTiers to complete the "build cost → ongoing cost" story.
+          Renders on mobile too; the 3-card grid stacks cleanly to 1-col. */}
+      <MaintenanceTiers />
 
       {/* Intro Section with image */}
       <section className="intro-section">
