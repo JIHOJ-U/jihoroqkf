@@ -1508,6 +1508,14 @@ html[data-theme="light"] .hero-card {
   .hero-card__sidebar {
     display: none;
   }
+
+  /* The intro-section 2-col grid (title | ActivityHeatmap) squeezes the
+     Korean title into a 1-char-per-line vertical strip at tablet widths.
+     Collapse to 1-col from tablet down. */
+  .intro-grid {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+  }
 }
 
 @media (max-width: 768px) {
