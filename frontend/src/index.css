@@ -31,7 +31,10 @@
   --border-light: #f0f0f0;
   --text-primary: #1a1a1a;
   --text-secondary: #505050;
-  --text-muted: #999999;
+  /* Darkened from #999999 (≈2.85:1 contrast, WCAG AA fail) to #6b7280
+     (≈5.7:1, passes AA for both normal + small text). Fixes muted
+     labels/notes across LighthouseBadge, QuoteCalculator, etc. */
+  --text-muted: #6b7280;
   --accent: #6366f1;
   --accent-light: #818cf8;
   --accent-hover: #4f46e5;
@@ -119,7 +122,10 @@
   --border-light: #1f2330;
   --text-primary: #e8eaf0;
   --text-secondary: #b8bcc8;
-  --text-muted: #6a7080;
+  /* Brightened from #6a7080 (≈3.6:1 on --bg-primary) to #94a3b8
+     (≈6.2:1). Same reasoning as light-mode muted — labels/notes now
+     legible without shouting. */
+  --text-muted: #94a3b8;
   --accent: #818cf8;
   --accent-light: #a5b4fc;
   --accent-hover: #6366f1;

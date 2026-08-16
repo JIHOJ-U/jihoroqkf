@@ -10,11 +10,11 @@
 
 .lh-badge__title {
   font-family: 'Courier New', monospace;
-  font-size: 0.62rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .lh-badge__items {
@@ -73,8 +73,9 @@
 }
 
 .lh-score__label {
-  font-size: 0.62rem;
-  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
   letter-spacing: 0.2px;
   text-align: center;
 }
