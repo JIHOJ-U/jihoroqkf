@@ -10,7 +10,6 @@ import TestimonialsMarquee from '../components/TestimonialsMarquee';
 import FaqSection from '../components/FaqSection';
 import TrustSection from '../components/TrustSection';
 import MetricsStrip from '../components/MetricsStrip';
-import ViewportTester from '../components/ViewportTester';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import BlurImage from '../components/BlurImage';
 import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
@@ -444,10 +443,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Device Showcase — desktop only (600px stage + laptop/phone floats are
-          decorative; mobile already lives on a real device) */}
-      {isDesktop && <DeviceShowcase />}
-
       {/* Why Full-Stack */}
       <section className="why-section">
         <div className="why-bg-decor" aria-hidden="true">
@@ -526,11 +521,13 @@ function Home() {
         </div>
       </section>
 
+      {/* Device Showcase — desktop only (600px stage + laptop/phone floats are
+          decorative; mobile already lives on a real device). Sits after the
+          why-section so the "왜" argument is made before the visual proof. */}
+      {isDesktop && <DeviceShowcase />}
+
       {/* Process — how we work */}
       <div id="home-process"><ProcessSection /></div>
-
-      {/* Live responsive tester — desktop only (the whole point is mouse drag) */}
-      {isDesktop && <ViewportTester />}
 
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
