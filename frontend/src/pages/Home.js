@@ -13,7 +13,6 @@ import MetricsStrip from '../components/MetricsStrip';
 import ViewportTester from '../components/ViewportTester';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import BlurImage from '../components/BlurImage';
-import ActivityHeatmap from '../components/ActivityHeatmap';
 import useViewTransitionNavigate, { tagForViewTransition } from '../hooks/useViewTransitionNavigate';
 import useMediaQuery from '../hooks/useMediaQuery';
 import useSpotlight from '../hooks/useSpotlight';
@@ -419,35 +418,28 @@ function Home() {
           Renders on mobile too; the 3-card grid stacks cleanly to 1-col. */}
       <MaintenanceTiers />
 
-      {/* Intro Section with image */}
+      {/* Intro Section — single-column now that ActivityHeatmap is removed. */}
       <section className="intro-section">
         <div className="container-wide">
-          <div className="intro-grid">
-            <motion.div className="intro-left" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span className="section-label">{t.intro.label}</span>
-              <h2 className="intro-title">
-                {t.intro.title.split('\n').map((line, i, arr) => (
-                  <React.Fragment key={i}>
-                    {line}
-                    {i < arr.length - 1 && <br />}
-                  </React.Fragment>
-                ))}
-              </h2>
-              <p className="intro-desc">{t.intro.desc}</p>
-              <div className="intro-techs">
-                {techLogos.map((tech, i) => (
-                  <motion.span key={i} className="intro-tech-badge" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.08 }}>
-                    {tech}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
-            <motion.div className="intro-right" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              {/* Real activity, not stock photography — pulled from actual
-                  portfolio/blog publish dates via the API. */}
-              <ActivityHeatmap />
-            </motion.div>
-          </div>
+          <motion.div className="intro-solo" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="section-label">{t.intro.label}</span>
+            <h2 className="intro-title">
+              {t.intro.title.split('\n').map((line, i, arr) => (
+                <React.Fragment key={i}>
+                  {line}
+                  {i < arr.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </h2>
+            <p className="intro-desc">{t.intro.desc}</p>
+            <div className="intro-techs">
+              {techLogos.map((tech, i) => (
+                <motion.span key={i} className="intro-tech-badge" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.08 }}>
+                  {tech}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
