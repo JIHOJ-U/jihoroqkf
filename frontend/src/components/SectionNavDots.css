@@ -7,7 +7,7 @@
 .sn-dots {
   position: fixed;
   top: 50%;
-  right: 22px;
+  left: 22px;
   transform: translateY(-50%);
   z-index: 9985; /* above content, below command palette overlay */
   pointer-events: none; /* let empty gaps between dots pass clicks */
