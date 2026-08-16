@@ -15,6 +15,7 @@ import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
 import ChannelTalk from './components/ChannelTalk';
 import CollectionButton from './components/CollectionButton';
+import SectionNavDots from './components/SectionNavDots';
 import Analytics from './components/Analytics';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -85,6 +86,7 @@ function AppChrome({ children }) {
           <QuickActionsDock />
           <ChannelTalk />
           <CollectionButton />
+          <SectionNavDots />
         </>
       )}
       {isAdmin ? <AdminNavbar /> : <Navbar />}

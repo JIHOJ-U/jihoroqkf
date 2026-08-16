@@ -176,10 +176,11 @@ function Home() {
       {/* Customer-outcome problem framing — sits above the IDE hero so the
           first thing SMB owners read is a mirror of their own pain, not our
           stack. Dark ink keeps continuity with the hero below. */}
-      <CustomerProblems />
+      <div id="home-problems"><CustomerProblems /></div>
 
       {/* Hero - IDE editor card */}
       <section
+        id="home-hero"
         className="hero-full"
         aria-label={heroCard.ariaLabel}
       >
@@ -411,7 +412,7 @@ function Home() {
 
       {/* Pricing tiers — desktop only (the 4-col matrix collapses to a long
           stack on mobile that fights the conversion flow with InquiryCTA below) */}
-      {isDesktop && <PricingTiers />}
+      <div id="home-pricing">{isDesktop && <PricingTiers />}</div>
 
       {/* Monthly maintenance tiers — orchestrated slide-in reveal. Sits right
           after PricingTiers to complete the "build cost → ongoing cost" story.
@@ -526,7 +527,7 @@ function Home() {
       </section>
 
       {/* Process — how we work */}
-      <ProcessSection />
+      <div id="home-process"><ProcessSection /></div>
 
       {/* Live responsive tester — desktop only (the whole point is mouse drag) */}
       {isDesktop && <ViewportTester />}
@@ -538,7 +539,7 @@ function Home() {
       {/* <TestimonialsMarquee /> */}
 
       {/* Works */}
-      <section className="works-section">
+      <section id="home-works" className="works-section">
         <div className="container-wide">
           <motion.div className="section-header-row" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div>
@@ -617,7 +618,7 @@ function Home() {
       </div>{/* end .home-curtain */}
 
       {/* CTA — vertical word slider, full-bleed */}
-      <InquiryCTA />
+      <div id="home-contact"><InquiryCTA /></div>
     </div>
   );
 }
