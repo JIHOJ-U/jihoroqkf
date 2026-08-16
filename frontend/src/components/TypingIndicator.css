@@ -1,0 +1,42 @@
+.typing-ind {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+}
+
+.typing-ind__label {
+  font-size: 0.88rem;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2px;
+}
+
+.typing-ind__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-ind__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  animation: typing-ind-pulse 1.2s ease-in-out infinite;
+}
+
+.typing-ind__dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-ind__dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typing-ind-pulse {
+  0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+  30%           { opacity: 1;    transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-ind__dot {
+    animation: none;
+    opacity: 0.7;
+  }
+}
