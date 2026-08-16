@@ -92,6 +92,10 @@ export const translations = {
     about: {
       mission: '홈페이지공방은 PC와 모바일에서 고객 문의가 잘 이어지도록 반응형 기업 홈페이지를 만들고, 필요한 관리자·예약·연동 기능을 직접 개발하며, 납품 후에도 계속 관리하는 홈페이지 파트너입니다.',
     },
+    parallaxBridge: {
+      top: '홈페이지공방 · CRAFTED IN CODE',
+      bottom: 'MADE TO LAST · SINCE 2026',
+    },
     comingSoon: {
       label: '준비중',
       title: '조금만 기다려주세요!',
@@ -640,6 +644,10 @@ export const translations = {
     },
     about: {
       mission: '홈페이지공방 is a homepage partner: we build responsive company sites that keep customer inquiries flowing across desktop and mobile, develop the admin, booking, and integration features you need in-house, and keep maintaining them long after launch.',
+    },
+    parallaxBridge: {
+      top: 'HOMEPAGE-GONGBANG · CRAFTED IN CODE',
+      bottom: 'MADE TO LAST · SINCE 2026',
     },
     comingSoon: {
       label: 'Coming Soon',

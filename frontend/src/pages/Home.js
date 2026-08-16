@@ -20,6 +20,7 @@ import PricingTiers from '../components/PricingTiers';
 import MaintenanceTiers from '../components/MaintenanceTiers';
 import CustomerProblems from '../components/CustomerProblems';
 import ComingSoonBadge from '../components/ComingSoonBadge';
+import ParallaxBridge from '../components/ParallaxBridge';
 import TrustCompliance from '../components/TrustCompliance';
 import StarterProducts from '../components/StarterProducts';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -417,6 +418,14 @@ function Home() {
           after PricingTiers to complete the "build cost → ongoing cost" story.
           Renders on mobile too; the 3-card grid stacks cleanly to 1-col. */}
       <MaintenanceTiers />
+
+      {/* Atmospheric chapter-break — large scroll-parallax monospace text
+          drifting in opposite directions. Sits between the pricing/care
+          chunk and the mission/why chunk to create a rhythmic breath. */}
+      <ParallaxBridge
+        topText={t.parallaxBridge?.top}
+        bottomText={t.parallaxBridge?.bottom}
+      />
 
       {/* Intro Section — single-column now that ActivityHeatmap is removed. */}
       <section className="intro-section">

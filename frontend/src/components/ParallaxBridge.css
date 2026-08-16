@@ -1,0 +1,65 @@
+/* ==========================================================================
+   ParallaxBridge — full-width scroll-linked typography band.
+   Sits between major Home sections. Zero interactive weight — just
+   atmospheric rhythm.
+   ========================================================================== */
+
+.pxbridge {
+  position: relative;
+  padding: 72px 0;
+  overflow: hidden;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.pxbridge__line {
+  display: block;
+  white-space: nowrap;
+  will-change: transform;
+  font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* Top line — outlined (stroke only) so it whispers */
+.pxbridge__line--top {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-primary);
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+/* Bottom line — filled with a very light muted color */
+.pxbridge__line--bottom {
+  color: var(--text-muted);
+  opacity: 0.25;
+  margin-top: 8px;
+}
+
+/* Dark theme — slightly boost stroke visibility and desaturate fill */
+:root[data-theme='dark'] .pxbridge__line--top {
+  -webkit-text-stroke-color: var(--text-primary);
+  opacity: 0.55;
+}
+
+:root[data-theme='dark'] .pxbridge__line--bottom {
+  opacity: 0.22;
+}
+
+@media (max-width: 768px) {
+  .pxbridge {
+    padding: 48px 0;
+  }
+  .pxbridge__line {
+    font-size: clamp(2rem, 12vw, 3.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pxbridge__line {
+    will-change: auto;
+  }
+}
