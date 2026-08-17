@@ -40,3 +40,4 @@ backend/data/*.json
 .claude/
 .claude-flow/
 *.tmp
+.gstack/
