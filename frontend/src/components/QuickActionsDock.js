@@ -9,6 +9,7 @@ function QuickActionsDock() {
   const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [overBridge, setOverBridge] = useState(false);
   const labels = t.quickDock;
 
   useEffect(() => {
@@ -23,10 +24,29 @@ function QuickActionsDock() {
     return () => clearTimeout(timer);
   }, []);
 
+  // The parallax typography band (.pxbridge) pans large text across the
+  // full width of the screen, right under this dock's fixed position —
+  // fade the dock out while that section is in view so it doesn't cover
+  // the text (most visible on mobile, where the band takes up more of
+  // the viewport width).
+  useEffect(() => {
+    const bridge = document.querySelector('.pxbridge');
+    if (!bridge) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => setOverBridge(entry.isIntersecting),
+      { threshold: 0.15 }
+    );
+    observer.observe(bridge);
+    return () => observer.disconnect();
+  }, []);
+
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <div className={`qdock ${mounted ? 'qdock--in' : ''}`} aria-label="Quick actions">
+    <div
+      className={`qdock ${mounted ? 'qdock--in' : ''} ${overBridge ? 'qdock--faded' : ''}`}
+      aria-label="Quick actions"
+    >
       <Link
         to="/contact"
         className="qdock-btn"

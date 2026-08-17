@@ -8,6 +8,18 @@
   flex-direction: column;
   gap: 10px;
   pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Fade out while the parallax typography band (.pxbridge) is in view so
+   the dock doesn't sit on top of its panning text. */
+.qdock--faded {
+  opacity: 0;
+}
+
+.qdock--faded .qdock-btn {
+  pointer-events: none;
 }
 
 /* ===== Glass minimal button ===== */
