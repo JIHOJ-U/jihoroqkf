@@ -341,6 +341,7 @@ function QuoteCalculator() {
               </span>
             </div>
             <div className="qc-price">
+              <span className="qc-price-pct">80%</span>
               <span className="qc-price-from">{fmt(calc.chargedMin)}</span>
               <span className="qc-price-tilde">~</span>
               <span className="qc-price-to">{fmt(calc.chargedMax)}</span>

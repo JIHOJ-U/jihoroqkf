@@ -302,29 +302,27 @@
   margin: 8px 0 20px;
 }
 
-/* List (pre-discount) price shown small + strikethrough above the charged
-   price so visitors see the 80% discount value. */
+/* Kmong / Coupang e-commerce discount style:
+   Row 1 — original list price with strikethrough (small, muted)
+   Row 2 — big red discount % + bold charged price on same line */
 .qc-price-list {
   display: flex;
   align-items: baseline;
   gap: 6px;
   margin-bottom: 4px;
-  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
 }
 .qc-price-list-label {
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  font-weight: 600;
+  display: none;
 }
 .qc-price-list-value {
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 500;
+  color: #94a3b8;
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
-  text-decoration-color: rgba(148, 163, 184, 0.55);
+  text-decoration-color: #94a3b8;
+  font-family: inherit;
 }
 
 .qc-price {
@@ -335,21 +333,29 @@
   margin-bottom: 6px;
 }
 
+/* Red discount percentage badge — Kmong/Coupang commerce style */
+.qc-price-pct {
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  font-weight: 900;
+  color: #ef4444;
+  letter-spacing: -0.01em;
+  margin-right: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
 .qc-price-from,
 .qc-price-to {
-  font-size: 1.4rem;
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
   font-weight: 900;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 .qc-price-tilde {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 .qc-price-badges {
