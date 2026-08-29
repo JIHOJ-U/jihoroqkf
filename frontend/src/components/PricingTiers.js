@@ -69,7 +69,12 @@ function PricingTiers() {
                 {tier.listPrice && (
                   <span className="pricing-cell__list-price">{tier.listPrice}</span>
                 )}
-                <span className="pricing-cell__tier-price">{tier.price}</span>
+                <span className="pricing-cell__price-row">
+                  {tier.listPrice && (
+                    <span className="pricing-cell__discount-pct">80%</span>
+                  )}
+                  <span className="pricing-cell__tier-price">{tier.price}</span>
+                </span>
               </div>
             ))}
           </div>

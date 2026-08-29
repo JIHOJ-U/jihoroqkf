@@ -97,7 +97,12 @@ function StarterProducts() {
                   {product.listPrice && (
                     <span className="stprod-card__list-price">{product.listPrice}</span>
                   )}
-                  <span className="stprod-card__price">{product.price}</span>
+                  <span className="stprod-card__price-row">
+                    {product.listPrice && (
+                      <span className="stprod-card__discount-pct">80%</span>
+                    )}
+                    <span className="stprod-card__price">{product.price}</span>
+                  </span>
                 </div>
                 <button
                   type="button"

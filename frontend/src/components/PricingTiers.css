@@ -104,14 +104,32 @@
 }
 
 .pricing-cell__list-price {
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 14px;
+  color: #94a3b8;
   text-decoration: line-through;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: #94a3b8;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.005em;
   margin-bottom: 4px;
+  display: block;
+  margin-bottom: 4px;
   line-height: 1;
+}
+
+.pricing-cell__price-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  justify-content: center;
+}
+
+.pricing-cell__discount-pct {
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  font-weight: 900;
+  color: #ef4444;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .pricing-cell__tier-price {
