@@ -39,19 +39,25 @@ function SectionNavDots() {
       .filter(Boolean);
     if (els.length === 0) return undefined;
 
-    // rootMargin biases the "active" section to the top-third of the
-    // viewport so scrolling past the middle counts as entering the next.
+    // Track last-known intersection ratio per element and always pick the
+    // one with the highest current visibility. rootMargin creates a broad
+    // trigger zone (top 20% → bottom 20% of viewport) so short sections
+    // still register. We keep a local map because IntersectionObserver
+    // only re-fires entries that changed — we need the full picture.
+    const ratios = new Map();
     const io = new IntersectionObserver(
       (entries) => {
-        // Choose the entry with the highest intersection ratio.
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible.length > 0) {
-          setActiveId(visible[0].target.id);
-        }
+        entries.forEach((e) => {
+          ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
+        });
+        let bestId = null;
+        let bestRatio = 0;
+        ratios.forEach((r, id) => {
+          if (r > bestRatio) { bestRatio = r; bestId = id; }
+        });
+        if (bestId && bestRatio > 0) setActiveId(bestId);
       },
-      { rootMargin: '-30% 0px -50% 0px', threshold: [0, 0.1, 0.5, 1] }
+      { rootMargin: '-20% 0px -20% 0px', threshold: [0, 0.15, 0.35, 0.6, 0.85, 1] }
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
