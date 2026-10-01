@@ -3,7 +3,7 @@
 /*                                                                          */
 /* Prompt phase = centered pill input (24px radii) with suggestion chips.  */
 /* Chat phase   = 4px-radius bubble window matching the rest of the site.  */
-/* Uses --bg-*/--text-*/--border/--color-* tokens for light + dark themes. */
+/* Uses --bg-xxx, --text-xxx, --border, --color-xxx tokens for light + dark themes. */
 /* ---------------------------------------------------------------------- */
 
 .aichat-page {
