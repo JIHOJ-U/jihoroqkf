@@ -28,7 +28,7 @@ const PROFILE_IMAGES = ['/jiho.jpg', '/jiho2.jpg'];
 const COPY = {
   ko: {
     aboutMe: 'ABOUT ME',
-    titlePre: '안녕하세요,', titleAccent: '풀스택 개발자', titlePost: '입니다',
+    titlePre: '프리랜서', titleAccent: '풀스택 개발자', titlePost: ' 긴밤 · 홈페이지공방 소개',
     heroDesc: '사용자 경험을 최우선으로 생각하며, 비즈니스 가치를 극대화하는 개발을 추구합니다. 기획부터 배포까지, 프로젝트의 모든 단계를 함께합니다.',
     stats: [
       { num: '12+', label: '프로젝트' },
@@ -53,7 +53,7 @@ const COPY = {
   },
   en: {
     aboutMe: 'ABOUT ME',
-    titlePre: "Hi, I'm a", titleAccent: 'Full-Stack Developer', titlePost: '',
+    titlePre: 'About', titleAccent: 'Full-Stack Developer', titlePost: ' Jin · Dev.Vibe',
     heroDesc: 'I put user experience first and build to maximize business value. From planning to deployment, I\'m with you at every stage of the project.',
     stats: [
       { num: '12+', label: 'Projects' },

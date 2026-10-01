@@ -2,8 +2,12 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/jpeg" href="%PUBLIC_URL%/favicon.jpg" />
-    <link rel="shortcut icon" type="image/jpeg" href="%PUBLIC_URL%/favicon.jpg" />
+    <!-- Favicon: .ico first (Naver/Daum prefer and cache it hardest), then
+         PNG fallbacks for modern browsers that upscale 192/512 for tabs. -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="any" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="%PUBLIC_URL%/logo512.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#6366f1" />
 
@@ -26,8 +30,9 @@
     <link rel="alternate" hreflang="en" href="https://홈페이지공방.kr/?lang=en" />
     <link rel="alternate" hreflang="x-default" href="https://홈페이지공방.kr/" />
 
-    <!-- RSS feed (recent notes) -->
-    <link rel="alternate" type="application/rss+xml" title="홈페이지공방 RSS" href="/api/rss" />
+    <!-- RSS feed is served by the backend at devvibe-api.onrender.com/api/rss;
+         not reachable from this static origin, so we don't advertise it here
+         (crawlers would 404 on /api/rss and penalize indexing). -->
 
     <!-- Search engine site verification -->
     <meta name="naver-site-verification" content="4af3ebaefe12204a581cb57baa4094cd7b7bb697" />
@@ -257,7 +262,7 @@
     }
     </script>
 
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.jpg" />
+    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <!-- Google AdSense site verification -->

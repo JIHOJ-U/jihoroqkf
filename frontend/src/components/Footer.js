@@ -102,15 +102,16 @@ function Footer() {
 
           <div className="footer-links">
             <div className="footer-col">
-              <h4>MENU</h4>
-              <Link to="/">Home</Link>
-              <Link to="/about">About</Link>
-              <Link to="/portfolio">Works</Link>
-              <Link to="/blog">Notes</Link>
-              <Link to="/contact">Contact</Link>
+              <h4>{lang === 'ko' ? '메뉴' : 'MENU'}</h4>
+              <Link to="/">{lang === 'ko' ? '홈' : 'Home'}</Link>
+              <Link to="/about">{lang === 'ko' ? '홈페이지공방 소개' : 'About'}</Link>
+              <Link to="/portfolio">{lang === 'ko' ? '포트폴리오' : 'Works'}</Link>
+              <Link to="/references">{lang === 'ko' ? '디자인 레퍼런스' : 'Designs'}</Link>
+              <Link to="/blog">{lang === 'ko' ? '블로그 노트' : 'Notes'}</Link>
+              <Link to="/contact">{lang === 'ko' ? '견적·문의' : 'Contact'}</Link>
             </div>
             <div className="footer-col">
-              <h4>SERVICES</h4>
+              <h4>{lang === 'ko' ? '제작 서비스' : 'SERVICES'}</h4>
               {services.map((s) => (
                 <Link
                   key={s.key}
@@ -123,7 +124,7 @@ function Footer() {
               ))}
             </div>
             <div className="footer-col">
-              <h4>CONTACT</h4>
+              <h4>{lang === 'ko' ? '연락처' : 'CONTACT'}</h4>
               <a href="mailto:roqkfwkwlgh@naver.com">
                 <HiMail /> roqkfwkwlgh@naver.com
               </a>

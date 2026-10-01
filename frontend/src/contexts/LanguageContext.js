@@ -5,7 +5,7 @@ const LanguageContext = createContext();
 
 export const translations = {
   ko: {
-    nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
+    nav: { services: '제작 서비스', references: '디자인 레퍼런스', portfolio: '포트폴리오', about: '소개', contact: '견적·문의' },
     hero: {
       heroCard: {
         headerBar: 'devvibe — main',
