@@ -52,6 +52,13 @@ const itemVariants = (reduce) =>
 
 const directions = ['left', 'bottom', 'right'];
 
+/* Per-card accent, matched to what each product is for — the landing
+   page is a promo one-pager (highlight), the business-card site is the
+   standard "company intro" build (trust), and the inquiry-form add-on
+   is a technical feature bolt-on (tech). Same token set as
+   CustomerProblems, which uses the identical dark-card pattern. */
+const accents = ['highlight', 'trust', 'tech'];
+
 function StarterProducts() {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -83,7 +90,7 @@ function StarterProducts() {
           {block.list.map((product, i) => (
             <motion.article
               key={product.name}
-              className="stprod-card"
+              className={`stprod-card stprod-card--${accents[i] || 'tech'}`}
               variants={cardVariants(directions[i], prefersReducedMotion)}
               initial="hidden"
               whileInView="visible"

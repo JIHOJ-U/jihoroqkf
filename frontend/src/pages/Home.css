@@ -3,8 +3,10 @@
   position: relative;
 }
 
-/* Natural-flow vertical stack: [AvailabilityBadge → editor card → CTAs],
-   with .scroll-circle absolutely positioned at section bottom. */
+/* Two-column lead: [headline/subtitle/CTA] carries the first impression,
+   the IDE editor card sits beside it as a smaller supporting "proof"
+   visual rather than the dominant hero element. .scroll-circle stays
+   absolutely positioned at the section bottom. */
 .hero-full {
   position: relative;
   min-height: 92vh;
@@ -13,7 +15,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 28px;
   padding: 96px 24px 120px;
   overflow: hidden;
   margin-top: -72px;
@@ -24,6 +25,69 @@
   position: relative;
   z-index: 2;
   pointer-events: auto;
+}
+
+.hero-full__layout {
+  width: 100%;
+  max-width: 1320px;
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) minmax(380px, 500px);
+  align-items: center;
+  gap: 48px;
+}
+
+.hero-full__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  text-align: left;
+}
+
+.hero-full__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.hero-full__subtitle {
+  font-size: clamp(0.98rem, 1.6vw, 1.15rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 480px;
+}
+
+.hero-full__layout .hero-ctas {
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+@media (max-width: 1080px) {
+  .hero-full__layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .hero-full__copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-full__subtitle {
+    max-width: 560px;
+  }
+
+  .hero-full__layout .hero-ctas {
+    justify-content: center;
+  }
+
+  .hero-card--compact {
+    justify-self: center;
+  }
 }
 
 /* Everything after the hero scrolls UP over it (curtain reveal) */
@@ -72,7 +136,7 @@
   border: 0;
 }
 
-/* ===== Editor Card (the ONE hero focal point) ===== */
+/* ===== Editor Card — supporting "proof" visual beside the headline ===== */
 .hero-card {
   width: clamp(320px, 72vw, 880px);
   background: rgba(15, 17, 23, 0.92);
@@ -99,6 +163,36 @@
     "sidebar tabs"
     "sidebar body"
     "sidebar status";
+}
+
+/* Scaled down + lighter shadow so the card reads as a supporting visual
+   next to the headline, not the dominant hero element. */
+.hero-card--compact {
+  width: 100%;
+  max-width: 500px;
+  grid-template-columns: 110px 1fr;
+  border-radius: 12px;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+.hero-card--compact .hero-card__sidebar {
+  width: 110px;
+  padding: 12px 10px;
+}
+
+.hero-card--compact .hero-card__body {
+  grid-template-columns: 34px 1fr;
+  font-size: 12px;
+}
+
+.hero-card--compact .hero-card__gutter {
+  padding: 0 8px 0 0;
+}
+
+.hero-card--compact .hero-card__code {
+  padding: 0 14px;
 }
 
 .hero-card__bar,
@@ -458,31 +552,6 @@ html[data-theme="light"] .hero-card {
 
 @keyframes heroStatusSpin {
   to { transform: rotate(360deg); }
-}
-
-.hero-card__palette-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 1px 7px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.hero-card__palette-hint:hover {
-  background: rgba(255, 255, 255, 0.26);
-  transform: translateY(-1px);
-}
-
-.hero-card__palette-hint:active {
-  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {

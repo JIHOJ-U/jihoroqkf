@@ -253,3 +253,50 @@
     margin-top: 12px;
   }
 }
+
+/* CTA pill — stays visible against both the transparent overlay navbar
+   (white fill, reads over the dark hero) and the scrolled white navbar
+   (filled with the brand accent), so it's never the same low-contrast
+   text link as the rest of the nav. */
+.nav-cta {
+  margin-left: 20px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  background: #ffffff;
+  color: var(--color-primary-strong);
+  transition: var(--transition);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
+.navbar.scrolled .nav-cta,
+.navbar:not(.navbar--overlay) .nav-cta {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+}
+
+.navbar.scrolled .nav-cta:hover,
+.navbar:not(.navbar--overlay) .nav-cta:hover {
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.42);
+}
+
+@media (max-width: 768px) {
+  .nav-cta {
+    margin-left: 0;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: #fff;
+    padding: 13px 22px;
+  }
+}

@@ -1,14 +1,14 @@
 /* ===== StarterProducts — 3 low-ticket entry products =========================
-   Placed just before <PricingTiers /> as the "quick start" ramp. Dark surface
-   cards on the default (light) section background, with a monospace bridge
-   line pointing users down to the full pricing matrix. */
+   Placed just before <PricingTiers /> as the "quick start" ramp. White cards
+   on the default (light) section background — part of the site's white /
+   pale-indigo two-tone system — with a monospace bridge line pointing users
+   down to the full pricing matrix. */
 
 .stprod {
-  --sp-ink: #0b0d12;
-  --sp-surface: #141821;
-  --sp-rule: rgba(255, 255, 255, 0.08);
-  --sp-text: #f5f6fa;
-  --sp-muted: #9199ac;
+  --sp-surface: #ffffff;
+  --sp-rule: rgba(15, 23, 42, 0.08);
+  --sp-text: #1a1a2e;
+  --sp-muted: #64748b;
   --sp-indigo: #6366f1;
   --sp-indigo-soft: rgba(99, 102, 241, 0.12);
 
@@ -59,7 +59,14 @@
   gap: 20px;
 }
 
-/* --- Card (dark surface, sits on light section bg) ------------------------- */
+/* --- Card (white surface, sits on light section bg) ------------------------- */
+/* Per-card color coding, same approach as CustomerProblems — each
+   product is a distinct, parallel offering (not a tier ladder), so a
+   dedicated accent per card reads better than the shared indigo. */
+.stprod-card--highlight { --sp-accent: var(--color-highlight); --sp-accent-soft: var(--color-highlight-soft); }
+.stprod-card--trust     { --sp-accent: var(--color-trust); --sp-accent-soft: var(--color-trust-soft); }
+.stprod-card--tech      { --sp-accent: var(--color-tech); --sp-accent-soft: var(--color-tech-soft); }
+
 .stprod-card {
   display: flex;
   flex-direction: column;
@@ -67,8 +74,10 @@
   background: var(--sp-surface);
   color: var(--sp-text);
   border: 1px solid var(--sp-rule);
+  border-left: 3px solid var(--sp-accent, var(--sp-indigo));
   border-radius: 4px;
   min-height: 100%;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.06));
 }
 
 .stprod-card__tag {
@@ -79,8 +88,8 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   padding: 4px 8px;
-  color: var(--sp-indigo);
-  background: var(--sp-indigo-soft);
+  color: var(--sp-accent, var(--sp-indigo));
+  background: var(--sp-accent-soft, var(--sp-indigo-soft));
   border-radius: 4px;
   margin-bottom: 16px;
 }
@@ -142,9 +151,9 @@
 }
 
 .stprod-card__discount-pct {
-  font-size: 20px;
-  font-weight: 900;
-  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  color: #f87171;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
@@ -190,8 +199,8 @@
 
 .stprod-card__cta:hover,
 .stprod-card__cta:focus-visible {
-  border-color: var(--sp-indigo);
-  color: var(--sp-indigo);
+  border-color: var(--sp-accent, var(--sp-indigo));
+  color: var(--sp-accent, var(--sp-indigo));
   outline: none;
 }
 

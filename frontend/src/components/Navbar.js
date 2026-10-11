@@ -30,8 +30,8 @@ function Navbar() {
     { path: '/references', label: t.nav.references },
     { path: '/portfolio', label: t.nav.portfolio },
     { path: '/about', label: t.nav.about },
-    { path: '/contact', label: t.nav.contact },
   ];
+  const ctaLink = { path: '/contact', label: t.nav.contact };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${isHome && !scrolled ? 'navbar--overlay' : ''}`}>
@@ -77,6 +77,13 @@ function Navbar() {
           >
             {theme === 'dark' ? <HiSun /> : <HiMoon />}
           </button>
+
+          <Link
+            to={ctaLink.path}
+            className={`nav-cta ${location.pathname === ctaLink.path ? 'active' : ''}`}
+          >
+            {ctaLink.label}
+          </Link>
         </div>
 
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>

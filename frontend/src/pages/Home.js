@@ -64,14 +64,9 @@ function Home() {
     transitionNavigate(`/portfolio/${id}`);
   };
   const prefersReducedMotion = useReducedMotion();
+  const heroText = t.hero;
   const heroCard = t.hero.heroCard;
   const activeFile = heroCard.files.find((f) => f.key === activeTabKey) || heroCard.files[0];
-
-  // Open the CommandPalette by dispatching the same shortcut it listens for.
-  // CommandPalette handler: (e.metaKey || e.ctrlKey) && e.key === 'k' → toggles open.
-  const openPalette = () => {
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
-  };
 
   useEffect(() => {
     getPortfolios().then(res => setPortfolios(res.data.slice(0, 6))).catch(() => {});
@@ -178,7 +173,10 @@ function Home() {
           stack. Dark ink keeps continuity with the hero below. */}
       <div id="home-problems"><CustomerProblems /></div>
 
-      {/* Hero - IDE editor card */}
+      {/* Hero — plain-language headline leads, IDE editor card demoted to a
+          supporting proof visual (see CLAUDE memory: first-impression polish
+          pass, 2026-10). A non-technical visitor reads the headline/CTA first;
+          the code card backs up the "I actually build this" claim second. */}
       <section
         id="home-hero"
         className="hero-full"
@@ -186,28 +184,64 @@ function Home() {
       >
         <div className="hero-full__bg" />
 
-        {/* Visually-hidden semantic H1 for SEO / screen readers */}
-        <h1 className="sr-only">
-          {lang === 'ko'
-            ? '홈페이지공방 — 프리랜서 풀스택 개발자의 홈페이지 제작·운영 파트너 (이번 달 1건 접수 가능)'
-            : 'DEVIBE — Freelance full-stack developer for company website design, build & operation (1 slot this month)'}
-        </h1>
+        <div className="hero-full__layout">
+          <div className="hero-full__copy">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
+            >
+              <AvailabilityBadge variant="chip" />
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-        >
-          <AvailabilityBadge variant="chip" />
-        </motion.div>
+            <motion.h1
+              className="hero-full__title"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              {heroText.title}
+            </motion.h1>
 
-        <motion.figure
-          className="hero-card"
-          aria-labelledby="hero-card-title"
-          variants={cardFade}
-          initial="hidden"
-          animate="visible"
-        >
+            <motion.p
+              className="hero-full__subtitle"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              {heroText.subtitle}
+            </motion.p>
+
+            <motion.div
+              className="hero-ctas"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <Link
+                to="/contact"
+                className="hero-cta hero-cta--primary"
+                aria-label={lang === 'ko' ? '상담 시작하기 - 문의 페이지로 이동' : 'Start a project - go to contact page'}
+              >
+                {heroCard.primaryCta}
+              </Link>
+              <Link to="/portfolio" className="hero-cta hero-cta--secondary">
+                {heroCard.secondaryCta}
+              </Link>
+              <Link to="/ai-preview" className="hero-cta hero-cta--secondary hero-cta--coming">
+                <span>{lang === 'ko' ? 'AI로 먼저 시안 받아보기' : 'Try the AI draft'}</span>
+                <ComingSoonBadge variant="chip" />
+              </Link>
+            </motion.div>
+          </div>
+
+          <motion.figure
+            className="hero-card hero-card--compact"
+            aria-labelledby="hero-card-title"
+            variants={cardFade}
+            initial="hidden"
+            animate="visible"
+          >
           <div className="hero-card__bar hero-card__header">
             <div className="hero-card__dots" aria-hidden="true">
               <span className="hero-card__dot hero-card__dot--red" />
@@ -335,16 +369,6 @@ function Home() {
                 Ln {activeFile.lines.length}, Col 3
               </span>
               <span className="hero-card__status-divider" />
-              <button
-                type="button"
-                className="hero-card__palette-hint"
-                onClick={openPalette}
-                title={heroCard.statusBar.paletteTooltip}
-                aria-label={heroCard.statusBar.paletteTooltip}
-              >
-                {heroCard.statusBar.paletteHint}
-              </button>
-              <span className="hero-card__status-divider" />
               <span className="hero-card__status-item hero-card__status-item--lang">
                 {activeFile.lang}
               </span>
@@ -359,23 +383,7 @@ function Home() {
               </span>
             </div>
           </div>
-        </motion.figure>
-
-        <div className="hero-card__cta hero-ctas">
-          <Link
-            to="/contact"
-            className="hero-cta hero-cta--primary"
-            aria-label={lang === 'ko' ? '상담 시작하기 - 문의 페이지로 이동' : 'Start a project - go to contact page'}
-          >
-            {heroCard.primaryCta}
-          </Link>
-          <Link to="/portfolio" className="hero-cta hero-cta--secondary">
-            {heroCard.secondaryCta}
-          </Link>
-          <Link to="/ai-preview" className="hero-cta hero-cta--secondary hero-cta--coming">
-            <span>{lang === 'ko' ? 'AI로 먼저 시안 받아보기' : 'Try the AI draft'}</span>
-            <ComingSoonBadge variant="chip" />
-          </Link>
+          </motion.figure>
         </div>
 
         {/* Circular scroll indicator */}

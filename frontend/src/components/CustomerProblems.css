@@ -1,13 +1,14 @@
 /* ===== CustomerProblems — 3-card "problem / solution" block ===================
-   Placed above the IDE hero on Home. Dark ink palette anchors the section to
-   the hero's identity while flagging pain points before the identity anchor. */
+   Placed above the IDE hero on Home. Light indigo-gray + white cards, part of
+   the site's white/pale-indigo two-tone system; the dark hero right below it
+   is the one deliberate dark anchor on the page. */
 
 .cprob {
-  --cp-ink: #0b0d12;
-  --cp-surface: #141821;
-  --cp-rule: rgba(255, 255, 255, 0.08);
-  --cp-text: #f5f6fa;
-  --cp-muted: #9199ac;
+  --cp-ink: #f5f6fb;
+  --cp-surface: #ffffff;
+  --cp-rule: rgba(15, 23, 42, 0.08);
+  --cp-text: #1a1a2e;
+  --cp-muted: #64748b;
   --cp-indigo: #6366f1;
 
   position: relative;
@@ -17,15 +18,6 @@
      hero-full's margin-top: -72px so the sections meet cleanly. */
   padding: 120px 24px 160px;
   z-index: 1;
-}
-
-.cprob::before {
-  /* Very slight lift over the ink so the section reads distinct from hero */
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.02);
-  pointer-events: none;
 }
 
 .cprob__inner {
@@ -74,14 +66,23 @@
 }
 
 /* --- Card ------------------------------------------------------------------ */
+/* Per-card color coding — borrows the reference site's "one color per
+   service card" cue. Each card's --cp-accent resolves to one of
+   index.css's semantic tokens. */
+.cprob-card--tech      { --cp-accent: var(--color-tech); }
+.cprob-card--trust      { --cp-accent: var(--color-trust); }
+.cprob-card--highlight { --cp-accent: var(--color-highlight); }
+
 .cprob-card {
   display: flex;
   flex-direction: column;
   padding: 28px;
   background: var(--cp-surface);
   border: 1px solid var(--cp-rule);
+  border-left: 3px solid var(--cp-accent, var(--cp-indigo));
   border-radius: 4px;
   min-height: 100%;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.06));
 }
 
 .cprob-card__num {
@@ -89,7 +90,7 @@
   font-size: 11px;
   letter-spacing: 0.1em;
   font-weight: 600;
-  color: var(--cp-indigo);
+  color: var(--cp-accent, var(--cp-indigo));
   margin-bottom: 14px;
   text-transform: uppercase;
 }
@@ -111,7 +112,7 @@
   display: block;
   height: 1px;
   width: 40px;
-  background: var(--cp-indigo);
+  background: var(--cp-accent, var(--cp-indigo));
   margin: 16px 0;
   opacity: 0.7;
 }
@@ -129,7 +130,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--cp-indigo);
+  color: var(--cp-accent, var(--cp-indigo));
   font-weight: 700;
 }
 

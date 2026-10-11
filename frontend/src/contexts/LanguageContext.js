@@ -7,6 +7,8 @@ export const translations = {
   ko: {
     nav: { services: '제작 서비스', references: '디자인 레퍼런스', portfolio: '포트폴리오', about: '소개', contact: '견적·문의' },
     hero: {
+      title: '만들고 끝나지 않는 홈페이지',
+      subtitle: '기획부터 디자인·개발·운영까지, 프리랜서 풀스택 개발자가 처음부터 끝까지 직접 만들고 관리합니다.',
       heroCard: {
         headerBar: 'devvibe — main',
         ariaLabel: '개발자 프로필 코드 카드',
@@ -586,6 +588,8 @@ export const translations = {
   en: {
     nav: { services: 'SERVICES', references: 'DESIGNS', portfolio: 'PORTFOLIO', about: 'ABOUT', contact: 'CONTACT' },
     hero: {
+      title: "A homepage that doesn't end at launch",
+      subtitle: 'From planning to design, development, and ongoing care — one freelance full-stack developer, start to finish.',
       heroCard: {
         headerBar: 'devvibe — main',
         ariaLabel: 'Developer profile code card',

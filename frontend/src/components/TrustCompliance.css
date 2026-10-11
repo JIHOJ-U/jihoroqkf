@@ -1,12 +1,13 @@
 /* ===== TrustCompliance — horizontal 4-item strip =============================
-   Sits below the IDE hero, above the pricing / product blocks. Dark ink base
-   with monospace bracket icons keeps the terminal identity. */
+   Sits below the IDE hero, above the pricing / product blocks. Light
+   indigo-gray base, part of the site's white / pale-indigo two-tone system;
+   keeps the monospace bracket icons as the only "terminal" trace. */
 
 .tcomp {
-  --tc-ink: #0b0d12;
-  --tc-rule: rgba(255, 255, 255, 0.08);
-  --tc-text: #f5f6fa;
-  --tc-muted: #9199ac;
+  --tc-ink: #f5f6fb;
+  --tc-rule: rgba(15, 23, 42, 0.08);
+  --tc-text: #1a1a2e;
+  --tc-muted: #64748b;
   --tc-indigo: #6366f1;
 
   background: var(--tc-ink);

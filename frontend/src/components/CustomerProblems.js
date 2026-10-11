@@ -55,6 +55,13 @@ const itemVariants = (reduce) =>
 
 const directions = ['left', 'bottom', 'right'];
 
+/* Per-card accent, mapped to the meaning of each problem rather than
+   sequential order — mobile/speed reads as "tech", the admin-automation
+   pain point as "highlight" (progress/efficiency), and the "what if the
+   developer disappears" concern as "trust" (continuity/security). Uses
+   the semantic color tokens already defined in index.css. */
+const accents = ['tech', 'highlight', 'trust'];
+
 function CustomerProblems() {
   const { t } = useLanguage();
   const block = t.customerProblems;
@@ -81,7 +88,7 @@ function CustomerProblems() {
           {block.cards.map((card, i) => (
             <motion.article
               key={card.num}
-              className="cprob-card"
+              className={`cprob-card cprob-card--${accents[i] || 'tech'}`}
               variants={cardVariants(directions[i], prefersReducedMotion)}
               initial="hidden"
               whileInView="visible"

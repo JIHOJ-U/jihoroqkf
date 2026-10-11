@@ -38,19 +38,18 @@ export default function TypeOnView({
     // Optional pre-typing delay — lets multiple TypeOnView instances in the
     // same viewport (e.g. sequential ProcessSection steps) type one after
     // another instead of all at once.
+    let intervalId;
     const kickoff = setTimeout(() => {
       let i = 0;
-      const t = setInterval(() => {
+      intervalId = setInterval(() => {
         i += 1;
         setCount(i);
-        if (i >= text.length) clearInterval(t);
+        if (i >= text.length) clearInterval(intervalId);
       }, speed);
-      // Store interval on the timeout closure for cleanup
-      kickoff._interval = t;
     }, startDelay);
     return () => {
       clearTimeout(kickoff);
-      if (kickoff._interval) clearInterval(kickoff._interval);
+      if (intervalId) clearInterval(intervalId);
     };
   }, [started, text, speed, startDelay]);
 
