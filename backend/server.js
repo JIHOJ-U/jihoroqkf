@@ -617,6 +617,55 @@ app.get('/api/inquiries', async (req, res) => {
   }
 });
 
+// Korean name → "김OO" (first syllable kept, rest masked). Anything that
+// isn't a 2-4 char Korean name falls back to "first char + asterisks" per word.
+function maskInquiryName(name) {
+  const trimmed = String(name || '').trim();
+  if (!trimmed) return '고객';
+  if (/^[가-힣]{2,4}$/.test(trimmed)) {
+    return trimmed[0] + 'O'.repeat(trimmed.length - 1);
+  }
+  return trimmed
+    .split(/\s+/)
+    .map((word) => (word.length <= 1 ? word : word[0] + '*'.repeat(word.length - 1)))
+    .join(' ');
+}
+
+// Public, PII-safe feed for the homepage "최근 상담 신청 현황" board — masked
+// name + project type + date only. Never add email/phone/company/description
+// here; /api/inquiries (full PII) is for the admin page only.
+app.get('/api/inquiries/public', async (req, res) => {
+  const LIMIT = 10;
+  try {
+    let rows;
+    if (usePg && pgPool) {
+      const result = await pgPool.query(
+        'SELECT name, project_type, created_at FROM inquiries ORDER BY created_at DESC LIMIT $1',
+        [LIMIT]
+      );
+      rows = result.rows.map((r) => ({
+        name: r.name,
+        projectType: r.project_type || '웹 개발',
+        createdAt: r.created_at instanceof Date ? r.created_at.toISOString() : r.created_at,
+      }));
+    } else {
+      rows = readData('inquiries').slice(0, LIMIT).map((inq) => ({
+        name: inq.name,
+        projectType: inq.projectType || '웹 개발',
+        createdAt: inq.createdAt,
+      }));
+    }
+    res.json(rows.map((r) => ({
+      name: maskInquiryName(r.name),
+      projectType: r.projectType,
+      createdAt: r.createdAt,
+    })));
+  } catch (e) {
+    console.error('[inquiry.public] failed:', e.message);
+    res.status(500).json({ error: '조회 중 오류가 발생했습니다.' });
+  }
+});
+
 app.patch('/api/inquiries/:id', async (req, res) => {
   try {
     if (usePg && pgPool) {

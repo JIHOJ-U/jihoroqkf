@@ -24,6 +24,8 @@ export const deletePortfolio = (id) => api.delete(`/portfolios/${id}`);
 // Inquiry API
 export const submitInquiry = (data) => api.post('/inquiries', data);
 export const getInquiries = () => api.get('/inquiries');
+// Masked name + project type + date only — safe for the public homepage board.
+export const getPublicInquiries = () => api.get('/inquiries/public');
 
 // AI Preview API
 export const submitAiPreview = (data) => api.post('/ai-preview', data);

@@ -22,6 +22,7 @@ import CustomerProblems from '../components/CustomerProblems';
 import ComingSoonBadge from '../components/ComingSoonBadge';
 import ParallaxBridge from '../components/ParallaxBridge';
 import TrustCompliance from '../components/TrustCompliance';
+import RecentInquiriesBoard from '../components/RecentInquiriesBoard';
 import StarterProducts from '../components/StarterProducts';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Home.css';
@@ -410,9 +411,13 @@ function Home() {
       <div className="home-curtain">
 
       {/* Trust & compliance strip — sits right at the top of the curtain so
-          it renders "immediately after" the hero once the curtain rolls up.
-          Dark ink strip preserves the terminal identity into the light body. */}
+          it renders "immediately after" the hero once the curtain rolls up. */}
       <TrustCompliance />
+
+      {/* Recent consultation requests — real, masked inquiry data from
+          /api/inquiries/public. Renders nothing until there's at least one
+          real submission (no placeholder rows). */}
+      <RecentInquiriesBoard />
 
       {/* Quick-start compact products — low-ticket entry before the full
           pricing matrix. Bridge line points visitors down to PricingTiers. */}
@@ -549,7 +554,7 @@ function Home() {
       {/* Dark mini-strip — light→dark→light rhythm + at-a-glance trust signal */}
       <MetricsStrip />
 
-      {/* Testimonials — keep hidden until we have real client quotes */}
+      {/* Testimonials — paused for now, keep the component/data ready to re-enable */}
       {/* <TestimonialsMarquee /> */}
 
       {/* Works */}

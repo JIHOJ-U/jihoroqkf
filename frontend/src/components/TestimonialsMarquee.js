@@ -19,12 +19,23 @@ const TAG_COLORS = {
   ux:  { bg: 'rgba(245, 158, 11, 0.12)', fg: '#f59e0b' },
 };
 
+function Stars({ rating = 5 }) {
+  return (
+    <div className="tm-card-rating" aria-label={`${rating} out of 5 stars`}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <span key={i} aria-hidden="true">{i < rating ? '★' : '☆'}</span>
+      ))}
+    </div>
+  );
+}
+
 function Card({ item, idx }) {
   const grad = GRADIENTS[idx % GRADIENTS.length];
   const color = TAG_COLORS[item.tagKey] || TAG_COLORS.web;
   return (
     <div className="tm-card">
       <div className="tm-card-quote-mark" aria-hidden="true">"</div>
+      <Stars rating={item.rating} />
       <p className="tm-card-body">{item.body}</p>
       <div className="tm-card-foot">
         <div className="tm-card-avatar" style={{ background: grad }}>
@@ -56,12 +67,17 @@ function Row({ items, direction, speed }) {
 }
 
 function TestimonialsMarquee() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { label, title, desc, items } = t.testimonials;
 
   const mid = Math.ceil(items.length / 2);
   const top = items.slice(0, mid);
   const bottom = items.slice(mid);
+
+  // Average + count summary line — the one thing both Kmong ("5.0(6)")
+  // and Soomgo (platform-wide totals) lead with that a plain quote wall
+  // skips. Computed from the real per-item ratings above, not a fixed number.
+  const avg = (items.reduce((sum, it) => sum + (it.rating || 5), 0) / items.length).toFixed(1);
 
   return (
     <section className="tm-section">
@@ -75,6 +91,12 @@ function TestimonialsMarquee() {
         >
           <span className="section-label">{label}</span>
           <h2 className="section-title">{title}</h2>
+          <div className="tm-head-summary">
+            <span className="tm-head-summary__star" aria-hidden="true">★</span>
+            <strong>{avg}</strong>
+            <span className="tm-head-summary__sep">·</span>
+            <span>{lang === 'ko' ? `후기 ${items.length}건` : `${items.length} reviews`}</span>
+          </div>
           {desc && <p className="tm-head-desc">{desc}</p>}
         </motion.div>
       </div>

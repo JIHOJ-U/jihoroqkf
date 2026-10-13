@@ -22,8 +22,33 @@
   margin-bottom: 14px;
 }
 
+/* Aggregate rating summary — "★ 4.9 · 후기 7건", the pattern Kmong/Soomgo
+   both lead with before showing individual reviews. */
+.tm-head-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.tm-head-summary strong {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.tm-head-summary__star {
+  color: var(--color-highlight, #f59e0b);
+  font-size: 1.1rem;
+}
+
+.tm-head-summary__sep {
+  color: var(--text-muted);
+}
+
 .tm-head-desc {
-  margin-top: 18px;
+  margin-top: 10px;
   font-size: 1rem;
   color: var(--text-muted);
   line-height: 1.7;
@@ -133,6 +158,20 @@
   line-height: 1;
   user-select: none;
   pointer-events: none;
+}
+
+/* Star rating — the convention Korean review/marketplace sites (크몽,
+   숨고, 네이버) lead with, which a plain quote-wall skips. Amber matches
+   the site's existing "highlight" semantic token. */
+.tm-card-rating {
+  display: flex;
+  gap: 2px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: var(--color-highlight, #f59e0b);
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .tm-card-body {

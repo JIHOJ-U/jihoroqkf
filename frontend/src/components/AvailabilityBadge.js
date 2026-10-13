@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi';
 import { useLanguage } from '../contexts/LanguageContext';
 import { trackCta } from '../utils/analytics';
+import availabilityStatus from '../data/availabilityStatus';
 import './AvailabilityBadge.css';
 
 function getKstClock() {
@@ -17,7 +18,9 @@ function getKstClock() {
 
 function AvailabilityBadge({ variant = 'chip' }) {
   const { t } = useLanguage();
-  const { label, hint, cta } = t.availability;
+  const { byStatus, hint, cta } = t.availability;
+  const { status, slotsLeft } = availabilityStatus;
+  const label = (byStatus[status] || byStatus.limited).replace('{slots}', slotsLeft);
   const [time, setTime] = useState(getKstClock());
   // Hide the top status bar once the user scrolls down a bit — it's only
   // shown at the top of the page so it doesn't compete with content.
