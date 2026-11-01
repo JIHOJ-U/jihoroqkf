@@ -28,7 +28,10 @@ function Analytics() {
       canonical.id = 'canonical-link';
       document.head.appendChild(canonical);
     }
-    canonical.href = window.location.origin + location.pathname;
+    // Keep ?lang=en so the English variant self-canonicalizes, matching the
+    // hreflang=en alternate in index.html. Other query params are dropped.
+    const isEn = new URLSearchParams(location.search).get('lang') === 'en';
+    canonical.href = window.location.origin + location.pathname + (isEn ? '?lang=en' : '');
 
     // Per-route SEO meta — resolve a routeMeta entry by exact path,
     // then by known dynamic patterns, finally falling back to default.
