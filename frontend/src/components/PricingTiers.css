@@ -34,6 +34,18 @@
   color: var(--text-secondary);
 }
 
+/* Promotion deadline pill — same red as the 80% badge so they read together. */
+.pricing-promo {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #dc2626;
+  background: rgba(248, 113, 113, 0.12);
+}
+
 /* ---------- Matrix outer card ---------- */
 .pricing-matrix {
   position: relative;
@@ -387,5 +399,69 @@
   .pricing-cta-btn:hover {
     transform: none !important;
     transition: none !important;
+  }
+}
+
+/* ---------- Mobile product cards (replace the matrix ≤880px) ---------- */
+.pricing-cards {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .pricing-matrix {
+    display: none;
+  }
+
+  .pricing-cards {
+    display: grid;
+    gap: 16px;
+  }
+
+  .pricing-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px 20px;
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
+    border-radius: 16px;
+    background: var(--bg-primary, #ffffff);
+  }
+
+  .pricing-card .pricing-cell__desc-title {
+    margin-top: 10px;
+  }
+
+  .pricing-card .pricing-cell__price-row {
+    justify-content: flex-start;
+  }
+
+  .pricing-card__list {
+    list-style: none;
+    margin: 12px 0 16px;
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
+    display: grid;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+  }
+
+  .pricing-card__list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pricing-card__list svg {
+    color: var(--color-primary, #6366f1);
+    flex-shrink: 0;
+  }
+
+  .pricing-card__quant {
+    justify-content: space-between;
+  }
+
+  .pricing-card__quant span {
+    color: var(--text-muted);
   }
 }

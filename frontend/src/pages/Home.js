@@ -19,11 +19,9 @@ import InquiryCTA from '../components/InquiryCTA';
 import PricingTiers from '../components/PricingTiers';
 import MaintenanceTiers from '../components/MaintenanceTiers';
 import CustomerProblems from '../components/CustomerProblems';
-import ComingSoonBadge from '../components/ComingSoonBadge';
 import ParallaxBridge from '../components/ParallaxBridge';
 import TrustCompliance from '../components/TrustCompliance';
 import RecentInquiriesBoard from '../components/RecentInquiriesBoard';
-import StarterProducts from '../components/StarterProducts';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Home.css';
 
@@ -229,10 +227,6 @@ function Home() {
               <Link to="/portfolio" className="hero-cta hero-cta--secondary">
                 {heroCard.secondaryCta}
               </Link>
-              <Link to="/ai-preview" className="hero-cta hero-cta--secondary hero-cta--coming">
-                <span>{lang === 'ko' ? 'AI로 먼저 시안 받아보기' : 'Try the AI draft'}</span>
-                <ComingSoonBadge variant="chip" />
-              </Link>
             </motion.div>
           </div>
 
@@ -419,13 +413,9 @@ function Home() {
           real submission (no placeholder rows). */}
       <RecentInquiriesBoard />
 
-      {/* Quick-start compact products — low-ticket entry before the full
-          pricing matrix. Bridge line points visitors down to PricingTiers. */}
-      <StarterProducts />
-
-      {/* Pricing tiers — desktop only (the 4-col matrix collapses to a long
-          stack on mobile that fights the conversion flow with InquiryCTA below) */}
-      <div id="home-pricing">{isDesktop && <PricingTiers />}</div>
+      {/* Pricing — the single source of build prices (3 products), shown on
+          every device so mobile visitors also see what things cost. */}
+      <div id="home-pricing"><PricingTiers /></div>
 
       {/* Monthly maintenance tiers — orchestrated slide-in reveal. Sits right
           after PricingTiers to complete the "build cost → ongoing cost" story.

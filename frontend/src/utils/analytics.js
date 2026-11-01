@@ -23,9 +23,34 @@ export function trackCta(ctaId, extra = {}) {
   trackEvent('cta_click', { cta_id: ctaId, ...extra });
 }
 
-/** Inquiry/contact form submit (success). */
+/* === Inquiry funnel ==================================================
+   Weekly funnel in GA4 (Explore → Funnel exploration):
+     1. session_start              — visitors
+     2. page_view  page_path=/contact — contact page visits
+     3. form_start                 — started typing in the form
+     4. generate_lead              — submit succeeded (mark as key event)
+   Side events: inquiry_submit_fail, contact_click (method=phone|kakao|email). */
+
+/** Inquiry/contact form submit (success). Fires GA4's recommended
+ *  `generate_lead` (mark it as a key event) plus the legacy event name. */
 export function trackInquirySubmit(extra = {}) {
+  trackEvent('generate_lead', { currency: 'KRW', value: 0, ...extra });
   trackEvent('inquiry_submit', extra);
+}
+
+/** First interaction with the inquiry form — once per page view. */
+export function trackFormStart(formId) {
+  trackEvent('form_start', { form_id: formId });
+}
+
+/** Submit failed (network, timeout, server error). */
+export function trackInquiryFail(reason) {
+  trackEvent('inquiry_submit_fail', { reason });
+}
+
+/** Direct-contact click: method = 'phone' | 'kakao' | 'email'. */
+export function trackContactClick(method, source) {
+  trackEvent('contact_click', { method, source });
 }
 
 /** Channel Talk opened from anywhere in the UI. */

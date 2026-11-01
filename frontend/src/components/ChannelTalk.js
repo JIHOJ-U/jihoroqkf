@@ -20,9 +20,12 @@ function ChannelTalk() {
     // iframe) doesn't compete with the initial page render / first scroll.
     const start = () => {
       ChannelService.loadScript();
+      // On mobile, lift the launcher above the fixed MobileContactBar.
+      const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
       ChannelService.boot({
         pluginKey: PLUGIN_KEY,
         language: lang === 'en' ? 'en' : 'ko',
+        ...(isMobile ? { channelButtonOption: { xMargin: 16, yMargin: 78 } } : {}),
       });
       booted = true;
     };

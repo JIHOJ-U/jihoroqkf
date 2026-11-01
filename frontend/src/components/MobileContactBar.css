@@ -1,0 +1,61 @@
+/* Mobile-only fixed contact bar (call + KakaoTalk). Hidden on desktop. */
+.mcb {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mcb {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9995;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    background: var(--bg-primary, #ffffff);
+    border-top: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  .mcb__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 46px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .mcb__btn--phone {
+    background: #4f46e5;
+    color: #ffffff;
+  }
+
+  /* KakaoTalk brand yellow with dark label for contrast. */
+  .mcb__btn--kakao {
+    background: #fee500;
+    color: #191919;
+  }
+
+  .mcb__btn--form {
+    background: var(--bg-secondary, #f3f4f6);
+    color: var(--text-primary, #111827);
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+  }
+
+  /* Keep page content and other floating buttons clear of the bar. */
+  body.has-mcb {
+    padding-bottom: calc(62px + env(safe-area-inset-bottom));
+  }
+  body.has-mcb .collection-btn {
+    bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+  body.has-mcb .exp-toggle {
+    bottom: calc(130px + env(safe-area-inset-bottom));
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import AdminNavbar from './components/AdminNavbar';
@@ -14,6 +14,7 @@ import ReadingProgress from './components/ReadingProgress';
 import ExplorerSidebar from './components/ExplorerSidebar';
 import QuickActionsDock from './components/QuickActionsDock';
 import ChannelTalk from './components/ChannelTalk';
+import MobileContactBar from './components/MobileContactBar';
 import CollectionButton from './components/CollectionButton';
 import SectionNavDots from './components/SectionNavDots';
 import Analytics from './components/Analytics';
@@ -44,7 +45,6 @@ const Portfolio = withMinDelay(() => import('./pages/Portfolio'));
 const PortfolioDetail = withMinDelay(() => import('./pages/PortfolioDetail'));
 const PortfolioForm = withMinDelay(() => import('./pages/PortfolioForm'));
 const Contact = withMinDelay(() => import('./pages/Contact'));
-const AiPreview = withMinDelay(() => import('./pages/AiPreview'));
 const About = withMinDelay(() => import('./pages/About'));
 const Admin = withMinDelay(() => import('./pages/Admin'));
 const Privacy = withMinDelay(() => import('./pages/Privacy'));
@@ -85,6 +85,7 @@ function AppChrome({ children }) {
           <ExplorerSidebar />
           <QuickActionsDock />
           <ChannelTalk />
+          <MobileContactBar />
           <CollectionButton />
           <SectionNavDots />
         </>
@@ -113,7 +114,8 @@ function AnimatedRoutes() {
           <Route path="/portfolio/new" element={<PageTransition><PortfolioForm /></PageTransition>} />
           <Route path="/portfolio/edit/:id" element={<PageTransition><PortfolioForm /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-          <Route path="/ai-preview" element={<PageTransition><AiPreview /></PageTransition>} />
+          {/* AI draft feature retired — old links land on the contact page. */}
+          <Route path="/ai-preview" element={<Navigate to="/contact" replace />} />
           <Route path="/about" element={<PageTransition><About /></PageTransition>} />
           <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />

@@ -22,6 +22,7 @@ function PricingTiers() {
     label,
     title,
     desc,
+    promo,
     comparisonHeader,
     tiers,
     features,
@@ -47,6 +48,7 @@ function PricingTiers() {
           <span className="section-label">{label}</span>
           <h2 className="section-title">{title}</h2>
           {desc && <p className="pricing-desc">{desc}</p>}
+          {promo && <p className="pricing-promo">{promo}</p>}
         </motion.div>
 
         <motion.div
@@ -149,6 +151,33 @@ function PricingTiers() {
             ))}
           </div>
         </motion.div>
+
+        {/* Mobile: one card per product (the matrix above is hidden ≤880px). */}
+        <div className="pricing-cards">
+          {tiers.map((tier, i) => (
+            <article key={`card-${tier.key}`} className="pricing-card">
+              <span className="pricing-cell__tier-name">{tier.name}</span>
+              {tier.listPrice && <span className="pricing-cell__list-price">{tier.listPrice}</span>}
+              <span className="pricing-cell__price-row">
+                {tier.listPrice && <span className="pricing-cell__discount-pct">80%</span>}
+                <span className="pricing-cell__tier-price">{tier.price}</span>
+              </span>
+              <span className="pricing-cell__desc-title">{tier.descTitle}</span>
+              <span className="pricing-cell__desc-body">{tier.descBody}</span>
+              <ul className="pricing-card__list">
+                {features.filter((f) => f.values[i]).map((f) => (
+                  <li key={f.key}><HiCheck aria-hidden="true" /> {f.label}</li>
+                ))}
+                {quantitative.map((q) => (
+                  <li key={q.key} className="pricing-card__quant"><span>{q.label}</span> {q.values[i]}</li>
+                ))}
+              </ul>
+              <button type="button" className="pricing-cta-btn" onClick={() => handleCta(tier)}>
+                {ctaText}
+              </button>
+            </article>
+          ))}
+        </div>
 
         {smallNote && <p className="pricing-note">{smallNote}</p>}
       </div>

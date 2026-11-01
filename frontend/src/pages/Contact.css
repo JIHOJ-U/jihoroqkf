@@ -401,3 +401,34 @@ textarea.has-error:focus {
   font-size: 1rem;
   flex-shrink: 0;
 }
+
+/* One-step form: submit button sits alone on the right. */
+.cf-nav--single {
+  justify-content: flex-end;
+}
+
+/* Fallback contact buttons shown under a failed submit. */
+.cf-submit-error {
+  flex-wrap: wrap;
+}
+.cf-alt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+.cf-alt .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Honeypot field — off-screen for people, still in the DOM for bots. */
+.cf-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
