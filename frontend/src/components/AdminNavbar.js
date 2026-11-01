@@ -4,9 +4,8 @@ import {
   HiOutlineViewGrid, HiOutlineCollection, HiOutlineMail,
   HiOutlineDocumentText, HiOutlineExternalLink, HiOutlineLogout,
 } from 'react-icons/hi';
+import { clearAdminKey } from '../utils/adminSession';
 import './AdminNavbar.css';
-
-const STORAGE_KEY = 'joe_dev_admin_auth';
 
 const NAV = [
   { to: '/admin',           label: 'Dashboard',  icon: <HiOutlineViewGrid />,    end: true },
@@ -19,7 +18,7 @@ function AdminNavbar() {
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    clearAdminKey();
     navigate('/');
     // hard reload so any client state tied to admin is cleared
     setTimeout(() => window.location.reload(), 0);

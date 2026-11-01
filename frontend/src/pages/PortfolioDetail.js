@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { HiArrowLeft, HiArrowRight, HiExternalLink, HiPencil, HiTrash, HiCode, HiCalendar, HiUser, HiSparkles } from 'react-icons/hi';
 import { FaGithub } from 'react-icons/fa';
 import { getPortfolio, getPortfolios, deletePortfolio, getImageUrl } from '../api';
+import { isAdminSession } from '../utils/adminSession';
 import { useAchievement } from '../contexts/AchievementContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import MarkdownContent from '../components/MarkdownContent';
@@ -198,14 +199,17 @@ function PortfolioDetail() {
               )}
             </div>
             <h1 className="detail-title">{portfolio.title}</h1>
-            <div className="detail-actions">
-              <Link to={`/portfolio/edit/${id}`} className="btn-icon">
-                <HiPencil /> {c.edit}
-              </Link>
-              <button onClick={handleDelete} className="btn-icon btn-icon-danger">
-                <HiTrash /> {c.remove}
-              </button>
-            </div>
+            {/* Edit/delete only for a signed-in admin; the server enforces it too. */}
+            {isAdminSession() && (
+              <div className="detail-actions">
+                <Link to={`/portfolio/edit/${id}`} className="btn-icon">
+                  <HiPencil /> {c.edit}
+                </Link>
+                <button onClick={handleDelete} className="btn-icon btn-icon-danger">
+                  <HiTrash /> {c.remove}
+                </button>
+              </div>
+            )}
           </div>
 
           {portfolio.demoUrl && (

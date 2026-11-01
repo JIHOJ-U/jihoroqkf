@@ -6,10 +6,8 @@ import { FaGithub, FaBlog } from 'react-icons/fa';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAchievement } from '../contexts/AchievementContext';
+import { isAdminSession, clearAdminKey } from '../utils/adminSession';
 import './CommandPalette.css';
-
-const ADMIN_KEY = 'wnwlgh0719';
-const STORAGE_KEY = 'joe_dev_admin_auth';
 
 const COPY = {
   ko: {
@@ -68,7 +66,7 @@ function CommandPalette() {
   // Check admin auth state when palette opens
   useEffect(() => {
     if (open) {
-      setIsAdminAuth(localStorage.getItem(STORAGE_KEY) === ADMIN_KEY);
+      setIsAdminAuth(isAdminSession());
     }
   }, [open]);
 
@@ -88,7 +86,7 @@ function CommandPalette() {
         { id: 'admin', label: L.admin, hint: '/admin', icon: <HiLockClosed />, action: () => navigate('/admin'), category: 'NAV' },
         { id: 'portfolio-new', label: L.portfolioNew, hint: '/portfolio/new', icon: <HiCode />, action: () => navigate('/portfolio/new'), category: 'NAV' },
         { id: 'admin-logout', label: L.adminLogout, hint: 'logout', icon: <HiLockClosed />, action: () => {
-          localStorage.removeItem(STORAGE_KEY);
+          clearAdminKey();
           setIsAdminAuth(false);
         }, category: 'ACTION' }
       );

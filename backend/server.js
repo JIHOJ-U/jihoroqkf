@@ -9,135 +9,7 @@ const Parser = require('rss-parser');
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
-const Anthropic = require('@anthropic-ai/sdk');
-
-const anthropic = process.env.ANTHROPIC_API_KEY
-  ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  : null;
-
-const AI_PREVIEW_MODEL = 'claude-haiku-4-5-20251001';
-
-const AI_PREVIEW_SYSTEM_PROMPT = `You are a website copywriter and information architect for Dev.Vibe, a freelance full-stack developer studio in South Korea. Given a visitor's business description, propose a homepage structure.
-
-Rules:
-- Respond ONLY by calling the generate_site_proposal tool — never write prose outside the tool call.
-- Write every text field in the language given by the "lang" field (ko or en).
-- headline: under 20 words, concrete and specific to the described business — never generic filler like "Welcome to our website" or "Unlock your business potential".
-- sections: 3 to 6 items, ordered top to bottom as they would appear on the page. Each title is short (2-4 words); each description is one plain sentence explaining what that section shows.
-- toneSuggestion: a short phrase (not a paragraph) naming a visual direction, e.g. "Minimal with warm accents".
-- suggestedColors: 2 to 3 hex color codes that fit the requested mood.
-- Never invent specific prices, statistics, or claims about the business beyond what you were given.
-
-Examples of the expected quality bar (illustrative only — always write your actual response in the language given by the "lang" field, regardless of the language used in these examples):
-
-Example A — input: businessType=Cafe/Restaurant, siteGoal=More bookings, mood=Warm
-{
-  "headline": "A warm cup, booked in three seconds",
-  "tagline": "A neighborhood cafe that roasts its own beans every morning",
-  "sections": [
-    {"title": "Today's Menu", "description": "The day's signature drinks and bakery items shown with photos."},
-    {"title": "Live Booking", "description": "Pick a time slot and the reservation is confirmed instantly."},
-    {"title": "The Space", "description": "Photos of the seating layout and atmosphere before you visit."},
-    {"title": "Getting Here", "description": "Map, parking, and transit info in one view."}
-  ],
-  "toneSuggestion": "Warm wood tones with a soft serif headline",
-  "suggestedColors": ["#8B5E3C", "#F5E6D3"]
-}
-
-Example B — input: businessType=Clinic/Hospital, siteGoal=More bookings, mood=Trustworthy
-{
-  "headline": "Same-week appointments with board-certified specialists",
-  "tagline": "A local clinic focused on clear communication and follow-through care",
-  "sections": [
-    {"title": "Book Online", "description": "Pick a specialist and time slot, confirmed instantly."},
-    {"title": "Our Doctors", "description": "Credentials, specialties, and patient reviews for each doctor."},
-    {"title": "Services", "description": "A clear list of treatments offered with plain-language explanations."},
-    {"title": "Patient Resources", "description": "Insurance info, forms, and what to expect on your first visit."},
-    {"title": "Location & Hours", "description": "Map, parking, and weekday/weekend hours in one view."}
-  ],
-  "toneSuggestion": "Clean clinical white with a single trustworthy blue accent",
-  "suggestedColors": ["#2563EB", "#F8FAFC"]
-}
-
-Example C — input: businessType=E-commerce, siteGoal=More sales, mood=Playful
-{
-  "headline": "Order today, it's at your door tomorrow — shop worry-free",
-  "tagline": "A daily-wear edit for people in their 20s and 30s",
-  "sections": [
-    {"title": "Best Sellers", "description": "Live sales rankings shown alongside real-time stock levels."},
-    {"title": "Browse by Category", "description": "Tops, bottoms, and accessories in a fast image-first grid."},
-    {"title": "Cart & Checkout", "description": "One-click add-to-cart and simplified payment front and center."},
-    {"title": "Customer Reviews", "description": "Real buyer photos and reviews shown on every product."},
-    {"title": "Shipping Info", "description": "Same-day dispatch cutoff and order tracking explained clearly."}
-  ],
-  "toneSuggestion": "Vivid accent color on a grid-based layout",
-  "suggestedColors": ["#FF4D6D", "#111111", "#FFFFFF"]
-}
-
-Example D — input: businessType=Beauty/Salon, siteGoal=More bookings, mood=Premium
-{
-  "headline": "A quiet, unhurried hour just for you",
-  "tagline": "A private studio taking a limited number of clients per day",
-  "sections": [
-    {"title": "Services & Pricing", "description": "Every treatment listed with duration and price, no surprises."},
-    {"title": "Book a Slot", "description": "See real-time open times and reserve without a phone call."},
-    {"title": "Portfolio", "description": "Before-and-after photos organized by treatment type."},
-    {"title": "Meet the Team", "description": "Stylist profiles with their specialties and experience."},
-    {"title": "Visit Us", "description": "Studio photos, address, and parking guidance."}
-  ],
-  "toneSuggestion": "Muted neutrals with a single warm gold accent",
-  "suggestedColors": ["#C9A876", "#2B2622"]
-}`;
-
-const AI_PREVIEW_TOOL = {
-  name: 'generate_site_proposal',
-  description: 'Generate a website homepage proposal based on the business description.',
-  strict: true,
-  input_schema: {
-    type: 'object',
-    properties: {
-      headline: { type: 'string' },
-      tagline: { type: 'string' },
-      sections: {
-        type: 'array',
-        minItems: 3,
-        maxItems: 6,
-        items: {
-          type: 'object',
-          properties: {
-            title: { type: 'string' },
-            description: { type: 'string' },
-          },
-          required: ['title', 'description'],
-          additionalProperties: false,
-        },
-      },
-      toneSuggestion: { type: 'string' },
-      suggestedColors: {
-        type: 'array',
-        minItems: 2,
-        maxItems: 3,
-        items: { type: 'string' },
-      },
-    },
-    required: ['headline', 'tagline', 'sections', 'toneSuggestion', 'suggestedColors'],
-    additionalProperties: false,
-  },
-};
-
-// In-memory per-IP daily limit — single Render instance, no external store needed.
-const aiPreviewHits = new Map();
-const AI_PREVIEW_DAILY_LIMIT = 3;
-
-function aiPreviewRateLimitOk(ip) {
-  const now = Date.now();
-  const oneDayAgo = now - 24 * 60 * 60 * 1000;
-  const hits = (aiPreviewHits.get(ip) || []).filter((t) => t > oneDayAgo);
-  if (hits.length >= AI_PREVIEW_DAILY_LIMIT) return false;
-  hits.push(now);
-  aiPreviewHits.set(ip, hits);
-  return true;
-}
+const { requireAdmin } = require('./adminAuth');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -178,7 +50,15 @@ const corsOptions = ALLOWED_ORIGINS.length
   ? {
       origin: (origin, cb) => {
         if (!origin) return cb(null, true);
-        if (ALLOWED_ORIGINS.some(a => origin === a || origin.endsWith(a.replace(/^https?:\/\//, '')))) {
+        let host = '';
+        try { host = new URL(origin).hostname; } catch (e) { return cb(new Error('Bad origin')); }
+        const ok = ALLOWED_ORIGINS.some((a) => {
+          if (origin === a) return true;
+          let allowedHost = '';
+          try { allowedHost = new URL(a).hostname; } catch (e) { return false; }
+          return host.endsWith('.' + allowedHost);
+        });
+        if (ok) {
           return cb(null, true);
         }
         cb(new Error(`Not allowed by CORS: ${origin}`));
@@ -188,7 +68,7 @@ const corsOptions = ALLOWED_ORIGINS.length
   : { origin: true, credentials: true };
 
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Ensure directories
@@ -286,7 +166,7 @@ if (DATABASE_URL) {
       CREATE TABLE IF NOT EXISTS inquiries (
         id           UUID PRIMARY KEY,
         name         TEXT NOT NULL,
-        email        TEXT NOT NULL,
+        email        TEXT DEFAULT '',
         phone        TEXT DEFAULT '',
         company      TEXT DEFAULT '',
         project_type TEXT DEFAULT '웹 개발',
@@ -298,6 +178,7 @@ if (DATABASE_URL) {
         updated_at   TIMESTAMPTZ
       );
     `)
+    .then(() => pgPool.query('ALTER TABLE inquiries ALTER COLUMN email DROP NOT NULL'))
     .then(() => {
       usePg = true;
       console.log('✅ PostgreSQL connected — inquiries are persistent');
@@ -325,48 +206,33 @@ const rowToInquiry = (row) => ({
   updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : (row.updated_at || undefined),
 });
 
-if (DATABASE_URL) {
-  pgPool
-    .query(`
-      CREATE TABLE IF NOT EXISTS ai_previews (
-        id             UUID PRIMARY KEY,
-        email          TEXT NOT NULL,
-        business_type  TEXT DEFAULT '',
-        site_goal      TEXT DEFAULT '',
-        mood           TEXT DEFAULT '',
-        must_have      TEXT DEFAULT '',
-        reference_site TEXT DEFAULT '',
-        lang           TEXT DEFAULT 'ko',
-        result         JSONB,
-        status         TEXT DEFAULT '생성중',
-        created_at     TIMESTAMPTZ DEFAULT NOW()
-      );
-    `)
-    .catch(err => {
-      console.warn('[pg] ai_previews table init failed:', err.message);
-    });
-}
-
-const rowToAiPreview = (row) => ({
-  id: row.id,
-  email: row.email,
-  businessType: row.business_type || '',
-  siteGoal: row.site_goal || '',
-  mood: row.mood || '',
-  mustHave: row.must_have || '',
-  referenceSite: row.reference_site || '',
-  lang: row.lang || 'ko',
-  result: row.result || null,
-  status: row.status || '생성중',
-  createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
-});
-
 // ========== Health ==========
+// Lets the admin page check a typed key without exposing anything else.
+app.post('/api/admin/verify', requireAdmin, (req, res) => res.status(204).end());
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
 // ========== Portfolio API ==========
+
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+
+// An image reference is either an absolute http(s) URL, a frontend static
+// path, or "/uploads/<file>" with no directory traversal.
+function isSafeImageRef(ref) {
+  if (typeof ref !== 'string' || !ref) return false;
+  if (/^https?:\/\//i.test(ref)) return true;
+  if (ref.includes('..') || ref.includes('\\')) return false;
+  return ref.startsWith('/');
+}
+
+function removeUpload(ref) {
+  if (typeof ref !== 'string' || !ref.startsWith('/uploads/')) return;
+  const fp = path.resolve(UPLOADS_DIR, path.basename(ref));
+  if (path.dirname(fp) !== UPLOADS_DIR) return;
+  if (fs.existsSync(fp)) fs.unlinkSync(fp);
+}
 
 app.get('/api/portfolios', (req, res) => {
   res.json(readData('portfolios'));
@@ -379,7 +245,7 @@ app.get('/api/portfolios/:id', (req, res) => {
   res.json(item);
 });
 
-app.post('/api/portfolios', portfolioUpload, (req, res) => {
+app.post('/api/portfolios', requireAdmin, portfolioUpload, (req, res) => {
   const items = readData('portfolios');
   const { title, description, techStack, projectUrl, githubUrl, demoUrl, category, duration, client } = req.body;
   const thumbnailFile = req.files?.thumbnail?.[0];
@@ -406,7 +272,7 @@ app.post('/api/portfolios', portfolioUpload, (req, res) => {
   res.status(201).json(newItem);
 });
 
-app.put('/api/portfolios/:id', portfolioUpload, (req, res) => {
+app.put('/api/portfolios/:id', requireAdmin, portfolioUpload, (req, res) => {
   const items = readData('portfolios');
   const idx = items.findIndex(p => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: '포트폴리오를 찾을 수 없습니다.' });
@@ -418,6 +284,8 @@ app.put('/api/portfolios/:id', portfolioUpload, (req, res) => {
   let mergedImages = items[idx].images || [];
   if (existingImages !== undefined) {
     try { mergedImages = JSON.parse(existingImages); } catch (e) { mergedImages = []; }
+    if (!Array.isArray(mergedImages)) mergedImages = [];
+    mergedImages = mergedImages.filter(isSafeImageRef);
   }
   mergedImages = [...mergedImages, ...imageFiles.map(f => `/uploads/${f.filename}`)];
 
@@ -440,24 +308,13 @@ app.put('/api/portfolios/:id', portfolioUpload, (req, res) => {
   res.json(items[idx]);
 });
 
-app.delete('/api/portfolios/:id', (req, res) => {
+app.delete('/api/portfolios/:id', requireAdmin, (req, res) => {
   let items = readData('portfolios');
   const item = items.find(p => p.id === req.params.id);
   if (!item) return res.status(404).json({ error: '포트폴리오를 찾을 수 없습니다.' });
 
-  // Delete local files
-  if (item.thumbnail && !item.thumbnail.startsWith('http')) {
-    const fp = path.join(__dirname, item.thumbnail);
-    if (fs.existsSync(fp)) fs.unlinkSync(fp);
-  }
-  if (Array.isArray(item.images)) {
-    item.images.forEach(img => {
-      if (img && !img.startsWith('http')) {
-        const fp = path.join(__dirname, img);
-        if (fs.existsSync(fp)) fs.unlinkSync(fp);
-      }
-    });
-  }
+  // Delete local upload files — only ever inside uploads/.
+  [item.thumbnail, ...(Array.isArray(item.images) ? item.images : [])].forEach(removeUpload);
 
   items = items.filter(p => p.id !== req.params.id);
   writeData('portfolios', items);
@@ -465,17 +322,51 @@ app.delete('/api/portfolios/:id', (req, res) => {
 });
 
 // ========== Inquiry API ==========
+// Per-IP submit limit — stops form spam from flooding the inbox/webhook.
+const inquiryHits = new Map();
+const INQUIRY_WINDOW_MS = 60 * 60 * 1000;
+const INQUIRY_MAX_PER_WINDOW = 5;
+function inquiryRateOk(ip) {
+  const cutoff = Date.now() - INQUIRY_WINDOW_MS;
+  const hits = (inquiryHits.get(ip) || []).filter((t) => t > cutoff);
+  if (hits.length >= INQUIRY_MAX_PER_WINDOW) return false;
+  hits.push(Date.now());
+  inquiryHits.set(ip, hits);
+  return true;
+}
+
+const clean = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[0-9+\-\s()]{8,20}$/;
+
 app.post('/api/inquiries', async (req, res) => {
-  const { name, email, phone, company, projectType, budget, timeline, description } = req.body;
-  if (!name || !email || !description) {
-    return res.status(400).json({ error: '이름, 이메일, 프로젝트 설명은 필수입니다.' });
+  const body = req.body || {};
+  // Honeypot: real visitors never see or fill "website". Pretend success.
+  if (clean(body.website, 200)) {
+    return res.status(201).json({ message: '문의가 접수되었습니다.' });
+  }
+  const name = clean(body.name, 50);
+  const email = clean(body.email, 120);
+  const phone = clean(body.phone, 20);
+  const description = clean(body.description, 2000);
+  if (!name || !description || (!email && !phone)) {
+    return res.status(400).json({ error: '이름, 연락처(전화 또는 이메일), 문의 내용은 필수입니다.' });
+  }
+  if (email && !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: '이메일 형식이 올바르지 않습니다.' });
+  }
+  if (phone && !PHONE_RE.test(phone)) {
+    return res.status(400).json({ error: '전화번호 형식이 올바르지 않습니다.' });
+  }
+  if (!inquiryRateOk(req.ip)) {
+    return res.status(429).json({ error: '잠시 후 다시 시도해주세요.' });
   }
   const newInquiry = {
     id: uuidv4(),
-    name, email,
-    phone: phone || '', company: company || '',
-    projectType: projectType || '웹 개발',
-    budget: budget || '', timeline: timeline || '',
+    name, email, phone,
+    company: clean(body.company, 100),
+    projectType: clean(body.projectType, 50) || '웹 개발',
+    budget: clean(body.budget, 50), timeline: clean(body.timeline, 50),
     description, status: '접수됨',
     createdAt: new Date().toISOString(),
   };
@@ -501,110 +392,10 @@ app.post('/api/inquiries', async (req, res) => {
     return res.status(500).json({ error: '문의 저장 중 오류가 발생했습니다.' });
   }
   notifyNewInquiry(newInquiry).catch(err => console.error('[notify] failed:', err.message));
-  res.status(201).json({ message: '문의가 접수되었습니다.', inquiry: newInquiry });
+  res.status(201).json({ message: '문의가 접수되었습니다.', id: newInquiry.id });
 });
 
-app.post('/api/ai-preview', async (req, res) => {
-  const { email, businessType, siteGoal, mood, mustHave, referenceSite, lang } = req.body || {};
-
-  if (!email || !businessType || !siteGoal || !mood) {
-    return res.status(400).json({ error: 'missing_fields' });
-  }
-  const MAX_LEN = 500;
-  const fields = [email, businessType, siteGoal, mood, mustHave, referenceSite];
-  if (fields.some((v) => typeof v === 'string' && v.length > MAX_LEN)) {
-    return res.status(400).json({ error: 'input_too_long' });
-  }
-  if (!usePg || !pgPool) {
-    return res.status(503).json({ error: 'db_unavailable' });
-  }
-
-  const ip = req.ip;
-  if (!aiPreviewRateLimitOk(ip)) {
-    return res.status(429).json({ error: 'rate_limited' });
-  }
-
-  const id = uuidv4();
-  const record = {
-    businessType,
-    siteGoal,
-    mood,
-    mustHave: mustHave || '',
-    referenceSite: referenceSite || '',
-    lang: lang === 'en' ? 'en' : 'ko',
-  };
-
-  try {
-    await pgPool.query(
-      `INSERT INTO ai_previews (id, email, business_type, site_goal, mood, must_have, reference_site, lang, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, '생성중')`,
-      [id, email, record.businessType, record.siteGoal, record.mood, record.mustHave, record.referenceSite, record.lang]
-    );
-  } catch (err) {
-    console.error('[ai-preview] failed to save input:', err.message);
-    return res.status(500).json({ error: 'save_failed' });
-  }
-
-  if (!anthropic) {
-    return res.status(503).json({ error: 'ai_unavailable', id });
-  }
-
-  try {
-    const message = await anthropic.messages.create({
-      model: AI_PREVIEW_MODEL,
-      max_tokens: 600,
-      system: [{ type: 'text', text: AI_PREVIEW_SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
-      tools: [AI_PREVIEW_TOOL],
-      tool_choice: { type: 'tool', name: 'generate_site_proposal' },
-      messages: [{
-        role: 'user',
-        content: `lang: ${record.lang}\nbusinessType: ${record.businessType}\nsiteGoal: ${record.siteGoal}\nmood: ${record.mood}\nmustHave: ${record.mustHave}\nreferenceSite: ${record.referenceSite}`,
-      }],
-    });
-
-    const toolUse = message.content.find((c) => c.type === 'tool_use');
-    if (!toolUse) throw new Error('no tool_use block in response');
-    const result = toolUse.input;
-
-    const isValidResult = result
-      && typeof result.headline === 'string'
-      && typeof result.tagline === 'string'
-      && Array.isArray(result.sections)
-      && result.sections.length >= 3
-      && result.sections.length <= 6
-      && result.sections.every((s) => typeof s.title === 'string' && typeof s.description === 'string')
-      && typeof result.toneSuggestion === 'string'
-      && Array.isArray(result.suggestedColors);
-
-    if (!isValidResult) {
-      await pgPool.query(`UPDATE ai_previews SET status = '실패' WHERE id = $1`, [id]).catch(() => {});
-      return res.status(502).json({ error: 'generation_failed', id });
-    }
-
-    await pgPool.query(`UPDATE ai_previews SET result = $1, status = '완료' WHERE id = $2`, [JSON.stringify(result), id]);
-
-    res.json({ id, ...result });
-  } catch (err) {
-    console.error('[ai-preview] generation failed:', err.message);
-    await pgPool.query(`UPDATE ai_previews SET status = '실패' WHERE id = $1`, [id]).catch(() => {});
-    res.status(502).json({ error: 'generation_failed', id });
-  }
-});
-
-app.get('/api/ai-previews', async (req, res) => {
-  if (!usePg || !pgPool) {
-    return res.json([]);
-  }
-  try {
-    const result = await pgPool.query('SELECT * FROM ai_previews ORDER BY created_at DESC');
-    res.json(result.rows.map(rowToAiPreview));
-  } catch (err) {
-    console.error('[ai-previews] fetch failed:', err.message);
-    res.status(500).json({ error: 'fetch_failed' });
-  }
-});
-
-app.get('/api/inquiries', async (req, res) => {
+app.get('/api/inquiries', requireAdmin, async (req, res) => {
   try {
     if (usePg && pgPool) {
       const result = await pgPool.query('SELECT * FROM inquiries ORDER BY created_at DESC');
@@ -666,7 +457,7 @@ app.get('/api/inquiries/public', async (req, res) => {
   }
 });
 
-app.patch('/api/inquiries/:id', async (req, res) => {
+app.patch('/api/inquiries/:id', requireAdmin, async (req, res) => {
   try {
     if (usePg && pgPool) {
       // Map incoming (camelCase) → column names (snake_case) and only touch allowed columns.
@@ -699,7 +490,10 @@ app.patch('/api/inquiries/:id', async (req, res) => {
     const inquiries = readData('inquiries');
     const i = inquiries.findIndex(inq => inq.id === req.params.id);
     if (i === -1) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
-    inquiries[i] = { ...inquiries[i], ...req.body, updatedAt: new Date().toISOString() };
+    const allowed = ['name', 'email', 'phone', 'company', 'projectType', 'budget', 'timeline', 'description', 'status'];
+    const patch = {};
+    allowed.forEach((k) => { if (typeof req.body[k] === 'string') patch[k] = req.body[k]; });
+    inquiries[i] = { ...inquiries[i], ...patch, updatedAt: new Date().toISOString() };
     writeData('inquiries', inquiries);
     res.json(inquiries[i]);
   } catch (e) {
@@ -739,7 +533,8 @@ app.get('/api/github/stats', async (req, res) => {
       contributionGraph: `https://ghchart.rshah.org/6366f1/${GITHUB_USERNAME}`,
     });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    console.error('[github.stats] failed:', e.message);
+    res.status(500).json({ error: 'github_unavailable' });
   }
 });
 
@@ -810,7 +605,8 @@ app.get('/api/blog/posts', async (req, res) => {
     }));
     res.json({ blogTitle: feed.title || '', posts });
   } catch (e) {
-    res.status(500).json({ error: e.message, posts: [] });
+    console.error('[blog] failed:', e.message);
+    res.status(500).json({ error: 'blog_unavailable', posts: [] });
   }
 });
 
@@ -819,7 +615,7 @@ async function notifyNewInquiry(inq) {
   const summary = [
     `📩 새 프로젝트 문의가 접수되었습니다!`, ``,
     `이름:     ${inq.name}`,
-    `이메일:   ${inq.email}`,
+    inq.email ? `이메일:   ${inq.email}` : '',
     inq.phone ? `연락처:   ${inq.phone}` : '',
     inq.company ? `회사:     ${inq.company}` : '',
     `프로젝트: ${inq.projectType}`,
@@ -835,7 +631,7 @@ async function notifyNewInquiry(inq) {
       await fetch(NOTIFY_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: summary, text: summary }),
+        body: JSON.stringify({ content: summary, text: summary, allowed_mentions: { parse: [] } }),
       });
     } catch (e) { console.error('[webhook]', e.message); }
   }
@@ -846,7 +642,7 @@ async function notifyNewInquiry(inq) {
       await mailTransporter.sendMail({
         from: `"Dev.Vibe 문의 알림" <${EMAIL_USER}>`,
         to: NOTIFY_EMAIL_TO,
-        replyTo: inq.email,
+        replyTo: inq.email || undefined,
         subject: `📩 [Dev.Vibe] ${inq.name}님의 새 프로젝트 문의 — ${inq.projectType}`,
         text: summary,
         html: buildInquiryEmailHTML(inq),
@@ -884,10 +680,10 @@ function buildInquiryEmailHTML(inq) {
       <div style="background:#fafbff;border:1px solid #f0f0f5;border-radius:8px;padding:14px 16px;font-size:14px;line-height:1.7;color:#333;white-space:pre-wrap;">${esc(inq.description)}</div>
     </div>
     <div style="padding:16px 28px 28px;border-top:1px solid #f0f0f5;">
-      <a href="mailto:${esc(inq.email)}?subject=Re: ${encodeURIComponent('프로젝트 문의 회신')}"
+      <a href="${inq.email ? `mailto:${esc(inq.email)}?subject=Re: ${encodeURIComponent('프로젝트 문의 회신')}` : `tel:${esc(inq.phone)}`}"
          style="display:inline-block;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;
                 padding:11px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">
-        💬 답장 보내기
+        ${inq.email ? '💬 답장 보내기' : '📞 전화하기'}
       </a>
       <div style="margin-top:14px;font-size:11px;color:#999;">
         접수 시간: ${new Date(inq.createdAt || Date.now()).toLocaleString('ko-KR')}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAdminKey } from '../utils/adminSession';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -10,25 +11,26 @@ const api = axios.create({
   timeout: 20000,
 });
 
+// Admin-only calls carry the operator's key; the server verifies it.
+const adminHeaders = (extra = {}) => ({ headers: { ...extra, 'x-admin-key': getAdminKey() } });
+
 // Portfolio API
 export const getPortfolios = () => api.get('/portfolios');
 export const getPortfolio = (id) => api.get(`/portfolios/${id}`);
-export const createPortfolio = (formData) => api.post('/portfolios', formData, {
-  headers: { 'Content-Type': 'multipart/form-data' }
-});
-export const updatePortfolio = (id, formData) => api.put(`/portfolios/${id}`, formData, {
-  headers: { 'Content-Type': 'multipart/form-data' }
-});
-export const deletePortfolio = (id) => api.delete(`/portfolios/${id}`);
+export const createPortfolio = (formData) => api.post('/portfolios', formData,
+  adminHeaders({ 'Content-Type': 'multipart/form-data' }));
+export const updatePortfolio = (id, formData) => api.put(`/portfolios/${id}`, formData,
+  adminHeaders({ 'Content-Type': 'multipart/form-data' }));
+export const deletePortfolio = (id) => api.delete(`/portfolios/${id}`, adminHeaders());
+
+// Admin
+export const verifyAdminKey = (key) => api.post('/admin/verify', null, { headers: { 'x-admin-key': key } });
 
 // Inquiry API
 export const submitInquiry = (data) => api.post('/inquiries', data);
-export const getInquiries = () => api.get('/inquiries');
+export const getInquiries = () => api.get('/inquiries', adminHeaders());
 // Masked name + project type + date only — safe for the public homepage board.
 export const getPublicInquiries = () => api.get('/inquiries/public');
-
-// AI Preview API
-export const submitAiPreview = (data) => api.post('/ai-preview', data);
 
 // GitHub & Blog
 export const getGithubStats = () => api.get('/github/stats');

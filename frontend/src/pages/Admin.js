@@ -1,31 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { HiKey, HiLogout, HiMail, HiPhone, HiOfficeBuilding, HiCalendar, HiCurrencyDollar, HiClock, HiX } from 'react-icons/hi';
-import { getInquiries } from '../api';
+import { getInquiries, verifyAdminKey } from '../api';
+import { isAdminSession, setAdminKey, clearAdminKey } from '../utils/adminSession';
 import './Admin.css';
 
-const ADMIN_KEY = 'wnwlgh0719';
-const STORAGE_KEY = 'joe_dev_admin_auth';
-
+// The key is checked by the server (POST /api/admin/verify); nothing secret
+// is stored in this bundle.
 function Admin() {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(isAdminSession);
   const [keyInput, setKeyInput] = useState('');
   const [error, setError] = useState('');
+  const [checking, setChecking] = useState(false);
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === ADMIN_KEY) {
-      setAuthenticated(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (authenticated) {
       loadInquiries();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated]);
 
   const loadInquiries = async () => {
@@ -34,26 +29,41 @@ function Admin() {
       const res = await getInquiries();
       setInquiries(res.data);
     } catch (err) {
-      console.error(err);
+      // Session key no longer valid (rotated or wrong) — back to login.
+      if (err.response && err.response.status === 401) {
+        clearAdminKey();
+        setAuthenticated(false);
+        setError('세션이 만료되었습니다. 다시 로그인해주세요.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (keyInput === ADMIN_KEY) {
-      localStorage.setItem(STORAGE_KEY, ADMIN_KEY);
+    if (!keyInput || checking) return;
+    setChecking(true);
+    try {
+      await verifyAdminKey(keyInput);
+      setAdminKey(keyInput);
       setAuthenticated(true);
       setError('');
-    } else {
-      setError('잘못된 관리자 키입니다.');
+    } catch (err) {
+      const status = err.response && err.response.status;
+      setError(status === 429
+        ? '시도 횟수가 너무 많습니다. 15분 후 다시 시도해주세요.'
+        : status === 503
+          ? '서버에 관리자 키가 설정되지 않았습니다.'
+          : '잘못된 관리자 키입니다.');
+    } finally {
       setKeyInput('');
+      setChecking(false);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    clearAdminKey();
     setAuthenticated(false);
     setKeyInput('');
   };
@@ -140,7 +150,7 @@ function Admin() {
                   >
                     <td>{new Date(inq.createdAt).toLocaleDateString('ko-KR')}</td>
                     <td className="td-name">{inq.name}</td>
-                    <td>{inq.email}</td>
+                    <td>{inq.email || inq.phone || '-'}</td>
                     <td>{inq.company || '-'}</td>
                     <td><span className="td-type">{inq.projectType}</span></td>
                     <td>{inq.budget || '-'}</td>
@@ -175,13 +185,15 @@ function Admin() {
             </div>
 
             <div className="modal-info-grid">
-              <div className="modal-info-item">
-                <HiMail />
-                <div>
-                  <span>이메일</span>
-                  <a href={`mailto:${selected.email}`}>{selected.email}</a>
+              {selected.email && (
+                <div className="modal-info-item">
+                  <HiMail />
+                  <div>
+                    <span>이메일</span>
+                    <a href={`mailto:${selected.email}`}>{selected.email}</a>
+                  </div>
                 </div>
-              </div>
+              )}
               {selected.phone && (
                 <div className="modal-info-item">
                   <HiPhone />
@@ -233,9 +245,15 @@ function Admin() {
             </div>
 
             <div className="modal-actions">
-              <a href={`mailto:${selected.email}?subject=프로젝트 문의 회신&body=안녕하세요 ${selected.name}님,`} className="btn btn-dark">
-                <HiMail /> 이메일 회신
-              </a>
+              {selected.email ? (
+                <a href={`mailto:${selected.email}?subject=프로젝트 문의 회신&body=안녕하세요 ${selected.name}님,`} className="btn btn-dark">
+                  <HiMail /> 이메일 회신
+                </a>
+              ) : (
+                <a href={`tel:${selected.phone}`} className="btn btn-dark">
+                  <HiPhone /> 전화 회신
+                </a>
+              )}
             </div>
           </motion.div>
         </div>
